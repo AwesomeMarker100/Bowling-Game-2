@@ -1,0 +1,85 @@
+\doxysection{Parabolic\+Laser\+Interactor Class Reference}
+\hypertarget{class_parabolic_laser_interactor}{}\label{class_parabolic_laser_interactor}\index{ParabolicLaserInteractor@{ParabolicLaserInteractor}}
+Inheritance diagram for Parabolic\+Laser\+Interactor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_parabolic_laser_interactor}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override void \mbox{\hyperlink{class_parabolic_laser_interactor_a1eb7a942b3d296941efc33ce3ea0fba4}{Create\+Laser}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_laser_interactor}{Laser\+Interactor}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual Vector3 {\bfseries Get\+Endpoint\+Position} ()
+\item 
+virtual bool {\bfseries Did\+Collide} (int latest\+Index, float dist)
+\item 
+void {\bfseries Set\+Ball\+Point\+Material} (bool hit)
+\item 
+void {\bfseries Replace\+Hit\+Object} (\mbox{\hyperlink{class_hittable_object}{Hittable\+Object}} new\+UIObject)
+\item 
+void {\bfseries Disable\+Hit\+Object} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_laser_interactor}{Laser\+Interactor}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_laser_interactor_a2bd9bf8735f3275b496e190e7132857b}\label{class_laser_interactor_a2bd9bf8735f3275b496e190e7132857b} 
+enum {\bfseries Laser\+Type} \{ {\bfseries Linear}
+, {\bfseries Parabolic}
+, {\bfseries Arc}
+ \}
+\item 
+\Hypertarget{class_laser_interactor_ad1d42fb66a58e6852b3b58b7043890bd}\label{class_laser_interactor_ad1d42fb66a58e6852b3b58b7043890bd} 
+enum {\bfseries Axis} \{ {\bfseries X}
+, {\bfseries Y}
+, {\bfseries Z}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{class_laser_interactor}{Laser\+Interactor}}}
+\begin{DoxyCompactItemize}
+\item 
+Line\+Renderer {\bfseries laser}
+\item 
+float {\bfseries maximum\+Distance} = 5f
+\item 
+Vector3 {\bfseries rotation\+Offset}
+\item 
+Gradient {\bfseries normal}
+\item 
+Gradient {\bfseries hit}
+\item 
+\mbox{\hyperlink{class_hand_tracker}{Hand\+Tracker}} {\bfseries hand}
+\item 
+bool {\bfseries do\+Collisions} = true
+\item 
+Transform {\bfseries ball\+Point}
+\item 
+Material {\bfseries normal\+Material}
+\item 
+Laser\+Type {\bfseries laser\+Type}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_parabolic_laser_interactor_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_parabolic_laser_interactor_a1eb7a942b3d296941efc33ce3ea0fba4}\index{ParabolicLaserInteractor@{ParabolicLaserInteractor}!CreateLaser@{CreateLaser}}
+\index{CreateLaser@{CreateLaser}!ParabolicLaserInteractor@{ParabolicLaserInteractor}}
+\doxysubsubsection{\texorpdfstring{CreateLaser()}{CreateLaser()}}
+{\footnotesize\ttfamily \label{class_parabolic_laser_interactor_a1eb7a942b3d296941efc33ce3ea0fba4} 
+override void Parabolic\+Laser\+Interactor.\+Create\+Laser (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_laser_interactor}{Laser\+Interactor}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Ragnarok Interaction/\+Lasers/Parabolic\+Laser\+Interactor.\+cs\end{DoxyCompactItemize}

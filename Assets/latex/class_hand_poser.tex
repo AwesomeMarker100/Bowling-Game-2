@@ -1,0 +1,73 @@
+\doxysection{Hand\+Poser Class Reference}
+\hypertarget{class_hand_poser}{}\label{class_hand_poser}\index{HandPoser@{HandPoser}}
+Inheritance diagram for Hand\+Poser\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_hand_poser}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_hand_poser_a9c39b1509fd07a645d5eb127fa4edfc0}\label{class_hand_poser_a9c39b1509fd07a645d5eb127fa4edfc0} 
+enum {\bfseries Grip\+Type} \{ {\bfseries Max\+Min\+Method}
+, {\bfseries Half\+Physics}
+, {\bfseries Physics}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_hand_poser_aae57396e76725a547c74e2132cc40915}\label{class_hand_poser_aae57396e76725a547c74e2132cc40915} 
+void {\bfseries Set\+Minimum\+Grip} (float val)
+\item 
+\Hypertarget{class_hand_poser_a43e1679ca9ab801803173bd408fba830}\label{class_hand_poser_a43e1679ca9ab801803173bd408fba830} 
+void {\bfseries Set\+Maximum\+Grip} (float val)
+\item 
+\Hypertarget{class_hand_poser_a1c95796332907b9b270135dd745582b7}\label{class_hand_poser_a1c95796332907b9b270135dd745582b7} 
+void {\bfseries Set\+Minimum\+Point} (float val)
+\item 
+\Hypertarget{class_hand_poser_a574a325514444d4bc2454de3ac76cbbd}\label{class_hand_poser_a574a325514444d4bc2454de3ac76cbbd} 
+void {\bfseries Set\+Maximum\+Point} (float val)
+\item 
+\Hypertarget{class_hand_poser_ab74eb000968eb5f83fb3453c706384f8}\label{class_hand_poser_ab74eb000968eb5f83fb3453c706384f8} 
+void {\bfseries Set\+Control} (bool control)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_hand_poser_a0e127a4df559629d0eb63acc1924af34}\label{class_hand_poser_a0e127a4df559629d0eb63acc1924af34} 
+Grip\+Type {\bfseries grip\+Type} = Grip\+Type.\+Max\+Min\+Method
+\item 
+\Hypertarget{class_hand_poser_a0ad07a2ab1024961982acf07f64e6df3}\label{class_hand_poser_a0ad07a2ab1024961982acf07f64e6df3} 
+bool {\bfseries is\+Controlled} = false
+\item 
+\Hypertarget{class_hand_poser_adff9052ec8cd3c9b43955794d41b6ac2}\label{class_hand_poser_adff9052ec8cd3c9b43955794d41b6ac2} 
+bool {\bfseries item\+Disruption}
+\item 
+\Hypertarget{class_hand_poser_a07f77e06d210422b6a896b9f7cb9880a}\label{class_hand_poser_a07f77e06d210422b6a896b9f7cb9880a} 
+bool {\bfseries movement\+Locked} = false
+\item 
+\Hypertarget{class_hand_poser_a6c3f0089c2088537d88d468280079158}\label{class_hand_poser_a6c3f0089c2088537d88d468280079158} 
+float {\bfseries grip\+Amount}
+\item 
+\Hypertarget{class_hand_poser_a13453d0faf25383cce0d7025bf6ddccf}\label{class_hand_poser_a13453d0faf25383cce0d7025bf6ddccf} 
+float {\bfseries point\+Amount}
+\item 
+\Hypertarget{class_hand_poser_aa4d4672352ba3f94ed4659500fa676b6}\label{class_hand_poser_aa4d4672352ba3f94ed4659500fa676b6} 
+Unity\+Event {\bfseries below\+Grip\+Amount} = new Unity\+Event()
+\item 
+\Hypertarget{class_hand_poser_aaf3e6924b9ba32ab523ad3955e8b7cf0}\label{class_hand_poser_aaf3e6924b9ba32ab523ad3955e8b7cf0} 
+Unity\+Event {\bfseries above\+Grip\+Amount} = new Unity\+Event()
+\item 
+\Hypertarget{class_hand_poser_aa851bf099b8706174739b4da3055c7dc}\label{class_hand_poser_aa851bf099b8706174739b4da3055c7dc} 
+Unity\+Event {\bfseries below\+Point\+Amount} = new Unity\+Event()
+\item 
+\Hypertarget{class_hand_poser_a9006727986aae54d1933cfed47e3bd97}\label{class_hand_poser_a9006727986aae54d1933cfed47e3bd97} 
+Unity\+Event {\bfseries above\+Point\+Amount} = new Unity\+Event()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Trackers/\+Hand/\+Animation/Hand\+Poser.\+cs\end{DoxyCompactItemize}

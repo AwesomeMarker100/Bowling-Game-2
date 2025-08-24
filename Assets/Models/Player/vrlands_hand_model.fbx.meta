@@ -1,0 +1,348 @@
+fileFormatVersion: 2
+guid: d7a03fee2cc38d74a99ebc169d50562e
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: "Invalid Avatar Rig Configuration. Missing or invalid transform:\n\tRequired
+      human bone 'Hips' not found\n"
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 0
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human:
+    - boneName: ring-l1
+      humanName: Right Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ring-l2
+      humanName: Right Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ring-l3
+      humanName: Right Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: pinky-l1
+      humanName: Right Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: pinky-l2
+      humanName: Right Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: pinky-l3
+      humanName: Right Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: middle-l1
+      humanName: Right Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: middle-l2
+      humanName: Right Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: middle-l3
+      humanName: Right Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: index-l1
+      humanName: Right Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: index-l2
+      humanName: Right Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: index-l3
+      humanName: Right Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: thumb-l2
+      humanName: Right Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: thumb-l1
+      humanName: Right Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: thumb-l3
+      humanName: Right Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: vrlands_hand_model(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Armature
+      parentName: vrlands_hand_model(Clone)
+      position: {x: 0, y: 0, z: -1.0446944}
+      rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+      scale: {x: 78.68768, y: 78.68768, z: 78.68768}
+    - name: Bone
+      parentName: Armature
+      position: {x: 0, y: -3.903361e-11, z: -0.0008929843}
+      rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
+    - name: index-l1
+      parentName: Bone
+      position: {x: -0.010602611, y: -0.0009303775, z: 0.03152903}
+      rotation: {x: 0.000000016519353, y: -0.17413193, z: -0.00000009341754, w: 0.9847224}
+      scale: {x: 1, y: 1, z: 1}
+    - name: index-l2
+      parentName: index-l1
+      position: {x: 6.031412e-10, y: -1.131184e-12, z: 0.007907786}
+      rotation: {x: 2.3092639e-14, y: -0.000000074505806, z: -0.00000019865249, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: index-l3
+      parentName: index-l2
+      position: {x: 2.1951298e-11, y: 1.8530954e-13, z: 0.007907789}
+      rotation: {x: -4.440892e-15, y: 5.0487086e-29, z: 0.00000020638726, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: index-l3_end
+      parentName: index-l3
+      position: {x: 0, y: 0, z: 0.00790779}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: middle-l1
+      parentName: Bone
+      position: {x: -0.0033738795, y: -0.0009078523, z: 0.033339307}
+      rotation: {x: -0.026210222, y: -0.017275466, z: 0.000453063, w: 0.99950707}
+      scale: {x: 1, y: 1, z: 1}
+    - name: middle-l2
+      parentName: middle-l1
+      position: {x: 2.9511282e-10, y: -3.753179e-11, z: 0.00790779}
+      rotation: {x: -0.000000002248267, y: 0.000023711093, z: -0.000000022272193,
+        w: 1}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: middle-l3
+      parentName: middle-l2
+      position: {x: 1.3242242e-10, y: -1.14112414e-10, z: 0.007907782}
+      rotation: {x: -0.00000000617226, y: 0.000023768285, z: -0.000000033789092, w: 1}
+      scale: {x: 0.99999994, y: 1, z: 0.9999999}
+    - name: middle-l3_end
+      parentName: middle-l3
+      position: {x: 0, y: 0, z: 0.007907789}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pinky-l1
+      parentName: Bone
+      position: {x: 0.012200378, y: -0.00030255585, z: 0.029149588}
+      rotation: {x: 0.000000060618305, y: 0.12429249, z: 0.0000004839251, w: 0.9922456}
+      scale: {x: 0.99999994, y: 1, z: 0.9999999}
+    - name: pinky-l2
+      parentName: pinky-l1
+      position: {x: 5.759121e-10, y: -1.1939391e-11, z: 0.0054203314}
+      rotation: {x: -2.1607714e-14, y: -0.000000052154064, z: -0.0000004868697, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pinky-l3
+      parentName: pinky-l2
+      position: {x: 2.990119e-10, y: -4.5011453e-11, z: 0.005420328}
+      rotation: {x: 2.5195124e-14, y: 0.000000104308114, z: 0.00000030149295, w: 1}
+      scale: {x: 1.0000001, y: 1, z: 1.0000001}
+    - name: pinky-l3_end
+      parentName: pinky-l3
+      position: {x: 0, y: 0, z: 0.0054203332}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ring-l1
+      parentName: Bone
+      position: {x: 0.0041425396, y: -0.0007004294, z: 0.03137026}
+      rotation: {x: 1.3330602e-10, y: 0.035267312, z: 0.0000000037775227, w: 0.99937797}
+      scale: {x: 1, y: 1, z: 0.9999999}
+    - name: ring-l2
+      parentName: ring-l1
+      position: {x: -1.4755594e-10, y: 4.10477e-12, z: 0.007907786}
+      rotation: {x: -1.3322676e-15, y: 0.000000011175871, z: -0.00000012054653, w: 1}
+      scale: {x: 0.99999994, y: 1, z: 1.0000001}
+    - name: ring-l3
+      parentName: ring-l2
+      position: {x: -1.9397958e-10, y: -1.7062334e-11, z: 0.007907784}
+      rotation: {x: -1.776357e-15, y: 0.000000011175872, z: 0.0000001422358, w: 1}
+      scale: {x: 1, y: 1, z: 0.99999994}
+    - name: ring-l3_end
+      parentName: ring-l3
+      position: {x: 0, y: 0, z: 0.007907788}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: thumb-l1
+      parentName: Bone
+      position: {x: -0.014561663, y: -0.0009792885, z: 0.010080985}
+      rotation: {x: 0.000000045489102, y: -0.4256145, z: -0.00000009671497, w: 0.9049046}
+      scale: {x: 1, y: 1, z: 1}
+    - name: thumb-l2
+      parentName: thumb-l1
+      position: {x: -5.7759825e-10, y: 8.702727e-13, z: 0.007907788}
+      rotation: {x: 0.000000018843657, y: 2.0122792e-15, z: -0.00000006966869, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: thumb-l3
+      parentName: thumb-l2
+      position: {x: 3.0473676e-11, y: -2.3862867e-12, z: 0.007907787}
+      rotation: {x: 3.463896e-14, y: -0.00000008940697, z: -0.00000007877113, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: thumb-l3_end
+      parentName: thumb-l3
+      position: {x: 0, y: 0, z: 0.007907792}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cube
+      parentName: vrlands_hand_model(Clone)
+      position: {x: 0, y: 7.1054274e-15, z: 1.9984014e-15}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 110.36188, y: 42.745052, z: 108.20279}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: Armature
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

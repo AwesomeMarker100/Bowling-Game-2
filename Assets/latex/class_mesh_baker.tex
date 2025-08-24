@@ -1,0 +1,55 @@
+\doxysection{Mesh\+Baker Class Reference}
+\hypertarget{class_mesh_baker}{}\label{class_mesh_baker}\index{MeshBaker@{MeshBaker}}
+Inheritance diagram for Mesh\+Baker\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_mesh_baker}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mesh_baker_aef065e75783c110a3c7d0299563c3b03}\label{class_mesh_baker_aef065e75783c110a3c7d0299563c3b03} 
+enum {\bfseries Bake\+Type} \{ {\bfseries Unchecked}
+, {\bfseries Unbaked}
+, {\bfseries Baked}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mesh_baker_a3a26bcabf1521e8735613c0935400c58}\label{class_mesh_baker_a3a26bcabf1521e8735613c0935400c58} 
+void {\bfseries On\+Draw\+Gizmos\+Selected} ()
+\item 
+\Hypertarget{class_mesh_baker_a05a83d62a889044e49bb3d590fe3c002}\label{class_mesh_baker_a05a83d62a889044e49bb3d590fe3c002} 
+void {\bfseries Check\+If\+Point\+Baked} (Vector3 mouse\+Pos, Terrain\+Data ter\+Data)
+\item 
+\Hypertarget{class_mesh_baker_a19f8f8813899b9c5212c91405da526b6}\label{class_mesh_baker_a19f8f8813899b9c5212c91405da526b6} 
+void {\bfseries Bake\+Mesh} ()
+\item 
+\Hypertarget{class_mesh_baker_ac918dad9ef96544e96bb0d92ca29e572}\label{class_mesh_baker_ac918dad9ef96544e96bb0d92ca29e572} 
+void {\bfseries Initialize\+Baked\+Map} (Vector3\mbox{[}$\,$\mbox{]} points, bool globalize)
+\item 
+\Hypertarget{class_mesh_baker_ac5d4130fb16af76e73281c030e5d2bcf}\label{class_mesh_baker_ac5d4130fb16af76e73281c030e5d2bcf} 
+void {\bfseries Bake\+Terrain} ()
+\item 
+\Hypertarget{class_mesh_baker_a1efd87d0f3bf2147267b853477bbb8ea}\label{class_mesh_baker_a1efd87d0f3bf2147267b853477bbb8ea} 
+bool {\bfseries Bake\+Points} (Vector3 point1, Vector3 point2)
+\item 
+\Hypertarget{class_mesh_baker_a81e197c1bca5928cfba338fcd08273b6}\label{class_mesh_baker_a81e197c1bca5928cfba338fcd08273b6} 
+bool {\bfseries Meets\+Angle\+Req} (Vector3 point1, Vector3 point2)
+\item 
+\Hypertarget{class_mesh_baker_ae2cb4e13cccd843c14dab5630337b524}\label{class_mesh_baker_ae2cb4e13cccd843c14dab5630337b524} 
+void {\bfseries Set\+Bake\+Type} (Bake\+Type bake\+Type, Vector3 point1, Vector3 point2)
+\item 
+\Hypertarget{class_mesh_baker_abf15e0a278c92dbeed30aab239c60777}\label{class_mesh_baker_abf15e0a278c92dbeed30aab239c60777} 
+Vector3\mbox{[}$\,$\mbox{]} {\bfseries Get\+Surface\+Vertices} ()
+\item 
+\Hypertarget{class_mesh_baker_a258798f7bd13029a1e1c531625b8f326}\label{class_mesh_baker_a258798f7bd13029a1e1c531625b8f326} 
+int\mbox{[}$\,$\mbox{]} {\bfseries Get\+Surface\+Triangle\+Indeces} (Vector3\mbox{[}$\,$\mbox{]} surface\+Vertices)
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Artemis AI/Mesh\+Baker.\+cs\end{DoxyCompactItemize}

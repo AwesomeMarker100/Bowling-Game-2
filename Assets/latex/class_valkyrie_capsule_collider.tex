@@ -1,0 +1,147 @@
+\doxysection{Valkyrie\+Capsule\+Collider Class Reference}
+\hypertarget{class_valkyrie_capsule_collider}{}\label{class_valkyrie_capsule_collider}\index{ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}}
+Inheritance diagram for Valkyrie\+Capsule\+Collider\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_valkyrie_capsule_collider}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_valkyrie_capsule_collider_a2aa0c048723ec964ba391250cc0d1cda}\label{class_valkyrie_capsule_collider_a2aa0c048723ec964ba391250cc0d1cda} 
+enum {\bfseries Orientation} \{ {\bfseries X}
+, {\bfseries Y}
+, {\bfseries Z}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_valkyrie_collider_a3a8a3cf111e7fd808e1520d3d0347747}\label{class_valkyrie_collider_a3a8a3cf111e7fd808e1520d3d0347747} 
+enum {\bfseries Collider\+Type} \{ \newline
+{\bfseries Box\+Collider}
+, {\bfseries Sphere\+Collider}
+, {\bfseries Capsule\+Collider}
+, {\bfseries Concave\+Collider}
+, \newline
+{\bfseries Terrain\+Collider}
+, {\bfseries Mesh\+Collider}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override void \mbox{\hyperlink{class_valkyrie_capsule_collider_a50ed66f809f189e9e3ccdfec9339fe56}{Set\+Bounds}} ()
+\item 
+\Hypertarget{class_valkyrie_capsule_collider_a3db8aef630eb4925302d2b8b09b81902}\label{class_valkyrie_capsule_collider_a3db8aef630eb4925302d2b8b09b81902} 
+void {\bfseries On\+Validate} ()
+\item 
+override void \mbox{\hyperlink{class_valkyrie_capsule_collider_a06ec447119788187596f0d08b1db53ab}{Draw\+Gizmos}} ()
+\item 
+override Vector3 \mbox{\hyperlink{class_valkyrie_capsule_collider_a0b7fd36ff35b694f416f68cbd69b9d19}{Get\+Furthest\+Point}} (Vector3 dir)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Awake} ()
+\item 
+virtual void {\bfseries Fixed\+Update} ()
+\item 
+virtual void {\bfseries Check\+For\+Collisions} ()
+\item 
+virtual Vector3 {\bfseries Get\+Closest\+Point\+On\+Bounds} (Vector3 point)
+\item 
+virtual bool {\bfseries Point\+In\+Bounds} (Vector3 point)
+\item 
+Vector3 {\bfseries Support} (\mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} other, Vector3 dir)
+\item 
+virtual bool {\bfseries Check\+If\+Collided} (\mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} other)
+\item 
+bool {\bfseries In\+Layer\+Mask} (Game\+Object other)
+\item 
+bool {\bfseries Origin\+Contained} (ref \mbox{\hyperlink{struct_valkyrie_collider_1_1_simplex}{Simplex}} simp, ref Vector3 dir)
+\item 
+void {\bfseries Subscribe\+To\+Collision\+Awake} (Unity\+Action$<$ \mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} $>$ evt)
+\item 
+void {\bfseries Subscribe\+To\+Collision\+Persistent} (Unity\+Action$<$ \mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} $>$ evt)
+\item 
+void {\bfseries Subscribe\+To\+Collision\+Dead} (Unity\+Action$<$ \mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} $>$ evt)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}}
+\begin{DoxyCompactItemize}
+\item 
+Collider\+Type {\bfseries type}
+\item 
+bool {\bfseries draw\+In\+Editor} = true
+\item 
+Color {\bfseries collider\+Color} = Color.\+red
+\item 
+bool {\bfseries log\+Collisions} = false
+\item 
+bool {\bfseries collision\+Detection\+Mode} = false
+\item 
+Vector3 {\bfseries local\+Center}
+\item 
+Vector3 {\bfseries global\+Center}
+\item 
+Layer\+Mask {\bfseries ignore\+Layers}
+\item 
+KDRegion$<$ \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} $>$ {\bfseries region}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} {\bfseries other\+Col}
+\item 
+\mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} {\bfseries collision\+Info}
+\item 
+\mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}} {\bfseries on\+Collision\+Awake} = new \mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}}()
+\item 
+\mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}} {\bfseries on\+Collision\+Persistent} = new \mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}}()
+\item 
+\mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}} {\bfseries on\+Collision\+Dead} = new \mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}}()
+\item 
+bool {\bfseries in\+Collision} = false
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_valkyrie_capsule_collider_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_valkyrie_capsule_collider_a06ec447119788187596f0d08b1db53ab}\index{ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}!DrawGizmos@{DrawGizmos}}
+\index{DrawGizmos@{DrawGizmos}!ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}}
+\doxysubsubsection{\texorpdfstring{DrawGizmos()}{DrawGizmos()}}
+{\footnotesize\ttfamily \label{class_valkyrie_capsule_collider_a06ec447119788187596f0d08b1db53ab} 
+override void Valkyrie\+Capsule\+Collider.\+Draw\+Gizmos (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}.
+
+\Hypertarget{class_valkyrie_capsule_collider_a0b7fd36ff35b694f416f68cbd69b9d19}\index{ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}!GetFurthestPoint@{GetFurthestPoint}}
+\index{GetFurthestPoint@{GetFurthestPoint}!ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}}
+\doxysubsubsection{\texorpdfstring{GetFurthestPoint()}{GetFurthestPoint()}}
+{\footnotesize\ttfamily \label{class_valkyrie_capsule_collider_a0b7fd36ff35b694f416f68cbd69b9d19} 
+override Vector3 Valkyrie\+Capsule\+Collider.\+Get\+Furthest\+Point (\begin{DoxyParamCaption}\item[{Vector3}]{dir}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}.
+
+\Hypertarget{class_valkyrie_capsule_collider_a50ed66f809f189e9e3ccdfec9339fe56}\index{ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}!SetBounds@{SetBounds}}
+\index{SetBounds@{SetBounds}!ValkyrieCapsuleCollider@{ValkyrieCapsuleCollider}}
+\doxysubsubsection{\texorpdfstring{SetBounds()}{SetBounds()}}
+{\footnotesize\ttfamily \label{class_valkyrie_capsule_collider_a50ed66f809f189e9e3ccdfec9339fe56} 
+override void Valkyrie\+Capsule\+Collider.\+Set\+Bounds (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Valkyrie Physics/\+Collisions/\+Colliders/Valkyrie\+Capsule\+Collider.\+cs\end{DoxyCompactItemize}

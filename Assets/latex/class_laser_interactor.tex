@@ -1,0 +1,82 @@
+\doxysection{Laser\+Interactor Class Reference}
+\hypertarget{class_laser_interactor}{}\label{class_laser_interactor}\index{LaserInteractor@{LaserInteractor}}
+Inheritance diagram for Laser\+Interactor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_laser_interactor}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_laser_interactor_a2bd9bf8735f3275b496e190e7132857b}\label{class_laser_interactor_a2bd9bf8735f3275b496e190e7132857b} 
+enum {\bfseries Laser\+Type} \{ {\bfseries Linear}
+, {\bfseries Parabolic}
+, {\bfseries Arc}
+ \}
+\item 
+\Hypertarget{class_laser_interactor_ad1d42fb66a58e6852b3b58b7043890bd}\label{class_laser_interactor_ad1d42fb66a58e6852b3b58b7043890bd} 
+enum {\bfseries Axis} \{ {\bfseries X}
+, {\bfseries Y}
+, {\bfseries Z}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_laser_interactor_a06be1171d1cc704354c06cb44e02ed8d}\label{class_laser_interactor_a06be1171d1cc704354c06cb44e02ed8d} 
+virtual void {\bfseries Create\+Laser} ()
+\item 
+\Hypertarget{class_laser_interactor_a2dc3a08fe022c1e87d1bc335ed75ec13}\label{class_laser_interactor_a2dc3a08fe022c1e87d1bc335ed75ec13} 
+virtual Vector3 {\bfseries Get\+Endpoint\+Position} ()
+\item 
+\Hypertarget{class_laser_interactor_a44244115793d61e025aaf418b78dd7c5}\label{class_laser_interactor_a44244115793d61e025aaf418b78dd7c5} 
+virtual bool {\bfseries Did\+Collide} (int latest\+Index, float dist)
+\item 
+\Hypertarget{class_laser_interactor_a598bc223ba3a882573fefee7e66da715}\label{class_laser_interactor_a598bc223ba3a882573fefee7e66da715} 
+void {\bfseries Set\+Ball\+Point\+Material} (bool hit)
+\item 
+\Hypertarget{class_laser_interactor_aa7563d6b38415f7d9aee8fc47854600d}\label{class_laser_interactor_aa7563d6b38415f7d9aee8fc47854600d} 
+void {\bfseries Replace\+Hit\+Object} (\mbox{\hyperlink{class_hittable_object}{Hittable\+Object}} new\+UIObject)
+\item 
+\Hypertarget{class_laser_interactor_a5f21bbea640ad517d4fcc34cccca244f}\label{class_laser_interactor_a5f21bbea640ad517d4fcc34cccca244f} 
+void {\bfseries Disable\+Hit\+Object} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_laser_interactor_afdfc7912cdb11e80ade217b409618215}\label{class_laser_interactor_afdfc7912cdb11e80ade217b409618215} 
+Line\+Renderer {\bfseries laser}
+\item 
+\Hypertarget{class_laser_interactor_a78d261313577bb9f7f4c46024aaa07ed}\label{class_laser_interactor_a78d261313577bb9f7f4c46024aaa07ed} 
+float {\bfseries maximum\+Distance} = 5f
+\item 
+\Hypertarget{class_laser_interactor_ac855d60f87d5e9d92404160c5ad043a1}\label{class_laser_interactor_ac855d60f87d5e9d92404160c5ad043a1} 
+Vector3 {\bfseries rotation\+Offset}
+\item 
+\Hypertarget{class_laser_interactor_ae59e2a27348631d1c0f137e596af0ce7}\label{class_laser_interactor_ae59e2a27348631d1c0f137e596af0ce7} 
+Gradient {\bfseries normal}
+\item 
+\Hypertarget{class_laser_interactor_a339a433c61de9ada08431e8d10846f6e}\label{class_laser_interactor_a339a433c61de9ada08431e8d10846f6e} 
+Gradient {\bfseries hit}
+\item 
+\Hypertarget{class_laser_interactor_ae12908d47bac05a9933187a7d4d718fe}\label{class_laser_interactor_ae12908d47bac05a9933187a7d4d718fe} 
+\mbox{\hyperlink{class_hand_tracker}{Hand\+Tracker}} {\bfseries hand}
+\item 
+\Hypertarget{class_laser_interactor_a24078a05247daba2b05da629efd49134}\label{class_laser_interactor_a24078a05247daba2b05da629efd49134} 
+bool {\bfseries do\+Collisions} = true
+\item 
+\Hypertarget{class_laser_interactor_a88d1ccfe37601969311081d084402e5a}\label{class_laser_interactor_a88d1ccfe37601969311081d084402e5a} 
+Transform {\bfseries ball\+Point}
+\item 
+\Hypertarget{class_laser_interactor_ac2f578821ea72ee722f3b3027f649e81}\label{class_laser_interactor_ac2f578821ea72ee722f3b3027f649e81} 
+Material {\bfseries normal\+Material}
+\item 
+\Hypertarget{class_laser_interactor_a4c06d988d54b7aee88d477128671068c}\label{class_laser_interactor_a4c06d988d54b7aee88d477128671068c} 
+Laser\+Type {\bfseries laser\+Type}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Ragnarok Interaction/\+Lasers/Laser\+Interactor.\+cs\end{DoxyCompactItemize}

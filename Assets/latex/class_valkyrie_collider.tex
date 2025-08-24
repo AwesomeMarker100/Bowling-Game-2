@@ -1,0 +1,137 @@
+\doxysection{Valkyrie\+Collider Class Reference}
+\hypertarget{class_valkyrie_collider}{}\label{class_valkyrie_collider}\index{ValkyrieCollider@{ValkyrieCollider}}
+Inheritance diagram for Valkyrie\+Collider\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.675159cm]{class_valkyrie_collider}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_valkyrie_collider_1_1_polytope}{Polytope}}
+\item 
+struct \mbox{\hyperlink{struct_valkyrie_collider_1_1_polytope_tri}{Polytope\+Tri}}
+\item 
+struct \mbox{\hyperlink{struct_valkyrie_collider_1_1_simplex}{Simplex}}
+\item 
+struct \mbox{\hyperlink{struct_valkyrie_collider_1_1_undirected_edge}{Undirected\+Edge}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_valkyrie_collider_a3a8a3cf111e7fd808e1520d3d0347747}\label{class_valkyrie_collider_a3a8a3cf111e7fd808e1520d3d0347747} 
+enum {\bfseries Collider\+Type} \{ \newline
+{\bfseries Box\+Collider}
+, {\bfseries Sphere\+Collider}
+, {\bfseries Capsule\+Collider}
+, {\bfseries Concave\+Collider}
+, \newline
+{\bfseries Terrain\+Collider}
+, {\bfseries Mesh\+Collider}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_valkyrie_collider_a8cdca48283c848a2b0a6f40736078650}\label{class_valkyrie_collider_a8cdca48283c848a2b0a6f40736078650} 
+void {\bfseries Awake} ()
+\item 
+\Hypertarget{class_valkyrie_collider_ae478f0e7e2ee482bdf1a0059f49423f2}\label{class_valkyrie_collider_ae478f0e7e2ee482bdf1a0059f49423f2} 
+virtual void {\bfseries Fixed\+Update} ()
+\item 
+\Hypertarget{class_valkyrie_collider_a80d0114ed503cf6a79a6b67030b590b1}\label{class_valkyrie_collider_a80d0114ed503cf6a79a6b67030b590b1} 
+virtual void {\bfseries Set\+Bounds} ()
+\item 
+\Hypertarget{class_valkyrie_collider_a0fd1813e2a32f68733084300976b1186}\label{class_valkyrie_collider_a0fd1813e2a32f68733084300976b1186} 
+virtual void {\bfseries Check\+For\+Collisions} ()
+\item 
+\Hypertarget{class_valkyrie_collider_a4f60846ce209795137def5b2a37c798d}\label{class_valkyrie_collider_a4f60846ce209795137def5b2a37c798d} 
+virtual void {\bfseries Draw\+Gizmos} ()
+\item 
+\Hypertarget{class_valkyrie_collider_a6f08ae0ecb3b06be4afda605ef8c19e4}\label{class_valkyrie_collider_a6f08ae0ecb3b06be4afda605ef8c19e4} 
+virtual Vector3 {\bfseries Get\+Closest\+Point\+On\+Bounds} (Vector3 point)
+\item 
+\Hypertarget{class_valkyrie_collider_afb63304a90cf376d4ef15157dcf7acf6}\label{class_valkyrie_collider_afb63304a90cf376d4ef15157dcf7acf6} 
+virtual bool {\bfseries Point\+In\+Bounds} (Vector3 point)
+\item 
+\Hypertarget{class_valkyrie_collider_a2fa4cf2f56f2cf86c9129665fc9c740d}\label{class_valkyrie_collider_a2fa4cf2f56f2cf86c9129665fc9c740d} 
+virtual Vector3 {\bfseries Get\+Furthest\+Point} (Vector3 dir)
+\item 
+\Hypertarget{class_valkyrie_collider_a05d18ebec6228695e4788da4357efc5b}\label{class_valkyrie_collider_a05d18ebec6228695e4788da4357efc5b} 
+Vector3 {\bfseries Support} (\mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} other, Vector3 dir)
+\item 
+\Hypertarget{class_valkyrie_collider_a769398b0658e88833fe6ee1cabd652a3}\label{class_valkyrie_collider_a769398b0658e88833fe6ee1cabd652a3} 
+virtual bool {\bfseries Check\+If\+Collided} (\mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} other)
+\item 
+\Hypertarget{class_valkyrie_collider_a74e2aa87aba36bb6bef8e36193bb7efb}\label{class_valkyrie_collider_a74e2aa87aba36bb6bef8e36193bb7efb} 
+bool {\bfseries In\+Layer\+Mask} (Game\+Object other)
+\item 
+\Hypertarget{class_valkyrie_collider_ac56dec14a4c42470e3b93fa86736b43a}\label{class_valkyrie_collider_ac56dec14a4c42470e3b93fa86736b43a} 
+bool {\bfseries Origin\+Contained} (ref \mbox{\hyperlink{struct_valkyrie_collider_1_1_simplex}{Simplex}} simp, ref Vector3 dir)
+\item 
+\Hypertarget{class_valkyrie_collider_a87a58556b213a0bb5c1a5955ed10f50a}\label{class_valkyrie_collider_a87a58556b213a0bb5c1a5955ed10f50a} 
+void {\bfseries Subscribe\+To\+Collision\+Awake} (Unity\+Action$<$ \mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} $>$ evt)
+\item 
+\Hypertarget{class_valkyrie_collider_a5b33d758d9bfce7ad79ca87064cfa360}\label{class_valkyrie_collider_a5b33d758d9bfce7ad79ca87064cfa360} 
+void {\bfseries Subscribe\+To\+Collision\+Persistent} (Unity\+Action$<$ \mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} $>$ evt)
+\item 
+\Hypertarget{class_valkyrie_collider_aa4bbaf96b2a11ee14d4020f08b3facbe}\label{class_valkyrie_collider_aa4bbaf96b2a11ee14d4020f08b3facbe} 
+void {\bfseries Subscribe\+To\+Collision\+Dead} (Unity\+Action$<$ \mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} $>$ evt)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_valkyrie_collider_af97d308459003a6b4a628e7e9f37219d}\label{class_valkyrie_collider_af97d308459003a6b4a628e7e9f37219d} 
+Collider\+Type {\bfseries type}
+\item 
+\Hypertarget{class_valkyrie_collider_aa78294b260f99a55fb4804ee98b9cc26}\label{class_valkyrie_collider_aa78294b260f99a55fb4804ee98b9cc26} 
+bool {\bfseries draw\+In\+Editor} = true
+\item 
+\Hypertarget{class_valkyrie_collider_a35bc8c9fbf864640dd75051d196b28c9}\label{class_valkyrie_collider_a35bc8c9fbf864640dd75051d196b28c9} 
+Color {\bfseries collider\+Color} = Color.\+red
+\item 
+\Hypertarget{class_valkyrie_collider_a4e63d5e65d40ddb4cd6c39d5c7b89c8d}\label{class_valkyrie_collider_a4e63d5e65d40ddb4cd6c39d5c7b89c8d} 
+bool {\bfseries log\+Collisions} = false
+\item 
+\Hypertarget{class_valkyrie_collider_a2cd999271ba06954537f233b3a4b5034}\label{class_valkyrie_collider_a2cd999271ba06954537f233b3a4b5034} 
+bool {\bfseries collision\+Detection\+Mode} = false
+\item 
+\Hypertarget{class_valkyrie_collider_aee89a3e8ed79e30d3fb054b44b294f1a}\label{class_valkyrie_collider_aee89a3e8ed79e30d3fb054b44b294f1a} 
+Vector3 {\bfseries local\+Center}
+\item 
+\Hypertarget{class_valkyrie_collider_abe4b387fc6c240124af5ebce78c77fd9}\label{class_valkyrie_collider_abe4b387fc6c240124af5ebce78c77fd9} 
+Vector3 {\bfseries global\+Center}
+\item 
+\Hypertarget{class_valkyrie_collider_a8c4b2d5e7fa82d90a2c06bacfbd55e24}\label{class_valkyrie_collider_a8c4b2d5e7fa82d90a2c06bacfbd55e24} 
+Layer\+Mask {\bfseries ignore\+Layers}
+\item 
+\Hypertarget{class_valkyrie_collider_a27e4520b25ef87b937cd9d59970c110b}\label{class_valkyrie_collider_a27e4520b25ef87b937cd9d59970c110b} 
+KDRegion$<$ \mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} $>$ {\bfseries region}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_valkyrie_collider_a251080d0097c13f07eb6a5c5ef97aebc}\label{class_valkyrie_collider_a251080d0097c13f07eb6a5c5ef97aebc} 
+\mbox{\hyperlink{class_valkyrie_collider}{Valkyrie\+Collider}} {\bfseries other\+Col}
+\item 
+\Hypertarget{class_valkyrie_collider_a29a91fab5d05976fe09381f198d6932f}\label{class_valkyrie_collider_a29a91fab5d05976fe09381f198d6932f} 
+\mbox{\hyperlink{class_valkyrie_collision}{Valkyrie\+Collision}} {\bfseries collision\+Info}
+\item 
+\Hypertarget{class_valkyrie_collider_a4c580edda1b0bc226c0619e48c3732e9}\label{class_valkyrie_collider_a4c580edda1b0bc226c0619e48c3732e9} 
+\mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}} {\bfseries on\+Collision\+Awake} = new \mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}}()
+\item 
+\Hypertarget{class_valkyrie_collider_a14d4e81119f2aebdde1f4e66b0c98f8b}\label{class_valkyrie_collider_a14d4e81119f2aebdde1f4e66b0c98f8b} 
+\mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}} {\bfseries on\+Collision\+Persistent} = new \mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}}()
+\item 
+\Hypertarget{class_valkyrie_collider_af5618dd952de2720f0c549d812455c96}\label{class_valkyrie_collider_af5618dd952de2720f0c549d812455c96} 
+\mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}} {\bfseries on\+Collision\+Dead} = new \mbox{\hyperlink{class_valkyrie_collision_event}{Valkyrie\+Collision\+Event}}()
+\item 
+\Hypertarget{class_valkyrie_collider_ac9b4fce512330c2af7530177cf6636c7}\label{class_valkyrie_collider_ac9b4fce512330c2af7530177cf6636c7} 
+bool {\bfseries in\+Collision} = false
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Valkyrie Physics/\+Collisions/\+Colliders/Valkyrie\+Collider.\+cs\end{DoxyCompactItemize}

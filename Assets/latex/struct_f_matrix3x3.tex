@@ -1,0 +1,155 @@
+\doxysection{FMatrix3x3 Struct Reference}
+\hypertarget{struct_f_matrix3x3}{}\label{struct_f_matrix3x3}\index{FMatrix3x3@{FMatrix3x3}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_f_matrix3x3_a7e40fe1a63c1671b696a44c5a659db90}\label{struct_f_matrix3x3_a7e40fe1a63c1671b696a44c5a659db90} 
+{\bfseries FMatrix3x3} (float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22)
+\item 
+void \mbox{\hyperlink{struct_f_matrix3x3_aaf6163fd2bd2f92ce61b24bad9a4003b}{Add\+Rows}} (float\mbox{[},\mbox{]} matrix, int first\+Row, int second\+Row, float c)
+\begin{DoxyCompactList}\small\item\em Performs arr\mbox{[}second\+Row\mbox{]} = arr\mbox{[}second\+Row\mbox{]} + arr\mbox{[}first\+Row\mbox{]} \texorpdfstring{$\ast$}{*} c;. \end{DoxyCompactList}\item 
+\Hypertarget{struct_f_matrix3x3_ad52b92448fe8f427558d588288ef9d66}\label{struct_f_matrix3x3_ad52b92448fe8f427558d588288ef9d66} 
+void {\bfseries Refresh\+Matrix} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_a4b6cb929bc64a282b735576319786b85}\label{struct_f_matrix3x3_a4b6cb929bc64a282b735576319786b85} 
+bool {\bfseries Is\+Basis} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_a8b6a5a242427bb67e23d18b788097033}\label{struct_f_matrix3x3_a8b6a5a242427bb67e23d18b788097033} 
+Vector3\mbox{[}$\,$\mbox{]} {\bfseries Get\+Kernel} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_ad59f649692a9d38f264823a227bc07c1}\label{struct_f_matrix3x3_ad59f649692a9d38f264823a227bc07c1} 
+Vector3\mbox{[}$\,$\mbox{]} {\bfseries Get\+Image} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_aa00e1f73156c9d213ef607d1a439c87f}\label{struct_f_matrix3x3_aa00e1f73156c9d213ef607d1a439c87f} 
+\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} {\bfseries Get\+Inverse} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_a3f36b7d00d6360a77e7a91dde3b8388f}\label{struct_f_matrix3x3_a3f36b7d00d6360a77e7a91dde3b8388f} 
+void {\bfseries QRFactorize} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_a6b32a3a39df2fca1a308e984971f78a5}\label{struct_f_matrix3x3_a6b32a3a39df2fca1a308e984971f78a5} 
+void {\bfseries Swap\+Rows} (float\mbox{[},\mbox{]} arr, int first\+Row, int second\+Row)
+\item 
+\Hypertarget{struct_f_matrix3x3_ac3e862d63e5675678f745cbbe95e092b}\label{struct_f_matrix3x3_ac3e862d63e5675678f745cbbe95e092b} 
+float\mbox{[}$\,$\mbox{]} {\bfseries Get\+Eigen\+Values} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_a9f9fd32532c57f36c54a77f291999f0d}\label{struct_f_matrix3x3_a9f9fd32532c57f36c54a77f291999f0d} 
+Vector3\mbox{[}$\,$\mbox{]} {\bfseries Get\+Eigen\+Vectors} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_a72a0564e5cf90fca376f570da6a6bd65}\label{struct_f_matrix3x3_a72a0564e5cf90fca376f570da6a6bd65} 
+readonly override string {\bfseries To\+String} ()
+\item 
+\Hypertarget{struct_f_matrix3x3_af86cc868d7a9988053ebdfa165129091}\label{struct_f_matrix3x3_af86cc868d7a9988053ebdfa165129091} 
+Vector3 {\bfseries Solve\+System\+Cholesky} (Vector3 b)
+\item 
+\Hypertarget{struct_f_matrix3x3_a7501ff366f14ced2b9d9320f6c88f6a4}\label{struct_f_matrix3x3_a7501ff366f14ced2b9d9320f6c88f6a4} 
+bool {\bfseries Cholesky\+Decomp} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_f_matrix3x3_a20e51a092b8b0391ab3bb839425d73a9}\label{struct_f_matrix3x3_a20e51a092b8b0391ab3bb839425d73a9} 
+static Vector3 {\bfseries operator\texorpdfstring{$\ast$}{*}} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a, Vector3 b)
+\item 
+\Hypertarget{struct_f_matrix3x3_aed9f8750a911e88a81775adeb35ff733}\label{struct_f_matrix3x3_aed9f8750a911e88a81775adeb35ff733} 
+static \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} {\bfseries operator\texorpdfstring{$\ast$}{*}} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a, \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} b)
+\item 
+\Hypertarget{struct_f_matrix3x3_a4237c6245ab5f192b7da0849b5e0cc85}\label{struct_f_matrix3x3_a4237c6245ab5f192b7da0849b5e0cc85} 
+static \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} {\bfseries operator+} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a, \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} b)
+\item 
+\Hypertarget{struct_f_matrix3x3_a1a527b5cb9d7367766989c3ea0af532b}\label{struct_f_matrix3x3_a1a527b5cb9d7367766989c3ea0af532b} 
+static \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} {\bfseries operator-\/} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a, \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} b)
+\item 
+\Hypertarget{struct_f_matrix3x3_a31d0a802282ddf82599a16d2c29f723e}\label{struct_f_matrix3x3_a31d0a802282ddf82599a16d2c29f723e} 
+static implicit {\bfseries operator float\mbox{[},\mbox{]}} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a)
+\item 
+\Hypertarget{struct_f_matrix3x3_a5004ce8e778d4b4c52595b4f670aab54}\label{struct_f_matrix3x3_a5004ce8e778d4b4c52595b4f670aab54} 
+static implicit {\bfseries operator FMatrix3x3} (float\mbox{[},\mbox{]} a)
+\item 
+\Hypertarget{struct_f_matrix3x3_ae28459fcd77d3ab7e3b0e37dbb4ad915}\label{struct_f_matrix3x3_ae28459fcd77d3ab7e3b0e37dbb4ad915} 
+static bool {\bfseries operator==} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a, \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} b)
+\item 
+\Hypertarget{struct_f_matrix3x3_a82001a2fe6c28b52e387db7f6b929267}\label{struct_f_matrix3x3_a82001a2fe6c28b52e387db7f6b929267} 
+static bool {\bfseries operator!=} (\mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} a, \mbox{\hyperlink{struct_f_matrix3x3}{FMatrix3x3}} b)
+\item 
+\Hypertarget{struct_f_matrix3x3_ad1cff630e640e7f3d29445dabd973dd6}\label{struct_f_matrix3x3_ad1cff630e640e7f3d29445dabd973dd6} 
+static float\mbox{[},\mbox{]} {\bfseries Get\+Transpose} (float\mbox{[},\mbox{]} matrix)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_f_matrix3x3_a4a5ec2c718eb95a0d6a6bdb8193307cb}\label{struct_f_matrix3x3_a4a5ec2c718eb95a0d6a6bdb8193307cb} 
+int {\bfseries rank}
+\item 
+\Hypertarget{struct_f_matrix3x3_ab193660e392f63c0420554ef0915e690}\label{struct_f_matrix3x3_ab193660e392f63c0420554ef0915e690} 
+float\mbox{[},\mbox{]} {\bfseries arr}
+\item 
+\Hypertarget{struct_f_matrix3x3_a2e35036ed12b318f7b9bbd2771771e15}\label{struct_f_matrix3x3_a2e35036ed12b318f7b9bbd2771771e15} 
+float\mbox{[},\mbox{]} {\bfseries permutation\+Matrix}
+\item 
+\Hypertarget{struct_f_matrix3x3_adb93fdd291516899e5dbc6fa116c27a4}\label{struct_f_matrix3x3_adb93fdd291516899e5dbc6fa116c27a4} 
+float\mbox{[},\mbox{]} {\bfseries lower\+Triangular}
+\item 
+\Hypertarget{struct_f_matrix3x3_ab6fa6d164a9e0480c2268f13f1f23542}\label{struct_f_matrix3x3_ab6fa6d164a9e0480c2268f13f1f23542} 
+float\mbox{[},\mbox{]} {\bfseries upper\+Triangular}
+\item 
+\Hypertarget{struct_f_matrix3x3_a837a52142a3afc5db51644dd99220a53}\label{struct_f_matrix3x3_a837a52142a3afc5db51644dd99220a53} 
+float\mbox{[},\mbox{]} {\bfseries cholesky\+Lower\+Triangular}
+\item 
+\Hypertarget{struct_f_matrix3x3_acfdff656ee06f1c29f6369c4661c162c}\label{struct_f_matrix3x3_acfdff656ee06f1c29f6369c4661c162c} 
+float\mbox{[},\mbox{]} {\bfseries cholesky\+Upper\+Triangular}
+\item 
+\Hypertarget{struct_f_matrix3x3_afa761fe7631d9bc33adad557a0890f8b}\label{struct_f_matrix3x3_afa761fe7631d9bc33adad557a0890f8b} 
+float\mbox{[},\mbox{]} {\bfseries transpose}
+\item 
+\Hypertarget{struct_f_matrix3x3_a4064d306232507a9398732104c4c0763}\label{struct_f_matrix3x3_a4064d306232507a9398732104c4c0763} 
+float\mbox{[}$\,$\mbox{]} {\bfseries row0}
+\item 
+\Hypertarget{struct_f_matrix3x3_a4a3996d7a985cbe1fd62cdf3ba621012}\label{struct_f_matrix3x3_a4a3996d7a985cbe1fd62cdf3ba621012} 
+float\mbox{[}$\,$\mbox{]} {\bfseries row1}
+\item 
+\Hypertarget{struct_f_matrix3x3_a5b750875495090cf26d99bf105f258e5}\label{struct_f_matrix3x3_a5b750875495090cf26d99bf105f258e5} 
+float\mbox{[}$\,$\mbox{]} {\bfseries row2}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_f_matrix3x3_a9beaeded819faaf1b86a3ce1f6464cf6}\label{struct_f_matrix3x3_a9beaeded819faaf1b86a3ce1f6464cf6} 
+static readonly float\mbox{[},\mbox{]} {\bfseries identity} = new float\mbox{[}3, 3\mbox{]} \{ \{ 1, 0, 0 \}, \{ 0, 1, 0 \}, \{ 0, 0, 1 \} \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_f_matrix3x3_a5389036ac774c8747b8eea831f97c0c4}\label{struct_f_matrix3x3_a5389036ac774c8747b8eea831f97c0c4} 
+float {\bfseries this\mbox{[}int i1, int i2\mbox{]}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_f_matrix3x3_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_f_matrix3x3_aaf6163fd2bd2f92ce61b24bad9a4003b}\index{FMatrix3x3@{FMatrix3x3}!AddRows@{AddRows}}
+\index{AddRows@{AddRows}!FMatrix3x3@{FMatrix3x3}}
+\doxysubsubsection{\texorpdfstring{AddRows()}{AddRows()}}
+{\footnotesize\ttfamily \label{struct_f_matrix3x3_aaf6163fd2bd2f92ce61b24bad9a4003b} 
+void FMatrix3x3.\+Add\+Rows (\begin{DoxyParamCaption}\item[{float}]{matrix}{\mbox{[},\mbox{]}, }\item[{int}]{first\+Row}{, }\item[{int}]{second\+Row}{, }\item[{float}]{c}{}\end{DoxyParamCaption})}
+
+
+
+Performs arr\mbox{[}second\+Row\mbox{]} = arr\mbox{[}second\+Row\mbox{]} + arr\mbox{[}first\+Row\mbox{]} \texorpdfstring{$\ast$}{*} c;. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em matrix} & \\
+\hline
+{\em first\+Row} & \\
+\hline
+{\em second\+Row} & \\
+\hline
+{\em c} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Minoboros Math/FMatrix3x3.\+cs\end{DoxyCompactItemize}

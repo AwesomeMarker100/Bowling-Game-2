@@ -1,0 +1,55 @@
+\doxysection{KDTree\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_k_d_tree-1-g}{}\label{class_k_d_tree-1-g}\index{KDTree$<$ T $>$@{KDTree$<$ T $>$}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_k_d_tree-1-g_a3f605f1901ed64f8d0a9eb2d545f3aa3}\label{class_k_d_tree-1-g_a3f605f1901ed64f8d0a9eb2d545f3aa3} 
+{\bfseries KDTree} (T\mbox{[}$\,$\mbox{]} global\+Members, IList$<$ Vector3 $>$ positions)
+\item 
+\Hypertarget{class_k_d_tree-1-g_a0123b9fadf8bc4cd5c654bfc5e0400a9}\label{class_k_d_tree-1-g_a0123b9fadf8bc4cd5c654bfc5e0400a9} 
+{\bfseries KDTree} (T\mbox{[}$\,$\mbox{]} global\+Members, IList$<$ Vector3 $>$ positions, float\mbox{[}$\,$\mbox{]} split\+Values)
+\item 
+\Hypertarget{class_k_d_tree-1-g_ac4c3f76a6d7dff1e179c10c78e2ad17b}\label{class_k_d_tree-1-g_ac4c3f76a6d7dff1e179c10c78e2ad17b} 
+void {\bfseries Build} (int k)
+\item 
+\Hypertarget{class_k_d_tree-1-g_a30ae9fafecba00972386bd3276154923}\label{class_k_d_tree-1-g_a30ae9fafecba00972386bd3276154923} 
+T\mbox{[}$\,$\mbox{]} {\bfseries Get\+All\+Members} ()
+\item 
+\Hypertarget{class_k_d_tree-1-g_aa184bfa85cc9d3ecb7c221f591a34af1}\label{class_k_d_tree-1-g_aa184bfa85cc9d3ecb7c221f591a34af1} 
+IList$<$ Vector3 $>$ {\bfseries Get\+All\+Positions} ()
+\item 
+\Hypertarget{class_k_d_tree-1-g_acb8f46d852db9f0824fdf88eb175f7aa}\label{class_k_d_tree-1-g_acb8f46d852db9f0824fdf88eb175f7aa} 
+void {\bfseries Create\+Region} (int k, int level, KDRegion$<$ T $>$ last\+Region)
+\item 
+\Hypertarget{class_k_d_tree-1-g_afda562f9e033a6093c1a9a058817a05d}\label{class_k_d_tree-1-g_afda562f9e033a6093c1a9a058817a05d} 
+bool {\bfseries On\+Pos\+Side} (int level, Vector3 pos, float split\+Val)
+\item 
+\Hypertarget{class_k_d_tree-1-g_aad68b32d6fae0464f71758dbfb59b6cd}\label{class_k_d_tree-1-g_aad68b32d6fae0464f71758dbfb59b6cd} 
+KDRegion$<$ T $>$ {\bfseries Get\+Region} (Vector3 pos)
+\item 
+\Hypertarget{class_k_d_tree-1-g_a20c9b01b2d420387db4d6e836edb3511}\label{class_k_d_tree-1-g_a20c9b01b2d420387db4d6e836edb3511} 
+float {\bfseries Get\+Median} (int level, List$<$ T $>$ members)
+\item 
+\Hypertarget{class_k_d_tree-1-g_a2ba6eb423172b80b866da249556e2db7}\label{class_k_d_tree-1-g_a2ba6eb423172b80b866da249556e2db7} 
+List$<$ KDRegion$<$ T $>$ $>$ {\bfseries Get\+All\+Regions} ()
+\item 
+\Hypertarget{class_k_d_tree-1-g_af04d089820a36a69b1958616d21133c2}\label{class_k_d_tree-1-g_af04d089820a36a69b1958616d21133c2} 
+KDRegion$<$ T $>$\mbox{[}$\,$\mbox{]} {\bfseries Get\+End\+Regions} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_k_d_tree-1-g_aebca698ddb59913f8aae1a36f71c80b2}\label{class_k_d_tree-1-g_aebca698ddb59913f8aae1a36f71c80b2} 
+int {\bfseries max\+Items\+In\+Region} = 3
+\item 
+\Hypertarget{class_k_d_tree-1-g_a74ed7c148e336b1df948de2f25f78906}\label{class_k_d_tree-1-g_a74ed7c148e336b1df948de2f25f78906} 
+T\mbox{[}$\,$\mbox{]} {\bfseries global\+Members}
+\item 
+\Hypertarget{class_k_d_tree-1-g_af1621f429ce1f5e68e2715f10c9ca0d6}\label{class_k_d_tree-1-g_af1621f429ce1f5e68e2715f10c9ca0d6} 
+List$<$ KDRegion$<$ T $>$ $>$ {\bfseries regions} = new List$<$KDRegion$<$T$>$$>$()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/KDTree.\+cs\end{DoxyCompactItemize}

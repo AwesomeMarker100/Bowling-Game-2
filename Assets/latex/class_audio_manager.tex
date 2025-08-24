@@ -1,0 +1,80 @@
+\doxysection{Audio\+Manager Class Reference}
+\hypertarget{class_audio_manager}{}\label{class_audio_manager}\index{AudioManager@{AudioManager}}
+Inheritance diagram for Audio\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_audio_manager}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_manager_aeb72488fd09696d0f523c4dac388c996}\label{class_audio_manager_aeb72488fd09696d0f523c4dac388c996} 
+enum {\bfseries Spatial\+Type} \{ {\bfseries Close}
+, {\bfseries Medium}
+, {\bfseries Far}
+, {\bfseries Alabama}
+ \}
+\item 
+\Hypertarget{class_audio_manager_a9a33c218641856532f2664d28f6b83ca}\label{class_audio_manager_a9a33c218641856532f2664d28f6b83ca} 
+enum {\bfseries Spatial\+Direction} \{ \newline
+{\bfseries Left}
+, {\bfseries Right}
+, {\bfseries Forward}
+, {\bfseries Back}
+, \newline
+{\bfseries Down}
+, {\bfseries Down\+Right}
+, {\bfseries Down\+Left}
+, {\bfseries Down\+Forward}
+, \newline
+{\bfseries Down\+Back}
+, {\bfseries Up}
+, {\bfseries Up\+Right}
+, {\bfseries Up\+Left}
+, \newline
+{\bfseries Up\+Forward}
+, {\bfseries Up\+Back}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_audio_manager_a77e86a55e78b9926eb7bdf60322a42a0}\label{class_audio_manager_a77e86a55e78b9926eb7bdf60322a42a0} 
+static Audio\+Source {\bfseries Create\+Audio\+Source} ()
+\item 
+\Hypertarget{class_audio_manager_a272691c35180c17455f7be94380fc641}\label{class_audio_manager_a272691c35180c17455f7be94380fc641} 
+static Audio\+Source {\bfseries Play\+Sound} (Audio\+Clip clip, Vector3 pos)
+\item 
+\Hypertarget{class_audio_manager_adb860ff4de1beb768d50b282a66f8e93}\label{class_audio_manager_adb860ff4de1beb768d50b282a66f8e93} 
+static Audio\+Source {\bfseries Play\+Sound} (Audio\+Clip clip, Spatial\+Type spatial\+Type, Spatial\+Direction spatial\+Direction)
+\item 
+\Hypertarget{class_audio_manager_ad590f6f94ae80eea500835378fb549b6}\label{class_audio_manager_ad590f6f94ae80eea500835378fb549b6} 
+static void {\bfseries Play\+Sound} (Audio\+Source source, Audio\+Clip clip)
+\item 
+\Hypertarget{class_audio_manager_ab29933c2e96a3ae651f746ea29778474}\label{class_audio_manager_ab29933c2e96a3ae651f746ea29778474} 
+static void {\bfseries Move\+Sound} (Audio\+Source source, Vector3 pos)
+\item 
+\Hypertarget{class_audio_manager_a10c83dff5a485ea44d92d9bc0c42b013}\label{class_audio_manager_a10c83dff5a485ea44d92d9bc0c42b013} 
+static Vector3 {\bfseries Get\+Random\+Spatial\+Pos} (float min\+Distance, float max\+Distance)
+\item 
+\Hypertarget{class_audio_manager_a5a1f0f9ca0aba9441e108493d785a705}\label{class_audio_manager_a5a1f0f9ca0aba9441e108493d785a705} 
+static Vector3 {\bfseries Get\+Spatial\+Pos} (Spatial\+Direction spatial\+Direction, Spatial\+Type spatial\+Type)
+\item 
+\Hypertarget{class_audio_manager_a50c6153b7c948873fd2f25d371de2e90}\label{class_audio_manager_a50c6153b7c948873fd2f25d371de2e90} 
+static float {\bfseries Get\+Distance} (Spatial\+Type spatial\+Type)
+\item 
+\Hypertarget{class_audio_manager_aa96602160a07d77542ad48f29cb9eb90}\label{class_audio_manager_aa96602160a07d77542ad48f29cb9eb90} 
+static void {\bfseries Stop\+Sound} (Audio\+Source source)
+\item 
+\Hypertarget{class_audio_manager_af3cfa65100e04f63c9ed1781ea90f5ef}\label{class_audio_manager_af3cfa65100e04f63c9ed1781ea90f5ef} 
+static void {\bfseries Remove\+Sound} (Audio\+Source source)
+\item 
+\Hypertarget{class_audio_manager_a9ceadd4334c0c838cc9136580ab1a09d}\label{class_audio_manager_a9ceadd4334c0c838cc9136580ab1a09d} 
+static void {\bfseries Stop\+All\+Sounds} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scripts/\+VRL Framework/\+Achilles Audio/Audio\+Manager.\+cs\end{DoxyCompactItemize}
