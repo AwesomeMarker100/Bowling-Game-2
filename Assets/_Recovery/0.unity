@@ -301,7 +301,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2189575435154088368, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2052777266}
   m_SourcePrefab: {fileID: 100100000, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
 --- !u!114 &653695947 stripped
 MonoBehaviour:
@@ -445,7 +448,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2189575435154088370, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
   m_PrefabInstance: {fileID: 653695945}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2052777264}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 318b074b513ac804d9738ac890575598, type: 3}
@@ -473,6 +476,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e46e800ba682cb4e9bd6fb5c25942b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2052777264 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2189575435154088368, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
+  m_PrefabInstance: {fileID: 653695945}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2052777266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052777264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85c6c9a73de6004ea02b496be44d790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandCalibrator
+  hand: {fileID: 1011007480}
+  startCalibration:
+    controls: 070000000b000000
+  moveController:
+    controls: 00000000
+  inCalibrationMode: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

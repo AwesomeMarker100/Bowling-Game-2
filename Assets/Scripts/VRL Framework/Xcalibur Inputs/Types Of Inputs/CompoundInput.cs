@@ -14,12 +14,15 @@ public class CompoundInput
     private ControllerInputEvent compoundInputEvent = new ControllerInputEvent();
     private ControllerInputInfo controllerInputInfo;
 
+    private float acceptableDelay = 0.5f;
+
     private OculusInputManager inputManager;
 
     private HandTracker handTracker;
+    bool[] activeControls;
 
     
-    public CompoundInput(OculusInputManager inputManager, ControllerInput input)
+    public CompoundInput(OculusInputManager inputManager, ControllerInput input, float acceptableDelay)
     {
         this.inputManager = inputManager;
         SetInputs(input);
@@ -40,24 +43,54 @@ public class CompoundInput
         }
 
         this.controls = input.controls;
+        activeControls = new bool[controls.Length];
 
         if (sameHand) handTracker = VRLGameObjectManager.instance.GetHandTracker(firstControlHandType); //if all of our inputs come from one hand, then set this handTracker to that hand
         
 
     }
 
+    public bool AllInputsActive()
+    {
+        for(int i = 0; activeControls.Length > i; i++)
+        {
+            if (!activeControls[i]) return false;
+        }
 
-    public void CheckInputs()
+        return true;
+    }
+
+    public void ResetActiveControls()
+    {
+        for (int i = 0; activeControls.Length > i; i++)
+        {
+            activeControls[i] = false;
+        }
+    }
+
+
+    public async Awaitable CheckInputs()
     {
 
-        foreach (Control control in controls)
-        {
-            //Every control in this compound input must be active for us to call the event
-            if (!inputManager.IsActive(control)) return;
-            
+        float curTime = 0; 
+        while (!AllInputsActive() && curTime < acceptableDelay) {
 
+            for (int i = 0; controls.Length > i; i++)
+            {
+                if (activeControls[i]) continue;
+                if (inputManager.IsActive(controls[i])) activeControls[i] = true;
+
+            }
+
+            await Awaitable.FixedUpdateAsync();
+            curTime += Time.fixedDeltaTime;
         }
-        compoundInputEvent.Invoke(new ControllerInputInfo("CompoundInput", handTracker, null));
+
+        if (AllInputsActive()) {
+            compoundInputEvent.Invoke(new ControllerInputInfo("CompoundInput", handTracker, null));
+        }
+
+        ResetActiveControls();
         
     }
 

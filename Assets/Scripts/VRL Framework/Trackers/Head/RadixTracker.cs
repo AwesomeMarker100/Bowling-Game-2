@@ -24,6 +24,8 @@ public class RadixTracker : MonoBehaviour
     [Tooltip("How far is the head from the headset")] [SerializeField] private float headBackOffsetFactor = 0.05f;
     [SerializeField] public Vector3 rotationOffset = new Vector3();
 
+    [SerializeField] public bool freeze = false;
+
     //IN-GAME
     [HideInInspector] public Vector3 headPosition;
     [HideInInspector] public Quaternion headRotation;
@@ -43,11 +45,21 @@ public class RadixTracker : MonoBehaviour
         {
             headset = VRLDeviceManager.GetHeadDevice();
 
-            //TRACK HEAD ROTATION
-            if (trackRotation) SetHeadRotation();
+            if (headset.name is not null)
+            {
 
-            //TRACK HEAD POSITION
-            if (trackMovement) SetHeadPosition();
+                if (!freeze)
+                {
+                    //TRACK HEAD ROTATION
+                    if (trackRotation) SetHeadRotation();
+
+                    //TRACK HEAD POSITION
+                    if (trackMovement) SetHeadPosition();
+                } else
+                {
+                    
+                }
+            }
         }
         
     }
@@ -77,8 +89,7 @@ public class RadixTracker : MonoBehaviour
 
 
         headRotation = GetRotation();
-
-        headCam.transform.localRotation = Quaternion.Slerp(headCam.transform.localRotation, Quaternion.Euler(rotationOffset) * headRotation, Time.fixedDeltaTime * rotationSpeed);
+        headCam.transform.localRotation = Quaternion.Slerp(headCam.transform.localRotation, headRotation * Quaternion.Euler(rotationOffset), Time.fixedDeltaTime * rotationSpeed);
 
     }
     #endregion

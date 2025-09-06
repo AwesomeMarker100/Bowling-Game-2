@@ -32,9 +32,11 @@ public class HandTracker : MonoBehaviour
 
 
     [Header("Position Scale Values")]
-    [SerializeField] private float positionXScale = 20f;
-    [SerializeField] private float positionYScale = 15f;
-    [SerializeField] private float positionZScale = 20f;
+    [SerializeField][Min(0)] private float positionXScale = 20f;
+    [SerializeField][Min(0)] private float positionYScale = 15f;
+    [SerializeField][Min(0)] private float positionZScale = 20f;
+
+    [SerializeField] private Vector3 positionOffset;
 
     [Header("Joints")]
     [SerializeField] private Transform wristJoint;
@@ -42,6 +44,8 @@ public class HandTracker : MonoBehaviour
     /// I'm here
     /// </summary>
     private Vector3 wristJointDiffVec;
+
+
 
 
     [Header("Rotation Offsets")]
@@ -63,6 +67,11 @@ public class HandTracker : MonoBehaviour
 
     private ValkPhys physicsHandler;
 
+    private bool savedInBetween = false;
+    private Vector3 inBetween;
+    private Quaternion originalRotation;
+    private Vector3 originalPosition;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -76,25 +85,27 @@ public class HandTracker : MonoBehaviour
     {
         handTrackingDevice = handTrackingDevice = handType == HandType.Left ? VRLDeviceManager.GetLeftHandController() : VRLDeviceManager.GetRightHandController();
 
-
         if (handTrackingDevice.name is not null)
         {
 
-            print("not null");
+            if (!radixTracker.freeze)
+            {
+                UpdateRealPosition();
+                UpdateRealVelocity();
 
-            UpdateRealPosiiton();
-            UpdateRealVelocity();
+                UpdateRealAngularVelocity();
+                UpdateRealRotation();
 
-            UpdateRealAngularVelocity();
-            UpdateRealRotation();
+                UpdateTriggerPressed();
+                UpdateGripButtonPressed();
 
-            UpdateTrigerPressed();
-            UpdateGripButtonPressed();
+                if (followPosition) SetGameHandPosition();
+                if (followRotation) SetGameHandRotation();
 
-            if (followPosition) SetGameHandPosition();
-            if (followRotation) SetGameHandRotation();
+            } 
 
-        }
+        } 
+
     }
 
 
@@ -102,49 +113,25 @@ public class HandTracker : MonoBehaviour
     #region
     private void SetGameHandPosition()
     {
-        print(trueHandPosition);
-
         //this vector gets the position difference from the headset and controller in real life to accurately display it in game
         Vector3 inBetween = trueHandPosition - radixTracker.GetPosition();
-
         inBetween.x *= positionXScale;
-        inBetween.y *= -positionYScale;
+        inBetween.y *= positionYScale;
         inBetween.z *= positionZScale;
 
         gameHandPosition = radixTracker.headCam.transform.localPosition + inBetween;
-       
-
-        if (useRigidbody)
-        {
-
-
-            Vector3 trueNextPos = radixTracker.transform.TransformPoint(gameHandPosition);
-            rigidbody.SetPosition(trueNextPos);
+        transform.localPosition = gameHandPosition;
         
-        }
-        else
-        {
-            transform.localPosition = gameHandPosition;
-        }
 
     }
 
     private void SetGameHandRotation()
     {
-        handRotation *= Quaternion.AngleAxis(leftRotationOffset, Vector3.left) * Quaternion.AngleAxis(upRotationOffset, Vector3.up) * Quaternion.AngleAxis(forwardRotationOffset, Vector3.forward);
+        handTrackingDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out handRotation);
+        Quaternion rotationOffset = Quaternion.AngleAxis(leftRotationOffset, Vector3.left) * Quaternion.AngleAxis(upRotationOffset, Vector3.up) * Quaternion.AngleAxis(forwardRotationOffset, Vector3.forward);
 
-        if (useRigidbody)
-        {
+        transform.localRotation = handRotation * rotationOffset;
 
-            rigidbody.SetRotation(transform.parent.rotation * handRotation, true);
-
-        } else
-        {
-
-            transform.localRotation = handRotation;
-
-        }
-       
     }
     #endregion
 
@@ -164,9 +151,8 @@ public class HandTracker : MonoBehaviour
 
     //SETTERS
     #region
-    private void UpdateRealPosiiton()
+    private void UpdateRealPosition()
     {
-
         handTrackingDevice.TryGetFeatureValue(CommonUsages.devicePosition, out trueHandPosition);
 
     }
@@ -174,7 +160,11 @@ public class HandTracker : MonoBehaviour
     private void UpdateRealRotation()
     {
 
-        handTrackingDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out handRotation);
+        if(!handTrackingDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out handRotation))
+        {
+            print("Could not retrieve device rotation");
+            handRotation = Quaternion.identity;
+        }
 
     }
 
@@ -199,7 +189,7 @@ public class HandTracker : MonoBehaviour
 
     }
 
-    private void UpdateTrigerPressed()
+    private void UpdateTriggerPressed()
     {
 
         handTrackingDevice.TryGetFeatureValue(CommonUsages.triggerButton, out isTriggerButtonPressed);

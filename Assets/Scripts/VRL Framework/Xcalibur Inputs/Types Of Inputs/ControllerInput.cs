@@ -49,6 +49,16 @@ public class ControllerInput
 
     public Control[] controls = new Control[1];
 
+    public ControllerInput()
+    {
+
+    }
+
+    public ControllerInput(Control[] controls)
+    {
+        this.controls = controls;
+    }
+
     public static HandType GetHandType(Control control)
     {
 

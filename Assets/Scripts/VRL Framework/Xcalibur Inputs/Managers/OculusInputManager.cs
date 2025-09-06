@@ -15,6 +15,8 @@ public class OculusInputManager : MonoBehaviour
     [SerializeField] private float triggerPressAmount = 0.98f; 
     [SerializeField] private float gripPressAmount = 0.98f;
 
+    [SerializeField] private float defaultAcceptableDelay = 0.5f;
+
     //CONTROLLER INPUT EVENTS -- EACH INPUT ON THE CONTROLLER CORRESPONDS TO ITS OWN EVENT THAT CAN TRIGGER ACTIONS TO HAPPEN IN-GAME
     #region
     private static ControllerInputEvent leftPrimaryButtonPress = new ControllerInputEvent();
@@ -236,9 +238,9 @@ public class OculusInputManager : MonoBehaviour
     }
 
     private static ControllerInputEvent GetCompoundInput(ControllerInput input)
-    {
+    { 
         //create a compound input instance, add it to our list
-        CompoundInput compoundInput = new CompoundInput(FindObjectOfType<OculusInputManager>(), input);
+        CompoundInput compoundInput = new CompoundInput(FindFirstObjectByType<OculusInputManager>(), input, 0.5f);
         compoundInputs.Add(compoundInput);
 
 
@@ -682,12 +684,10 @@ public class OculusInputManager : MonoBehaviour
     #region
     private void CheckCompoundInputs()
     {
-
         //iterate over 
         foreach (CompoundInput compoundInput in compoundInputs)
         {
             compoundInput.CheckInputs();
-
         }
 
     }
