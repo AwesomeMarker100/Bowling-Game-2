@@ -5,7 +5,7 @@ using UnityEngine;
 public class LaserTeleportController : MovementController
 {
 
-    [SerializeField] private LaserInteractor laserPointer;
+    [SerializeField] private LinearLaserInteractor laserPointer;
 
 
     public override void Move(ControllerInputInfo inputInfo)
@@ -13,10 +13,10 @@ public class LaserTeleportController : MovementController
 
         base.Move(inputInfo);
 
-        if (laserPointer.GetEndpointPosition() != Vector3.zero)
+      /*  if (laserPointer.GetEndpointPosition() != Vector3.zero)
         {
             movementEngine.SetPosition(laserPointer.GetEndpointPosition());
-        }
+        }*/
     }
 
 }

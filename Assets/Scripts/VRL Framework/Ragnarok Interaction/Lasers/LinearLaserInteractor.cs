@@ -1,65 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LinearLaserInteractor : LaserInteractor
+[ExecuteInEditMode]
+public class LinearLaserInteractor : MonoBehaviour
 {
-    [Header("Line Settings")]
-    public Axis forwardAxis = Axis.Z;
-    [SerializeField] private bool flipDirection = false;
-    [SerializeField] private int linearSegments = 100;
-
-
-    private Vector3 forwardVec;
-
-    private void Awake()
+    [SerializeField] Vector3 laserStartOffset = Vector3.zero;
+    [SerializeField] Vector3 direction = Vector3.forward;
+    [SerializeField] float length = 2;
+    [SerializeField] LineRenderer lineRenderer; 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-        this.laserType = LaserType.Linear;
-
-        if(forwardAxis == Axis.X)
+        if(lineRenderer == null)
         {
-
-            forwardVec = Vector3.left;
-
-        } else if(forwardAxis == Axis.Y)
-        {
-
-            forwardVec = Vector3.up;
-
-        } else
-        {
-
-            forwardVec = Vector3.forward;
-
+            lineRenderer = GetComponent<LineRenderer>();
         }
 
-        if (flipDirection) forwardVec *= -1;
+        lineRenderer.useWorldSpace = false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        DrawLine();
+    }
+
+
+    private void DrawLine()
+    {
+        //<x, y, z> = start + t * direction
+        lineRenderer.SetPosition(0, laserStartOffset);
+        lineRenderer.SetPosition(1, laserStartOffset + length * direction);
 
     }
 
-    public override void CreateLaser()
-    {
-        if (maximumDistance <= 0) return;
-
-        laser.positionCount = linearSegments + 1;
-        laser.SetPosition(0, Vector3.zero);
-
-        float interval = maximumDistance / linearSegments;
-        int index = 1;
-
-        for (int i = 1; i <= linearSegments; i++)
-        {
-            Vector3 lastPosition = laser.GetPosition(i - 1);
-            Vector3 rawPosition = lastPosition + (forwardVec * interval);
-
-            laser.SetPosition(i, rawPosition);
-
-            if (doCollisions && DidCollide(i, interval)) break;
-            index++;
-        }
-
-        laser.positionCount = index;
-
-        ballPoint.position = transform.TransformPoint(laser.GetPosition(laser.positionCount - 1));
-    }
 }

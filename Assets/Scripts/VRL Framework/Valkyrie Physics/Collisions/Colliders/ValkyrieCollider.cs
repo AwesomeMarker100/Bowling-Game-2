@@ -566,7 +566,7 @@ public class ValkyrieCollider : MonoBehaviour
     public virtual void CheckForCollisions()
     {
 
-        ValkPhys.SetNewRegion(this);
+        //ValkPhys2.SetNewRegion(this);
 
         // List<ValkyrieCollider> neighbors = region.GetMembers();
         ValkyrieCollider[] neighbors = FindObjectsOfType<ValkyrieCollider>();
@@ -697,7 +697,6 @@ public class ValkyrieCollider : MonoBehaviour
     #region
     private void OnDrawGizmosSelected() //if object selected
     {
-        
         if (drawInEditor) DrawGizmos();
 
     }

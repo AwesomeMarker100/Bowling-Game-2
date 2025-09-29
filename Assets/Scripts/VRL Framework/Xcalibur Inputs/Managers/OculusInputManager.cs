@@ -6,6 +6,9 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using static ControllerInput;
 
+//STOP MAKING NEW EVENTS EVERY MS, INCREDIBLY COSTLY. CHECK TO SEE IF EVT ALREADY EXISTS AND UPDATE NECESSARY VALUES
+
+
 [RequireComponent(typeof(VRLGameObjectManager))]
 public class OculusInputManager : MonoBehaviour
 {
@@ -415,14 +418,14 @@ public class OculusInputManager : MonoBehaviour
             if (activeControls.Contains(Control.LeftJoystickUp))
             {
 
-                if (IsActive(Control.LeftJoystickUp)) leftJoystickUp.Invoke(new ControllerInputInfo("LeftJoystickUp", leftHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.LeftJoystickUp)) leftJoystickUp.Invoke(new ControllerInputInfo("LeftJoystickUp", leftHandTracker, new ControllerInputHoldTime(), Mathf.Abs(leftHandTracker.GetJoystickVelocity().y)));
 
             }
 
             if (activeControls.Contains(Control.LeftJoystickDown))
             {
 
-                if (IsActive(Control.LeftJoystickDown)) leftJoystickDown.Invoke(new ControllerInputInfo("LeftJoystickDown", leftHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.LeftJoystickDown)) leftJoystickDown.Invoke(new ControllerInputInfo("LeftJoystickDown", leftHandTracker, new ControllerInputHoldTime(), Mathf.Abs(leftHandTracker.GetJoystickVelocity().y)));
 
 
             }
@@ -434,7 +437,7 @@ public class OculusInputManager : MonoBehaviour
             if (activeControls.Contains(Control.RightJoystickUp))
             {
 
-                if (IsActive(Control.RightJoystickUp)) rightJoystickUp.Invoke(new ControllerInputInfo("RightJoystickUp", rightHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.RightJoystickUp)) rightJoystickUp.Invoke(new ControllerInputInfo("RightJoystickUp", rightHandTracker, new ControllerInputHoldTime(), Mathf.Abs(rightHandTracker.GetJoystickVelocity().y)));
 
 
             }
@@ -442,7 +445,7 @@ public class OculusInputManager : MonoBehaviour
             if (activeControls.Contains(Control.RightJoystickDown))
             {
 
-                if (IsActive(Control.RightJoystickDown)) rightJoystickDown.Invoke(new ControllerInputInfo("RightJoystickDown", rightHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.RightJoystickDown)) rightJoystickDown.Invoke(new ControllerInputInfo("RightJoystickDown", rightHandTracker, new ControllerInputHoldTime(), Mathf.Abs(rightHandTracker.GetJoystickVelocity().y)));
 
             }
 
@@ -456,14 +459,14 @@ public class OculusInputManager : MonoBehaviour
         {
             if (activeControls.Contains(Control.LeftJoystickLeft)){
 
-                if (IsActive(Control.LeftJoystickLeft)) leftJoystickLeft.Invoke(new ControllerInputInfo("LeftJoystickLeft", leftHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.LeftJoystickLeft)) leftJoystickLeft.Invoke(new ControllerInputInfo("LeftJoystickLeft", leftHandTracker, new ControllerInputHoldTime(), Mathf.Abs(leftHandTracker.GetJoystickVelocity().x)));
 
 
             }
 
             if (activeControls.Contains(Control.LeftJoystickRight)) {
 
-                if (IsActive(Control.LeftJoystickRight)) leftJoystickRight.Invoke(new ControllerInputInfo("LeftJoystickRight", leftHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.LeftJoystickRight)) leftJoystickRight.Invoke(new ControllerInputInfo("LeftJoystickRight", leftHandTracker, new ControllerInputHoldTime(), Mathf.Abs(leftHandTracker.GetJoystickVelocity().x)));
 
             }
 
@@ -474,7 +477,7 @@ public class OculusInputManager : MonoBehaviour
             if (activeControls.Contains(Control.RightJoystickLeft))
             {
 
-                if (IsActive(Control.RightJoystickLeft)) rightJoystickLeft.Invoke(new ControllerInputInfo("RightJoystickLeft", rightHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.RightJoystickLeft)) rightJoystickLeft.Invoke(new ControllerInputInfo("RightJoystickLeft", rightHandTracker, new ControllerInputHoldTime(), Mathf.Abs(rightHandTracker.GetJoystickVelocity().x)));
 
 
             }
@@ -483,7 +486,7 @@ public class OculusInputManager : MonoBehaviour
             {
 
                 
-                if (IsActive(Control.RightJoystickRight)) rightJoystickRight.Invoke(new ControllerInputInfo("RightJoystickRight", rightHandTracker, new ControllerInputHoldTime()));
+                if (IsActive(Control.RightJoystickRight)) rightJoystickRight.Invoke(new ControllerInputInfo("RightJoystickRight", rightHandTracker, new ControllerInputHoldTime(), Mathf.Abs(rightHandTracker.GetJoystickVelocity().x)));
 
 
             }

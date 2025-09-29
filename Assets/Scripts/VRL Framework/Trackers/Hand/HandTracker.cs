@@ -65,7 +65,7 @@ public class HandTracker : MonoBehaviour
     private new ValkyrieCollider collider;
     private new ValkyrieRigidbody rigidbody;
 
-    private ValkPhys physicsHandler;
+    private VPhys physicsHandler;
 
     private bool savedInBetween = false;
     private Vector3 inBetween;

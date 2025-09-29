@@ -1,45 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ParabolicLaserInteractor : LaserInteractor
+public class ParabolicLaserInteractor : MonoBehaviour
 {
-    [SerializeField] private float parabolaScale = 0.05f;
+    [SerializeField][Min(3)] float numVertices = 3f;
 
-    [SerializeField] private Vector2 vertex = Vector2.zero;
-    private float aValue = 2f;
+    [SerializeField] Vector3 laserStartOffset = Vector3.zero;
+    [SerializeField] Vector3 vertexOffset = Vector3.forward + Vector3.up;
 
-    private void Awake()
+    [SerializeField] LineRenderer lineRenderer;
+
+    private float a;
+
+    private void Start()
     {
+        if(laserStartOffset.x == vertexOffset.x || laserStartOffset.y == vertexOffset.y)
+        {
+            return;
+        }
+        a = laserStartOffset.y - vertexOffset.y / Mathf.Pow((laserStartOffset.x - vertexOffset.x), 2);
 
-        this.laserType = LaserType.Parabolic;
-
+        if (lineRenderer == null) lineRenderer = GetComponent<LineRenderer>();
     }
 
-    //USES TRANSFORM.POSITION AS 0, 0 ORIGIN
-    public override void CreateLaser()
+    private void Update()
     {
-        //y = ax^2 + bx + c
-        laser.positionCount = (int)(maximumDistance / parabolaScale) + 1;
+        
+    }
 
-        int i = 0;
-        float x = 0f;
+    private void DrawParabola()
+    { 
+        if (lineRenderer == null) return;
 
-        //if they set the vertex, calculate the a value for the equation
-        aValue = -vertex.y/ Mathf.Pow(-vertex.x, 2); 
-
-        while (x <= maximumDistance)
+        float t = 0;
+        while (t < numVertices)
         {
-            float y = aValue * Mathf.Pow(x - vertex.x, 2) + vertex.y; 
-            Vector3 finalPos = transform.rotation * Quaternion.Euler(rotationOffset) * new Vector3(x, y, 0f);
-
-            laser.SetPosition(i, transform.position + finalPos);
-           // if (DidCollide(transform.position + finalPos, i)) break;
-
-            i++;
-            x += parabolaScale;
+            
         }
-
-        laser.positionCount = i;
     }
 }

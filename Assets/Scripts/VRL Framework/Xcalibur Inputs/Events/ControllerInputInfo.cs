@@ -5,20 +5,36 @@ using UnityEngine;
 public class ControllerInputInfo 
 {
     public HandTracker handTracker;
-    public string inputName = "";
+    private string inputName = "";
 
     public ControllerInputHoldTime holdTime;
 
     //useful if grip or trigger
-    public float amountOfPress;
+    private float amountOfPress;
 
     //constructor
-    public ControllerInputInfo(string inputName, HandTracker handTracker, ControllerInputHoldTime ciht)
+    public ControllerInputInfo(string inputName, HandTracker handTracker, ControllerInputHoldTime holdtime)
     {
         this.inputName = inputName;
         this.handTracker = handTracker;
-        holdTime = ciht;
-
+        this.holdTime = holdtime;
+        this.amountOfPress = 1;
     }
+
+    public ControllerInputInfo(string inputName, HandTracker handTracker, ControllerInputHoldTime holdTime, float amountOfPress)
+    {
+
+        this.inputName=inputName;
+        this.handTracker = handTracker;
+        this.holdTime = holdTime;
+        this.amountOfPress = amountOfPress;
+    }
+
+    
+    public float GetAmountOfPress()
+    {
+        return amountOfPress;
+    }
+
 
 }
