@@ -29,30 +29,56 @@ public class VPhys : MonoBehaviour
         StopAtFirstHit, NoStop
     }
 
-    public struct Plane
+    public struct Edge
     {
-        public Vector3 pt;
+        public Vector3 pt1;
+        public Vector3 pt2;
+
+        public Edge(Vector3 pt1, Vector3 pt2)
+        {
+            this.pt1 = pt1;
+            this.pt2 = pt2;
+        }
+    }
+
+    public struct BoundedPlane
+    {
+        public Vector3 origin;
         public Vector3 normal;
 
-        public Vector3 minBounds;
-        public Vector3 maxBounds; 
+        private Vector3 basisVector1;
+        private Vector3 basisVector2;
 
-        public Plane(Vector3 pt, Vector3 normal)
+        private float bv1Length; //basic vector 1 length
+        private float bv2Length; //basis vector 2 length
+
+        public BoundedPlane(Vector3 a, Vector3 b, Vector3 c) //also used to establish bounds, obviously
         {
-            this.pt = pt;
-            this.normal = normal;
+            origin = a;
+            basisVector1 = b - a;
+            basisVector2 = c - a;
 
-            this.minBounds = Vector3.negativeInfinity;
-            this.maxBounds = Vector3.positiveInfinity;
+            bv1Length = basisVector1.magnitude;
+            bv2Length = basisVector2.magnitude;
+
+            normal = Vector3.Cross(b - a, c - a);
+
+        }
+        /***
+         * Checks if p is inside bounded plane rectangle
+         * 
+         */
+        public bool IsOnPlane(Vector3 p)
+        {
+            if (!MinoMath.FApproximately(Vector3.Dot(normal, p - origin), 0, 0.0001f)) return false;
+
+            Vector3 rebasedP = p - origin;
+            float compBV1Mag = Vector3.Dot(basisVector1, rebasedP) / bv1Length;
+            float compBV2Mag = Vector3.Dot(basisVector2, rebasedP) / bv2Length;
+            //print("here: " + basisVector1 + " " + basisVector2 + " " + compBV1Mag + " " + compBV2Mag);
+            return MinoMath.Within(compBV1Mag, 0, bv1Length) && MinoMath.Within(compBV2Mag, 0, bv2Length);
         }
 
-        public Plane(Vector3 pt, Vector3 normal, Vector3 minBounds, Vector3 maxBounds)
-        {
-            this.pt = pt;
-            this.normal = normal;
-            this.minBounds = minBounds;
-            this.maxBounds = maxBounds;
-        }
     }
     #endregion
 
@@ -129,27 +155,14 @@ public class VPhys : MonoBehaviour
     
     }   
 
-    public bool DidIntersectPlane(VRay ray, Plane plane)
+    public bool DidIntersectPlane(VRay ray, BoundedPlane plane)
     {
         if (Vector3.Dot(plane.normal, ray.dir) == 0) return false;
-        Vector3 checkVec = ray.start + (Vector3.Dot(plane.normal, plane.pt - ray.start) / Vector3.Dot(plane.normal, ray.dir)) * ray.dir;
+        Vector3 pointOfIntersection = ray.start + (Vector3.Dot(plane.normal, plane.origin - ray.start) / Vector3.Dot(plane.normal, ray.dir)) * ray.dir;
 
-        return WithinBounds(checkVec, plane.minBounds, plane.maxBounds);
+        return plane.IsOnPlane(pointOfIntersection);
     }
 
-    public bool WithinBounds(Vector3 a, Vector3 minBounds, Vector3 maxBounds)
-    {
-        if(a.x >= minBounds.x && a.y >= minBounds.y && a.z >= minBounds.z && a.x <= maxBounds.x && a.y <= maxBounds.y && a.z <= maxBounds.z)
-        {
-            print("Min X: " + minBounds.x + ", " + "Max X: " + maxBounds.x + "Actual: " + a.x);
-            print("Min Y: " + minBounds.y + ", " + "Max Y: " + maxBounds.y + "Actual: " + a.y);
-
-            print("Min Z: " + minBounds.z + ", " + "Max Z: " + maxBounds.z + "Actual: " + a.z);
-
-
-        }
-        return a.x >= minBounds.x && a.y >= minBounds.y && a.z >= minBounds.z && a.x <= maxBounds.x && a.y <= maxBounds.y && a.z <= maxBounds.z;
-    }
 
     public bool DidIntersectBox()
     {

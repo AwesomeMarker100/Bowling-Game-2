@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using Plane = VPhys.Plane;
+using BoundedPlane = VPhys.BoundedPlane;
+using Edge = VPhys.Edge;
 
 [ExecuteInEditMode]
 public class ValkyrieBoxCollider : ValkyrieCollider
@@ -28,12 +29,12 @@ public class ValkyrieBoxCollider : ValkyrieCollider
     [HideInInspector] public Vector3 bottomLeftBack;
     [HideInInspector] public Vector3 bottomRightBack;
 
-    public Plane topPlane;
-    public Plane bottomPlane;
-    public Plane rightPlane;
-    public Plane leftPlane;
-    public Plane backPlane;
-    public Plane frontPlane;
+    public BoundedPlane topPlane;
+    public BoundedPlane bottomPlane;
+    public BoundedPlane rightPlane;
+    public BoundedPlane leftPlane;
+    public BoundedPlane backPlane;
+    public BoundedPlane frontPlane;
 
 
     private void Start()
@@ -42,12 +43,6 @@ public class ValkyrieBoxCollider : ValkyrieCollider
         globalCenter = transform.TransformPoint(localCenter);
 
 
-        topPlane = new Plane();
-        bottomPlane = new Plane();
-        leftPlane = new Plane();
-        backPlane = new Plane();
-        frontPlane = new Plane();
-        rightPlane = new Plane();
     }
 
 
@@ -89,50 +84,27 @@ public class ValkyrieBoxCollider : ValkyrieCollider
         bottomRightBack = transform.rotation * (new Vector3(xMax, yMin, zMax) - globalCenter);
         bottomRightBack += globalCenter;
 
+
         //TOP PLANE
-        topPlane.normal = Vector3.Cross(topRightBack - topLeftBack, topLeftFront - topLeftBack).normalized;
-        (Vector3, Vector3) minMaxBounds = GetMinMaxes(new Vector3[] { topLeftBack, topLeftFront, topRightBack, topRightFront });
-        topPlane.minBounds = minMaxBounds.Item1;
-        topPlane.maxBounds = minMaxBounds.Item2;
-        topPlane.pt = topLeftFront;
-        if (Vector3.Dot(topLeftBack - globalCenter, topPlane.normal) < 0) topPlane.normal *= -1;
+        topPlane = new BoundedPlane(topLeftFront, topLeftBack, topRightFront);
+
 
         //BOTTOM PLANE
-        bottomPlane.normal = Vector3.Cross(bottomRightBack - bottomLeftBack, bottomLeftFront - bottomLeftBack).normalized;
-        (Vector3, Vector3) minMaxBounds2 = GetMinMaxes(new Vector3[] { bottomRightBack, bottomLeftBack, bottomLeftFront, bottomRightFront });
-        bottomPlane.minBounds = minMaxBounds2.Item1;
-        bottomPlane.maxBounds = minMaxBounds2.Item2;
-        bottomPlane.pt = bottomRightBack;
-        if (Vector3.Dot(bottomLeftBack - globalCenter, bottomPlane.normal) < 0) bottomPlane.normal *= -1;
+        bottomPlane = new BoundedPlane(bottomRightFront, bottomRightBack, bottomLeftFront);
+
 
         //RIGHT PLANE
-        rightPlane.normal = Vector3.Cross(topRightBack - topRightFront, bottomRightFront - topRightFront).normalized;
-        (Vector3, Vector3) minMaxBounds3 = GetMinMaxes(new Vector3[] { topRightBack, bottomRightBack, topRightFront, bottomRightFront});
-        rightPlane.minBounds = minMaxBounds3.Item1;
-        rightPlane.maxBounds = minMaxBounds3.Item2;
-        rightPlane.pt = topRightFront;
-        if (Vector3.Dot(topRightFront - globalCenter, rightPlane.normal) < 0) rightPlane.normal *= -1;
-        
-        leftPlane.normal = Vector3.Cross(topLeftBack - topLeftFront, bottomLeftFront - topLeftFront).normalized;
-        (Vector3, Vector3) minMaxBounds4 = GetMinMaxes(new Vector3[] { topLeftBack, topLeftFront, bottomLeftBack, bottomLeftFront });
-        leftPlane.minBounds = minMaxBounds4.Item1;
-        leftPlane.maxBounds = minMaxBounds4.Item2;
-        leftPlane.pt = topLeftFront;
-        if (Vector3.Dot(topLeftFront - globalCenter, leftPlane.normal) < 0) leftPlane.normal *= -1;
+        rightPlane = new BoundedPlane(bottomRightFront, topRightFront, bottomRightBack);
 
-        frontPlane.normal = Vector3.Cross(topRightFront - topLeftFront, bottomLeftFront - topLeftFront).normalized;
-        (Vector3, Vector3) minMaxBounds5 = GetMinMaxes(new Vector3[] { topRightFront, topLeftFront, bottomLeftFront, bottomRightFront});
-        frontPlane.minBounds = minMaxBounds5.Item1;
-        frontPlane.maxBounds = minMaxBounds5.Item2;
-        frontPlane.pt = topLeftFront;
-        if(Vector3.Dot(topRightFront - globalCenter, frontPlane.normal) < 0) frontPlane.normal *= -1;
+        //LEFT PLANE
+        leftPlane = new BoundedPlane(bottomLeftBack, topLeftBack, bottomLeftFront);
 
-        backPlane.normal = Vector3.Cross(topRightBack - topLeftBack, bottomLeftBack - topLeftBack).normalized;
-        (Vector3, Vector3) minMaxBounds6 = GetMinMaxes(new Vector3[] { topRightBack, bottomRightBack, topLeftBack, bottomLeftBack});
-        backPlane.minBounds = minMaxBounds6.Item1;
-        backPlane.maxBounds = minMaxBounds6.Item2;
-        backPlane.pt = topRightBack;
-        if(Vector3.Dot(topRightBack - globalCenter, backPlane.normal) < 0) backPlane.normal *= -1;
+        //FRONT PLANE
+        frontPlane = new BoundedPlane(bottomLeftFront, topLeftFront, bottomRightFront);
+
+        //BACK PLANE
+        backPlane = new BoundedPlane(bottomRightBack, topRightBack, bottomLeftBack);
+
     }
 
     public (Vector3, Vector3) GetMinMaxes(Vector3[] pts)
