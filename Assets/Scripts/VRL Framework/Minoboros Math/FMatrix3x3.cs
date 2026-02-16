@@ -173,6 +173,7 @@ public struct FMatrix3x3
         return this[0, 0] * detCof1 - this[1, 0] * detCof2 + this[2, 0] * detCof3;
     }
 
-    public override bool Equals(object obj) => obj is FMatrix3x3 && (FMatrix3x3)obj == this;
+    public readonly override bool Equals(object obj) => obj is FMatrix3x3 x && x == this;
+    public readonly override int GetHashCode() => base.GetHashCode();
     
 }

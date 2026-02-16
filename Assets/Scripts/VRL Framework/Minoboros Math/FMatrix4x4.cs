@@ -8,7 +8,7 @@ using UnityEngine;
 public struct FMatrix4x4
 {
     //row wise storage for matrix
-    public readonly Vec4[] matArr;
+    private Vec4[] matArr;
 
     //Indexing
     #region
@@ -16,12 +16,13 @@ public struct FMatrix4x4
     {
         get
         {
-            return matArr[i][j];
+            return i is >= 0 and <= 3 && j is >= 0 and <= 3 ? matArr[i][j] : throw new ArgumentOutOfRangeException("i and j must be between 0 and 3 inclusive!");
         }
 
         set
         {
-            matArr[i][j] = value;
+            if (i is >= 0 and <= 3 && j is >= 0 and <= 3) matArr[i][j] = value;
+            else throw new ArgumentOutOfRangeException("i and j must be between 0 and 3 inclusive!");
         }
     }
 
@@ -29,55 +30,37 @@ public struct FMatrix4x4
     {
         get
         {
-            return matArr[i];
+            return i is >= 0 and <= 3 ? matArr[i] : throw new ArgumentOutOfRangeException("i must be between 0 and 3 inclusive!");
         }
 
         set
         {
-            matArr[i] = value;
+            if (i is >= 0 and <= 3) matArr[i] = value;
+            else throw new ArgumentOutOfRangeException("i must be between 0 and 3 inclusive!");
         }
     }
     #endregion
 
     //Decomposition - PLU, Cholesky, QR 
     #region
-    public FMatrix4x4[] PLU { get; private set; }
-    public FMatrix4x4[] choleskyDecomp { get; private set; }
-    private bool isCholeskyDecomped;
-    private bool isPLUDecomped;
-    private bool isQRDecomped;
+    public (FMatrix4x4, FMatrix4x4, FMatrix4x4) PLU => PLUDecompose();
+    public (FMatrix4x4, FMatrix4x4) Cholesky => CholeskyDecompose();
 
     #endregion
 
-    //isTriangular indicators
-    #region
-    public bool isUpperTriangular => IsUpperTriangular();
-    public bool isLowerTriangular => GetTranspose().IsUpperTriangular();
-    #endregion
-
-    //Invertibility
-    #region
+    
 
 
-    private bool isInverted;
-
-    #endregion
-
-    //Determinant 
-    #region
+    //Expression Based Properties
+    public bool IsUpperTriangular => IsUpperTriangularHelper();
+    public bool IsLowerTriangular => GetTranspose().IsUpperTriangularHelper();
     public float Determinant => CalcDeterminant();
     public bool IsSingular => Determinant == 0;
-    #endregion
+    public bool IsSymmetric => this == GetTranspose();
 
-    private float CalcConditionNum()
-    {
-        throw new NotImplementedException();
-    }
+    public FMatrix4x4 Inverse => CalcInverse();
 
-    public bool isIllConditioned { get; private set; }
-    public bool isSymmetric => IsSymmetric();
-
-
+    public FMatrix4x4 Transpose => GetTranspose();
 
     //Operator Overloads
     #region
@@ -98,22 +81,14 @@ public struct FMatrix4x4
     //Basic Operators
     #region
 
-    public static FMatrix4x4 operator +(FMatrix4x4 mat1, FMatrix4x4 mat2)
-    {
-        return new FMatrix4x4(mat1[0] + mat2[0], mat1[1] + mat2[1], mat1[2] + mat2[2], mat1[3] + mat2[3]);
-    }
+    public static FMatrix4x4 operator +(FMatrix4x4 mat1, FMatrix4x4 mat2) => new FMatrix4x4(mat1[0] + mat2[0], mat1[1] + mat2[1], mat1[2] + mat2[2], mat1[3] + mat2[3]);
+ 
 
-    public static FMatrix4x4 operator -(FMatrix4x4 mat1, FMatrix4x4 mat2)
-    {
-        return new FMatrix4x4(mat1[0] - mat2[0], mat1[1] - mat2[1], mat1[2] - mat2[2], mat1[3] - mat2[3]);
-    }
+    public static FMatrix4x4 operator -(FMatrix4x4 mat1, FMatrix4x4 mat2) => new FMatrix4x4(mat1[0] - mat2[0], mat1[1] - mat2[1], mat1[2] - mat2[2], mat1[3] - mat2[3]);
 
-    public static FMatrix4x4 operator -(FMatrix4x4 mat)
-    {
 
-        return -1 * mat;
-    }
-
+    public static FMatrix4x4 operator -(FMatrix4x4 mat) => -1 * mat;
+   
     public static Vector4 operator *(FMatrix4x4 mat, Vector4 v)
     {
         Vec4[] matrix = mat.matArr;
@@ -170,35 +145,23 @@ public struct FMatrix4x4
 
     }
 
-    public static FMatrix4x4 operator *(float scalar, FMatrix4x4 a)
-    {
-        return new FMatrix4x4(a[0] * scalar, a[1] * scalar, a[2] * scalar, a[3] * scalar);
-    }
+    public static FMatrix4x4 operator *(float scalar, FMatrix4x4 a) => new FMatrix4x4(a[0] * scalar, a[1] * scalar, a[2] * scalar, a[3] * scalar);
 
-    public static FMatrix4x4 operator *(FMatrix4x4 a, float scalar)
-    {
-        return scalar * a;
-    }
+
+    public static FMatrix4x4 operator *(FMatrix4x4 a, float scalar) => scalar * a;
     #endregion
 
     #endregion
 
     //Common 4x4 Matrices (I, Zero)
     #region
-    public static FMatrix4x4 I {
+    public static FMatrix4x4 I => new FMatrix4x4(Vec4.e1, Vec4.e2, Vec4.e3, Vec4.e4);
+        
 
-        get
-        {
-            return new FMatrix4x4(Vec4.e1, Vec4.e2, Vec4.e3, Vec4.e4);
-        }
-
-    }
-    public static FMatrix4x4 Zero {
-        get
-        {
-            return new FMatrix4x4(Vec4.zero, Vec4.zero, Vec4.zero, Vec4.zero);
-        }
-    }
+    
+    public static FMatrix4x4 Zero => new FMatrix4x4(Vec4.zero, Vec4.zero, Vec4.zero, Vec4.zero);
+        
+    
     #endregion
 
     //Constructor
@@ -208,59 +171,22 @@ public struct FMatrix4x4
 
         matArr = new Vec4[] { r0, r1, r2, r3 };
 
-        isIllConditioned = SetIllConditionedness();
-
-        //set all decompositions false, initialize decomposition arrays
-        isPLUDecomped = false;
-        isQRDecomped = false;
-        isCholeskyDecomped = false;
-        isInverted = false;
-
-
-        PLU = new FMatrix4x4[3];
-        choleskyDecomp = new FMatrix4x4[3];
-
     }
 
-    private bool IsUpperTriangular()
-    {
-        //hardcoded since small
-        return this[1, 0] == 0 && this[2, 0] == 0 && this[2,1] == 0 && this[3, 0] == 0 && this[3, 1] == 0 && this[3, 2] == 0;
 
-    }
 
-    private static bool SetIllConditionedness()
-    {
-
-        return false;
-    }
     #endregion
 
+    private bool IsUpperTriangularHelper() => this[1, 0] == 0 && this[2, 0] == 0 && this[2, 1] == 0 && this[3, 0] == 0 && this[3, 1] == 0 && this[3, 2] == 0;
 
     //Calculating Determinant
 
     //im not doing the cofactor method and sort of "bruteforcing" it bc its only 4x4 and also FMatrix3x3 needs refining
     public float CalcDeterminant()
     {
-        /*Vec4 r0 = matArr[0];
-        Vec4 r1 = matArr[1];
-        Vec4 r2 = matArr[2];
-        Vec4 r3 = matArr[3];
-
-        if (isLowerTriangular || isUpperTriangular) return r0[0] * r1[1] * r2[2] * r3[3];
-
-        //using the first column
-        FMatrix3x3 cof1 = new FMatrix3x3(r0.ToVec3(0), r2.ToVec3(0), r3.ToVec3(0)); //omit first row, first col
-        FMatrix3x3 cof2 = new FMatrix3x3(r0.ToVec3(0), r2.ToVec3(0), r3.ToVec3(0)); //omit second row, first col
-        FMatrix3x3 cof3 = new FMatrix3x3(r0.ToVec3(0), r1.ToVec3(0), r3.ToVec3(0)); //omit third row, first col
-        FMatrix3x3 cof4 = new FMatrix3x3(r0.ToVec3(0), r1.ToVec3(0), r2.ToVec3(0)); //omit fourth row, first col
-
-        float det = r0.x * cof1.determinant - r1.x * cof2.determinant + r2.x * cof3.determinant - r3.x * cof4.determinant;*/
-        if(!isPLUDecomped) PLUDecompose();
-        FMatrix4x4 upperTriangular = PLU[2];
+        FMatrix4x4 upperTriangular = PLU.Item3;
 
         float det = upperTriangular[0, 0] * upperTriangular[1, 1] * upperTriangular[2, 2] * upperTriangular[3, 3];
-
         return det;
     }
 
@@ -360,7 +286,7 @@ public struct FMatrix4x4
     }
 
     
-    private void PLUDecompose()
+    private (FMatrix4x4 P, FMatrix4x4 L, FMatrix4x4 U) PLUDecompose()
     {
         FMatrix4x4 U = MakeCopy(this);
         FMatrix4x4 L = I;
@@ -392,41 +318,34 @@ public struct FMatrix4x4
 
         }
 
-        this.PLU[0] = P;
-        this.PLU[1] = L;
-        this.PLU[2] = U;
+        return (P, L, U);
 
     }
 
-    private bool CholeskyDecompose()
+    private (FMatrix4x4 L, FMatrix4x4 S) CholeskyDecompose()
     {
-        if (!IsSymmetric()) return false;
-        if(isPLUDecomped)
+        if (!IsSymmetric) return (FMatrix4x4.Zero, FMatrix4x4.Zero);
+
+        (FMatrix4x4, FMatrix4x4, FMatrix4x4) PLU = this.PLU;
+
+        FMatrix4x4 U = PLU.Item3;
+        if (U[0, 0] > 0 && U[1, 1] > 0 && U[2, 2] > 0 && U[3, 3] > 0) //valid for Cholesky Decomp
         {
-            FMatrix4x4 U = PLU[2];
-            if (U[0, 0] > 0 && U[1, 1] > 0 && U[2, 2] > 0 && U[3, 3] > 0) //valid for Cholesky Decomp
-            {
-                FMatrix4x4 S = new FMatrix4x4(new Vec4(Mathf.Sqrt(U[0, 0]), 0, 0, 0), new Vec4(0, Mathf.Sqrt(U[1, 1]), 0, 0), 
-                    new Vec4(0, 0, Mathf.Sqrt(U[2, 2]), 0), new Vec4(0, 0, 0, Mathf.Sqrt(U[3, 3])));
+            FMatrix4x4 S = new FMatrix4x4(new Vec4(Mathf.Sqrt(U[0, 0]), 0, 0, 0), new Vec4(0, Mathf.Sqrt(U[1, 1]), 0, 0), 
+                new Vec4(0, 0, Mathf.Sqrt(U[2, 2]), 0), new Vec4(0, 0, 0, Mathf.Sqrt(U[3, 3])));
 
-                choleskyDecomp[0] = PLU[1] * S;
-                choleskyDecomp[1] = choleskyDecomp[0].GetTranspose();
+            FMatrix4x4 LS = PLU.Item2 * S;
+            return (LS, LS.GetTranspose());
 
-                isCholeskyDecomped = true;
-            }
         }
 
-        return isCholeskyDecomped;
+        return (FMatrix4x4.Zero, FMatrix4x4.Zero);
     }
 
 
     #region
 
 
-    public bool IsSymmetric()
-    {
-        return this == GetTranspose();
-    }
 
     public Vec4[] Solve(Vec4 b)
     {
@@ -439,7 +358,6 @@ public struct FMatrix4x4
     //better in efficincy in general
     public Vec4[] SolvePLU(Vec4 b)
     {
-        if (!isPLUDecomped) { PLUDecompose(); isPLUDecomped = true; }
 
         return new Vec4[3];
 
@@ -529,11 +447,9 @@ public struct FMatrix4x4
 
     }
 
-    public static FMatrix4x4 MakeCopy(FMatrix4x4 toCopy)
-    {
-        return new FMatrix4x4(toCopy[0], toCopy[1], toCopy[2], toCopy[3]);
+    public static FMatrix4x4 MakeCopy(FMatrix4x4 toCopy) => new FMatrix4x4(toCopy[0], toCopy[1], toCopy[2], toCopy[3]);
 
-    }
+    
 
 
     public void ApplyFunction(Func<float, float> fn)
@@ -551,9 +467,8 @@ public struct FMatrix4x4
     {
         return $"{matArr[0]}, {matArr[1]}, {matArr[2]}, {matArr[3]}";
     }
+
     //Use as inner product matrix (perform x^T A y) 
-
-
     public void SetRow(int i, Vec4 row)
     {
         this[i] = row;
@@ -599,17 +514,20 @@ public struct FMatrix4x4
     
     public FMatrix4x4 CalcInverse()
     {
-        //if (Determinant == 0) return Zero; //no inverse exists
+        if (Determinant == 0) return Zero; //no inverse exists
 
-        if (isUpperTriangular) return CalcInverseUpperTriangular();
-        else if (isLowerTriangular) return CalcInverseLowerTriangular();
+        if (IsUpperTriangular) return CalcInverseUpperTriangular();
+        else if (IsLowerTriangular) return CalcInverseLowerTriangular();
 
-        FMatrix4x4 U_inverse = PLU[2].CalcInverseUpperTriangular();
-        FMatrix4x4 L_inverse = PLU[1].CalcInverseLowerTriangular();
+        FMatrix4x4 U_inverse = PLU.Item3.CalcInverseUpperTriangular();
+        FMatrix4x4 L_inverse = PLU.Item2.CalcInverseLowerTriangular();
 
-        return U_inverse * L_inverse * PLU[0];
+        return U_inverse * L_inverse * PLU.Item1;
 
     }
+
+    public override bool Equals(object obj) => obj is FMatrix4x4 x && x == this;
+    public override int GetHashCode() => base.GetHashCode();
 
 
 }
