@@ -36,6 +36,7 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
     [SerializeField] float offsetFactor = 0.01f;
     [SerializeField] Vector3 testDir = Vector3.zero;
 
+
     private float minAngle;
     private float maxAngle;
 
@@ -77,16 +78,20 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
 
         float inverseScale = 1 / scaleFactor;
 
-        
         //create transform, rotation, scaling matrix s.t. we can use adjusted local coordinate basis that takes into account rotation!
-        //setting a new basis 
+        //setting a new basis (think Matrix Methods and Applications)  
+
+        
+
         TRS = Matrix4x4.TRS(globalCenter, transform.rotation * Quaternion.Euler(rotation), transform.localScale * scaleFactor);
+
         Handles.matrix = TRS;
         Gizmos.matrix = TRS;
 
         float rewiredThickness = thickness * inverseScale;
 
         //drawing axes
+        #region
         Handles.color = Color.blue;
         Handles.DrawLine(Vector3.zero, Vector3.forward * radius, rewiredThickness);
 
@@ -95,9 +100,12 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
 
         Handles.color = Color.red;
         Handles.DrawLine(Vector3.zero, Vector3.right * radius, rewiredThickness);
+        #endregion
 
         Vector3 wireDiscCenter = Vector3.up * (height / 4);
 
+        //Defining 8 linear points for cylinder boundaries
+        #region
         Vector3 p1 = wireDiscCenter + Vector3.forward * radius;
         Vector3 p2 = -wireDiscCenter + Vector3.forward * radius;
 
@@ -109,27 +117,38 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
 
         Vector3 p7 = wireDiscCenter + Vector3.left * radius;
         Vector3 p8 = -wireDiscCenter + Vector3.left * radius;
+        #endregion
 
         Handles.color = Color.black;
+
+        //Drawing top and bottom disks along with lines along cylinder
+        #region
         Handles.DrawWireDisc(wireDiscCenter, Vector3.up, radius, rewiredThickness);
         Handles.DrawWireDisc(-wireDiscCenter, Vector3.down, radius, rewiredThickness);
         Handles.DrawLine(p1, p2, rewiredThickness);
         Handles.DrawLine(p3, p4, rewiredThickness);
         Handles.DrawLine(p5, p6, rewiredThickness);
         Handles.DrawLine(p7, p8, rewiredThickness);
+        #endregion
 
+        //drawing hemispheres
+        #region
         Handles.DrawWireArc(wireDiscCenter, Vector3.forward, Vector3.right * radius, 180, radius, rewiredThickness);
         Handles.DrawWireArc(wireDiscCenter, Vector3.right, Vector3.forward * radius, -180, radius, rewiredThickness);
 
         Handles.DrawWireArc(-wireDiscCenter, Vector3.forward, Vector3.right * radius, -180, radius, rewiredThickness);
         Handles.DrawWireArc(-wireDiscCenter, Vector3.right, Vector3.forward * radius, 180, radius, rewiredThickness);
 
-        Gizmos.color = Color.blue;
+        #endregion
+
+        //center sphere for reference
         Gizmos.DrawSphere(Vector3.zero, radius / 10);
 
+        /*
         Gizmos.matrix = Matrix4x4.identity;
         Handles.matrix = Matrix4x4.identity;
 
+        
         if(testDir != Vector3.zero)
         {
             maxAngle = Mathf.Rad2Deg * Mathf.Acos(radius / Mathf.Sqrt(Mathf.Pow(radius, 2) + (Mathf.Pow(height, 2) / 16)));
@@ -145,7 +164,7 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
             Vector3 something = GetFurthestPoint(testDir);
             Gizmos.DrawSphere(something, radius / 9);
         }
-
+        */
     }
 
     //https://www.desmos.com/3d/ecck9khnd7 - shows work

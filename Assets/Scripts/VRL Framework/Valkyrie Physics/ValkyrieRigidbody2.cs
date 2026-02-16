@@ -54,7 +54,10 @@ public class ValkyrieRigidbody2 : MonoBehaviour
         col.SubscribeToCollisionPersistent(OnCollisionPersistent);
         col.SubscribeToCollisionDead(OnCollisionEnd);
 
+        FMatrix4x4 matrix = new FMatrix4x4(new Vec4(4, 1, 2, 3), new Vec4(1, 6, 0, 2), new Vec4(2, 0, 5, 1), new Vec4(3, 2, 1, 4));
+        matrix.SolvePLU(Vec4.zero);
 
+        print(matrix.Determinant);
     }
 
     // Update is called once per frame
@@ -115,6 +118,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
     }
 
     #endregion
+
     //APPLY FORCES
     #region
     //force given in Newtons, acceleration has units ms^-2. This is for Impulse Forces
@@ -137,26 +141,25 @@ public class ValkyrieRigidbody2 : MonoBehaviour
             ApplyForce(force);
             yield return new WaitForFixedUpdate();
             timer += Time.fixedDeltaTime + 0.00001f;
-           // print(velocity);
+            //print(velocity);
 
         }
 
        
     }
-
-
+    
     public void ApplyTorque(Vector3 torque)
     {
         //angularAcceleration = inertiaTensor.GetInverse() * torque; //because torque equals = inertia tensor * angular acceleration
     }
 
-    //adjust GJK to get point of contact on collision
     public void ApplyTorque(Vector3 force, Vector3 pointOfApplication)
     {
         //ApplyTorque(Vector3.Cross(pointOfApplication - pivotPoint, force)); //for torque, force relationship 
 
     }
     #endregion
+
     //COLLISION RESPONSE
     #region
     public void OnCollisionAwake(ValkyrieCollision collision)
@@ -199,7 +202,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
         {
 
             collision.relVelDotNorm = GetRelVelDotNorm(otherVRB.velocity, collision.penetrationNormal);
-            float cor = 1f;
+            float cor = 1f; //coefficient of restitution
 
             float effectiveInverseMass = GetEffectiveInverseMass(collision);
 
@@ -348,7 +351,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
 
     //print(inertiaTensor.GetInverse());
 
-
+    
     /* centerOfMassWorldCoords = transform.TransformPoint(centearOfMass);
      basicDampingForce = -velocity * dampingConstant;
      basicDampingTorque = -angularVelocity * dampingConstant;

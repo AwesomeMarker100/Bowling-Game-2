@@ -1,36 +1,20 @@
 using UnityEngine;
 
-[ExecuteInEditMode]
-public class LinearLaserInteractor : MonoBehaviour
+[ExecuteAlways]
+public class LinearLaserInteractor : LaserInteractor
 {
-    [SerializeField] Vector3 laserStartOffset = Vector3.zero;
-    [SerializeField] Vector3 direction = Vector3.forward;
-    [SerializeField] float length = 2;
-    [SerializeField] LineRenderer lineRenderer; 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Vector3 endPoint;
+
+    //resolution does not matter
+    protected override void Update()
     {
-        if(lineRenderer == null)
-        {
-            lineRenderer = GetComponent<LineRenderer>();
-        }
+        base.Update();
 
-        lineRenderer.useWorldSpace = false;
+        this.resolution = 1;
+        endPoint = Vector3.forward * maxLength;
+
+        SetPositionCount(2);
+        SetPosition(0, Vector3.zero);
+        SetPosition(1, endPoint);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        DrawLine();
-    }
-
-
-    private void DrawLine()
-    {
-        //<x, y, z> = start + t * direction
-        lineRenderer.SetPosition(0, laserStartOffset);
-        lineRenderer.SetPosition(1, laserStartOffset + length * direction);
-
-    }
-
 }

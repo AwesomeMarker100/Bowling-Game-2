@@ -8,8 +8,6 @@ public class MovementEngine : MonoBehaviour
     [Header("Necessary Transforms")]
     [SerializeField] private RadixTracker radixTracker;
     [SerializeField] private Camera rotationController;
-
-    [SerializeField] TeleportPoint spawnPoint;
     [SerializeField] LayerMask ignoreLayers;
 
     [Header("Controls")]
@@ -49,7 +47,7 @@ public class MovementEngine : MonoBehaviour
         if (allowedControllers.Count == 0)
         {
 
-            allowedControllers = new List<MovementController>(FindObjectsOfType<MovementController>());
+            allowedControllers = new List<MovementController>(GetComponentsInChildren<MovementController>());
 
             for (int i = 0; allowedControllers.Count > i; i++)
             {
@@ -72,6 +70,7 @@ public class MovementEngine : MonoBehaviour
         CommenceRotation();
 
         if (clampToGround) ClampToGround();
+        
 
     }
 
@@ -111,13 +110,6 @@ public class MovementEngine : MonoBehaviour
 
         if (currentIndex == allowedControllers.Count - 1) currentIndex = 0;
         else currentIndex++;
-
-    }
-
-    public void GoToSpawn()
-    {
-
-        spawnPoint.Teleport(radixTracker.gameObject);
 
     }
 

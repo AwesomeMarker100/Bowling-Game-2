@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using BoundedPlane = VPhys.BoundedPlane;
+using BoundedRect = VPhys.BoundedRect;
 using Edge = VPhys.Edge;
 
 [ExecuteInEditMode]
@@ -29,12 +29,12 @@ public class ValkyrieBoxCollider : ValkyrieCollider
     [HideInInspector] public Vector3 bottomLeftBack;
     [HideInInspector] public Vector3 bottomRightBack;
 
-    public BoundedPlane topPlane;
-    public BoundedPlane bottomPlane;
-    public BoundedPlane rightPlane;
-    public BoundedPlane leftPlane;
-    public BoundedPlane backPlane;
-    public BoundedPlane frontPlane;
+    public BoundedRect topPlane;
+    public BoundedRect bottomPlane;
+    public BoundedRect rightPlane;
+    public BoundedRect leftPlane;
+    public BoundedRect backPlane;
+    public BoundedRect frontPlane;
 
 
     private void Start()
@@ -86,24 +86,24 @@ public class ValkyrieBoxCollider : ValkyrieCollider
 
 
         //TOP PLANE
-        topPlane = new BoundedPlane(topLeftFront, topLeftBack, topRightFront);
+        topPlane = new BoundedRect(topLeftFront, topLeftBack, topRightFront);
 
 
         //BOTTOM PLANE
-        bottomPlane = new BoundedPlane(bottomRightFront, bottomRightBack, bottomLeftFront);
+        bottomPlane = new BoundedRect(bottomRightFront, bottomRightBack, bottomLeftFront);
 
 
         //RIGHT PLANE
-        rightPlane = new BoundedPlane(bottomRightFront, topRightFront, bottomRightBack);
+        rightPlane = new BoundedRect(bottomRightFront, topRightFront, bottomRightBack);
 
         //LEFT PLANE
-        leftPlane = new BoundedPlane(bottomLeftBack, topLeftBack, bottomLeftFront);
+        leftPlane = new BoundedRect(bottomLeftBack, topLeftBack, bottomLeftFront);
 
         //FRONT PLANE
-        frontPlane = new BoundedPlane(bottomLeftFront, topLeftFront, bottomRightFront);
+        frontPlane = new BoundedRect(bottomLeftFront, topLeftFront, bottomRightFront);
 
         //BACK PLANE
-        backPlane = new BoundedPlane(bottomRightBack, topRightBack, bottomLeftBack);
+        backPlane = new BoundedRect(bottomRightBack, topRightBack, bottomLeftBack);
 
     }
 

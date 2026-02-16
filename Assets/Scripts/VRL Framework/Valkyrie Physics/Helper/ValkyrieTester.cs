@@ -5,14 +5,16 @@ using UnityEngine.InputSystem;
 
 
 [ExecuteAlways]
+
+[RequireComponent(typeof(ValkyrieRigidbody2))]
 public class ValkyrieTester : MonoBehaviour
 {
-    private ValkyrieRigidbody m_Rigidbody;
+    private ValkyrieRigidbody2 m_Rigidbody;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_Rigidbody = GetComponent<ValkyrieRigidbody>();
+        m_Rigidbody = GetComponent<ValkyrieRigidbody2>();
     }
 
     // Update is called once per frame
@@ -20,7 +22,7 @@ public class ValkyrieTester : MonoBehaviour
     {
         if (Keyboard.current.pKey.isPressed)
         {
-            m_Rigidbody.Accelerate(transform.forward * 0.1f);
+            m_Rigidbody.ApplyForce(transform.forward * 4f);
         }
 
     }

@@ -1,436 +1,178 @@
 using JetBrains.Annotations;
+using NUnit.Framework.Constraints;
+using org.mariuszgromada.math.mxparser.parsertokens;
 using System;
 using Unity.VisualScripting;
-using UnityEngine;
 
 public struct FMatrix3x3
 {
+    private Vec3[] matArr;
 
-    private static readonly float[,] zero = new float[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-    public static readonly float[,] identity = new float[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
-    private float minimumVal;
-    public int rank;
+    //index in range helper
+    public static bool InRange(int i) => i is >= 0 and <= 2;
 
-    private float[] eigenValues;
-    private Vector3[] eigenSpace;
+    //common static values
+    #region
+    public static FMatrix3x3 I => new(Vec3.e1, Vec3.e2, Vec3.e3);
+    public static FMatrix3x3 Zero => new(Vec3.zero, Vec3.zero, Vec3.zero);
+    #endregion
 
-    private float determinant;
-    public float[,] arr;
 
-    //For PLU factorization
-    public float[,] permutationMatrix;
-    public float[,] lowerTriangular;
-    public float[,] upperTriangular;
+    //expression bodied properties
+    public FMatrix3x3 Transpose => new(new Vec3(this[0, 0], this[1, 0], this[2, 0]), new Vec3(this[0, 1], this[1, 1], this[2, 1]), new Vec3(this[0, 2], this[1, 2], this[2, 2]));
+    public FMatrix3x3 Inverse => GetInverse();
 
-    //for cholesky factorization
-    public float[,] choleskyLowerTriangular;
-    public float[,] choleskyUpperTriangular;
+    public bool IsIllConditioned => throw new NotImplementedException();
 
-    public float[,] transpose;
+    public bool IsUpperTriangular => this[1, 0] == 0 && this[2, 0] == 0 && this[2, 1] == 0;
+    public bool IsLowerTriangular => this[0, 1] == 0 && this[0, 2] == 0 && this[1, 2] == 0;
+    
 
-    float[] row0;
-    float[] row1;
-    float[] row2;
+    public bool IsOrthogonal => Transpose * this == I;
+    public float Determinant => GetDeterminant();
 
-    public static Vector3 operator *(FMatrix3x3 a, Vector3 b)
+    public bool IsSingular => Determinant == 0;
+
+
+
+    //operators
+    #region
+
+    //equality
+    #region
+    public static bool operator ==(FMatrix3x3 a, FMatrix3x3 b) => a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+    public static bool operator !=(FMatrix3x3 a, FMatrix3x3 b) => !(a == b);
+    #endregion
+
+    //indexing
+    #region
+    public float this[int i, int j]
     {
-        return new Vector3(a[0, 0] * b[0] + a[0, 1] * b[1] + a[0, 2] * b[2], a[1, 0] * b[0] + a[1, 1] * b[1] + a[1, 2] * b[2], a[2, 0] * b[0] + a[2, 1] * b[1] + a[2, 2] * b[2]);
+        get
+        {
+            return i is >= 0 and <= 2 && j is >= 0 and <= 2 ? matArr[i][j] : throw new ArgumentOutOfRangeException("Indices must be between 0 and 2 inclusive");
+        }
+
+        set
+        {
+            if (i is >= 0 and <= 2 && j is >= 0 and <= 2) matArr[i][j] = value;
+        }
     }
 
+    public Vec3 this[int i]
+    {
+        get
+        {
+            return i is >= 0 and <= 2 ? matArr[i] : throw new ArgumentOutOfRangeException("Index must be between 0 and 2 inclusive!");
+        }
+
+        set
+        {
+            if (i is >= 0 and <= 2) matArr[i] = value;
+        }
+    }
+
+    #endregion
+
+    //scalar multiplication / division
+    #region
+    public static FMatrix3x3 operator *(FMatrix3x3 a, float s) => new(s * a[0], s * a[1], s * a[2]);
+    public static FMatrix3x3 operator *(float s, FMatrix3x3 a) => a * s;
+
+    public static FMatrix3x3 operator /(FMatrix3x3 a, float s) => new(a[0] / s, a[1] / s, a[2] / s);
+
+    #endregion
+
+    //vector and matrix multiplication
+    #region
+    public static Vec3 operator *(FMatrix3x3 a, Vec3 v) => new Vec3(Vec3.Dot(a[0], v), Vec3.Dot(a[1], v), Vec3.Dot(a[2], v)); 
     public static FMatrix3x3 operator *(FMatrix3x3 a, FMatrix3x3 b)
     {
-        return new FMatrix3x3(a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0] + a[0, 2] * b[2, 0], a[0, 0] * b[0, 1] + a[0, 1] * b[1, 1] + a[0, 2] * b[2, 1],
-            a[0, 0] * b[0, 2] + a[0, 1] * b[1, 2] + a[0, 2] * b[2, 2], a[1, 0] * b[0, 0] + a[1, 1] * b[1, 0] + a[1, 2] * b[2, 0], 
-            a[1, 0] * b[0, 1] + a[1, 1] * b[1, 1] + a[1, 2] * b[2, 1], a[1, 0] * b[0, 2] + a[1, 1] * b[1, 2] + a[1, 2] * b[2, 2],
-            a[2, 0] * b[0, 0] + a[2, 1] * b[1, 0] + a[2, 2] * b[2, 0], a[2, 0] * b[0, 1] + a[2, 1] * b[1, 1] + a[2, 2] * b[2, 1],
-            a[2, 0] * b[0, 2] + a[2, 1] * b[1, 2] + a[2, 2] * b[2, 2]);
-    }
+        FMatrix3x3 bT = b.Transpose;
 
-    public static FMatrix3x3 operator +(FMatrix3x3 a, FMatrix3x3 b)
+        float c00 = Vec3.Dot(a[0], bT[0]);
+        float c01 = Vec3.Dot(a[0], bT[1]);
+        float c02 = Vec3.Dot(a[0], bT[2]);
+
+        float c10 = Vec3.Dot(a[1], bT[0]);
+        float c11 = Vec3.Dot(a[1], bT[1]);
+        float c12 = Vec3.Dot(a[1], bT[2]);
+
+        float c20 = Vec3.Dot(a[2], bT[0]);
+        float c21 = Vec3.Dot(a[2], bT[1]);
+        float c22 = Vec3.Dot(a[2], bT[2]);
+
+        return new FMatrix3x3(new Vec3(c00, c01, c02), new Vec3(c10, c11, c12), new Vec3(c20, c21, c22));
+    }
+    #endregion
+
+    //addition and subtraction
+    #region
+    public static FMatrix3x3 operator +(FMatrix3x3 a, FMatrix3x3 b) => new(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
+    public static FMatrix3x3 operator -(FMatrix3x3 a, FMatrix3x3 b) => new(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+    #endregion
+
+    #endregion
+
+    //constructors
+    #region
+    public FMatrix3x3(Vec3 r0, Vec3 r1, Vec3 r2)
     {
-        return new FMatrix3x3(a[0, 0] + b[0, 0], a[0, 1] + b[0, 1], a[0, 2] + b[0, 2], a[1, 0] + b[1, 0], a[1,1] + b[1, 1], a[1, 2] + b[1, 2],
-            a[2, 0] + b[2, 0], a[2,1] + b[2, 1], a[2, 2] + b[2, 2]);
+        matArr = new Vec3[3] { r0, r1, r2 };
     }
 
-    public static FMatrix3x3 operator -(FMatrix3x3 a, FMatrix3x3 b)
-    {
-        return new FMatrix3x3(a[0, 0] - b[0, 0], a[0, 1] - b[0, 1], a[0, 2] - b[0, 2], a[1, 0] - b[1, 0], a[1, 1] - b[1, 1], a[1, 2] - b[1, 2],
-            a[2, 0] - b[2, 0], a[2, 1] - b[2, 1], a[2, 2] - b[2, 2]);
-    }
+    #endregion
 
-    public static implicit operator float[,](FMatrix3x3 a)
-    {
-        return a.arr;
-    }
-
-    public static implicit operator FMatrix3x3(float[,] a)
-    {
-        return new FMatrix3x3(a[0, 0], a[0, 1], a[0, 2], a[1, 0], a[1, 1], a[1, 2], a[2, 0], a[2, 1], a[2, 2]);
-    }
-
-    public static bool operator ==(FMatrix3x3 a, FMatrix3x3 b)
-    {
-        return a[0, 0] == b[0, 0] && a[0, 1] == b[0, 1] && a[0, 2] == b[0, 2] && a[1, 0] == b[1, 0] && a[1, 1] == b[1, 1] && a[1, 2] == b[1, 2]
-            && a[2, 0] == b[2, 0] && a[2, 1] == b[2, 1] && a[2, 2] == b[2, 2];
-    }
-
-    public static bool operator !=(FMatrix3x3 a, FMatrix3x3 b)
-    {
-        return !(a[0, 0] == b[0, 0] && a[0, 1] == b[0, 1] && a[0, 2] == b[0, 2] && a[1, 0] == b[1, 0] && a[1, 1] == b[1, 1] && a[1, 2] == b[1, 2]
-            && a[2, 0] == b[2, 0] && a[2, 1] == b[2, 1] && a[2, 2] == b[2, 2]);
-    }
-
-    //public static bool operator ==(FMatrix3x3 a, FMatrix3x3 b) => a.Equals(b);
-   // public static bool operator !=(FMatrix3x3 a, FMatrix3x3 b) => !a.Equals(b);
-
-
-    //for upper triangular matrices 
-
-
-    public FMatrix3x3(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22)
-    {
-        arr = new float[3,3];
-
-        arr[0,0] = a00;
-        arr[0,1] = a01;
-        arr[0,2] = a02;
-        arr[1,0] = a10;
-        arr[1,1] = a11;
-        arr[1, 2] = a12;
-        arr[2, 0] = a20;
-        arr[2, 1] = a21;
-        arr[2, 2] = a22;
-
-        row0 = new float[] { a00, a01, a02 };
-        row1 = new float[] { a10, a11, a12 };
-        row2 = new float[] { a20, a21, a22 };
-
-        upperTriangular = new float[3, 3];
-        lowerTriangular = new float[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
-        permutationMatrix = new float[3, 3];
-        choleskyLowerTriangular = null;
-        choleskyUpperTriangular = null;
-
-        transpose = new float[3, 3];
-
-        eigenValues = null;
-        eigenSpace = null;
-        determinant = 0;
-        rank = 0;
-
-        minimumVal = 1E-2f;
+    //expression bodied functions
+    public void SwapRows(int i, int j) => (this[i], this[j]) = i != j && InRange(i) && InRange(j) ? (this[j], this[i]) : throw new ArgumentOutOfRangeException("Indices must be between 0 and 2 inclusive!");
 
 
 
-        RefreshMatrix();
-
-    }
-
-    private void SetDeterminant()
-    {
-        determinant = upperTriangular[0, 0] * upperTriangular[1, 1] * upperTriangular[2, 2];
-    }
-
-    private void SetEigenValues()
-    {
-
-    }
-
-
-
-    /// <summary>
-    /// Performs arr[secondRow] = arr[secondRow] + arr[firstRow] * c;
-    /// </summary>
-    /// <param name="matrix"></param>
-    /// <param name="firstRow"></param>
-    /// <param name="secondRow"></param>
-    /// <param name="c"></param>
-    public void AddRows(float[,] matrix, int firstRow, int secondRow, float c)
-    {
-        matrix[secondRow, 0] += c * matrix[firstRow, 0];
-        matrix[secondRow, 1] += c * matrix[firstRow, 1];
-        matrix[secondRow, 2] += c * matrix[firstRow, 2];
-    }
-
-    public void RefreshMatrix()
-    {
-
-        PLUFactorize();
-        SetDeterminant();
-        SetTranspose();
-        SetEigenValues();
-    }
-
-    public float this[int i1, int i2]
-    {
-        get => arr[i1, i2];
-        set { 
-            arr[i1, i2] = value;
-            RefreshMatrix();
-        }
-        
-    }
-
-    //should do QR Factorization Instead but PLU works pretty much the same efficiency for this small 3x3 
-
-    //A = QR -> det(A) = det(Q) * det(R). we know QQ^T = I so det(QQ^T) = 1 ->  (detQ)^2 = 1 -> detQ = +- 1, det(R) = product of diagonals
-    //learned from APPM 3310 - Matrix Methods and Applications
-    private void PLUFactorize()
-    {
-        //if (this == FMatrix3x3.zero) upp
-        Array.Copy(arr, upperTriangular, 9);
-
-        permutationMatrix = new float[3, 3]
-        {
-            {1, 0, 0 } ,
-            {0, 1, 0 },
-            {0, 0, 1 }
-        };
-
-        for(int j = 0; j < 2; j++) //iterate over columns
-        {
-
-            if (upperTriangular[j, j] == 0)
-            {
-                for(int i = j + 1; i < 3; i++)
-                {
-                    if (upperTriangular[i, j] != 0)
-                    {
-                        SwapRows(upperTriangular, j, i);
-                        SwapRows(permutationMatrix, j, i);
-
-                        //swap rows under diagonal only for lower triangular
-                        if (i == 0 || j == 0) break;
-
-                        float a = lowerTriangular[1, 0];
-                        lowerTriangular[1, 0] = lowerTriangular[2, 0];
-                        lowerTriangular[2, 0] = a;
-                        break;
-                    }
-                }
-            }
-
-            for (int i = j + 1; i < 3; i++) //iterate over rows above jth column
-            {
-                float c = -upperTriangular[i, j] / upperTriangular[j, j];
-
-                AddRows(upperTriangular, j, i, c);
-                //AddRows(lowerTriangular, j, i, -c);
-
-                if(i == 1 && j == 0)
-                {
-                    lowerTriangular[1, 0] += -c;
-                }
-
-                if(i == 2 && j == 1)
-                {
-                    lowerTriangular[2, 1] += -c;
-
-                }
-
-                if (i == 2 && j == 0)
-                {
-                    lowerTriangular[2, 0] += -c;
-                }
-                    
-                if (Mathf.Abs(upperTriangular[i, 0]) < minimumVal) upperTriangular[i, 0] = 0;
-                if (Mathf.Abs(upperTriangular[i, 1]) < minimumVal) upperTriangular[i, 1] = 0;
-                if (Mathf.Abs(upperTriangular[i, 2]) < minimumVal) upperTriangular[i, 2] = 0;
-
-                if (Mathf.Abs(lowerTriangular[i, 0]) < minimumVal) lowerTriangular[i, 0] = 0;
-                if (Mathf.Abs(lowerTriangular[i, 1]) < minimumVal) lowerTriangular[i, 1] = 0;
-                if (Mathf.Abs(lowerTriangular[i, 2]) < minimumVal) lowerTriangular[i, 2] = 0;
-            }
-            
-        }
-
-
-    }
-
-    public bool IsBasis()
-    {
-        return determinant != 0;
-    }
-
-    public Vector3[] GetKernel()
-    {
-        return new Vector3[3];
-    }
-
-    public Vector3[] GetImage()
-    {
-        return new Vector3[3];
-    }
-
-    private Vector3 SolveSystem(Vector3 b)
-    {
-        //PLUx = b
-        //LUx = P^T * b
-        b  = (FMatrix3x3)GetTranspose(permutationMatrix) * b;
-        b = SolveSystemLowerTriangular(lowerTriangular, b);
-        return SolveSystemUpperTriangular(upperTriangular, b);
-    }
-
-    //ONLY PASS IN UPPER TRIANGULAR MATRIX
-    private Vector3 SolveSystemUpperTriangular(float[,] upperTri, Vector3 b)
-    {
-
-        float zComp = b.z / upperTri[2, 2];
-        float yComp = (b.y - upperTri[1, 2] * zComp) / upperTri[1, 1];
-        float xComp = (b.x - upperTri[0, 1] * yComp - upperTri[0, 2] * zComp) / upperTri[0, 0];
-
-        return new Vector3(xComp, yComp, zComp);
-    }
-
-
-    private Vector3 SolveSystemLowerTriangular(float[,] lowerTri, Vector3 b)
-    {
-        float xComp = b[0] / lowerTri[0, 0];
-        float yComp = (b[1] - lowerTri[1, 0] * xComp) / lowerTri[1, 1];
-        float zComp = (b[2] - lowerTri[2, 0] * xComp - lowerTri[2, 1] * yComp) / lowerTri[2, 2];
-
-        return new Vector3(xComp, yComp, zComp);
-
-    }
-
+    //inverse
     public FMatrix3x3 GetInverse()
     {
-        if (determinant == 0) return FMatrix3x3.zero; //not invertible
+        if (this == I) return I;
+        if (IsOrthogonal) return Transpose;
+        if (IsSingular) return Zero;
 
-        float[,] pTranspose = GetTranspose(permutationMatrix);
+        float det = Determinant;
 
-        Vector3 yCol1 = SolveSystemLowerTriangular(lowerTriangular, new Vector3(pTranspose[0, 0], pTranspose[1, 0], pTranspose[2, 0]));//new Vector3(pTranspose[0, 0], pTranspose[1, 0], pTranspose[2, 0]));
-        Vector3 yCol2 = SolveSystemLowerTriangular(lowerTriangular, new Vector3(pTranspose[1, 1], pTranspose[1, 1], pTranspose[2, 1]));
-        Vector3 yCol3 = SolveSystemLowerTriangular(lowerTriangular, new Vector3(pTranspose[2, 2], pTranspose[1, 2], pTranspose[2, 2]));
+        //using adjugate method -- note inv_{ij} = det(M_{ji}) / det
+        float inv00 = (this[1, 1] * this[2, 2] - this[1, 2] * this[2, 1]) / det;
+        float inv01 = -(this[0, 1] * this[2, 2] - this[2, 1] * this[0, 2]) / det;
+        float inv02 = (this[0, 1] * this[1, 2] - this[1, 1] * this[0, 2]) / det;
 
-        Vector3 inverseCol1 = SolveSystemUpperTriangular(upperTriangular, yCol1);
-        Vector3 inverseCol2 = SolveSystemUpperTriangular(upperTriangular, yCol2);
-        Vector3 inverseCol3 = SolveSystemUpperTriangular(upperTriangular, yCol3);
+        float inv10 = -(this[1, 0] * this[2, 2] - this[1, 2] * this[2, 0]) / det;
+        float inv11 = (this[0, 0] * this[2, 2] - this[2, 0] * this[0, 2]) / det;
+        float inv12 = -(this[0, 0] * this[1, 2] - this[0, 2] * this[1, 0]) / det;
 
-
-
-        //check master tablet for proof
-        return new FMatrix3x3(inverseCol1.x, inverseCol2.x, inverseCol3.x, inverseCol1.y, inverseCol2.y, inverseCol3.y, inverseCol1.z, inverseCol2.z, inverseCol3.z);
-    }
-
-
-    private void SetTranspose()
-    {
-        transpose[0, 0] = arr[0, 0]; //, arr[1, 0], arr[2, 0], arr[0, 1], arr[1, 1], arr[2, 1], arr[0, 2], arr[1, 2], arr[2, 2] };
-        transpose[0, 1] = arr[1, 0];
-        transpose[0, 2] = arr[2, 0];
-        transpose[1, 0] = arr[0, 1];
-        transpose[1, 1] = arr[1, 1];
-        transpose[1, 2] = arr[2, 1];
-        transpose[2, 0] = arr[0, 2];
-        transpose[2, 1] = arr[1, 2];
-        transpose[2, 2] = arr[2, 2];
-    }
-
-    //LU Factorization
-
-    //LDLT Factorization
-
-    //QR Factorization
-
-    public void QRFactorize()
-    {
+        float inv20 = (this[1, 0] * this[2, 1] - this[1, 1] * this[2, 0]) / det;
+        float inv21 = -(this[0, 0] * this[2, 1] - this[2, 0] * this[0, 1]) / det;
+        float inv22 = (this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0]) / det;
 
 
-    }
-
-    public void SwapRows(float[,] arr, int firstRow, int secondRow)
-    {
-        float t1 = arr[firstRow, 0];
-        float t2 = arr[firstRow, 1];
-        float t3 = arr[firstRow, 2];
-
-        arr[firstRow, 0] = arr[secondRow, 0];
-        arr[firstRow, 1] = arr[secondRow, 1];
-        arr[firstRow, 2] = arr[secondRow, 2];
-
-        arr[secondRow, 0] = t1;
-        arr[secondRow, 1] = t2;
-        arr[secondRow, 2] = t3;
-
-    }
-
-    public float[] GetEigenValues()
-    {
-        return new float[4];
-
-    }
-
-
-    public Vector3[] GetEigenVectors()
-    {
-        return new Vector3[4];
-
+        return new(new Vec3(inv00, inv01, inv02), new Vec3(inv10, inv11, inv12), new Vec3(inv20, inv21, inv22));
     }
 
    
 
-    public readonly override string ToString()
+    public float GetDeterminant()
     {
-        return "[" + arr[0, 0] + ", " + arr[0, 1] + ", " + arr[0, 2] + "] " + 
-            "[" + arr[1, 0] + ", " + arr[1, 1] + ", " + arr[1, 2] + "] " + 
-            "[" + arr[2, 0] + ", " + arr[2, 1] + ", " + arr[2, 2] + "]";
+        //deal with ill conditioned case later
+        if (IsIllConditioned) return 0;
+        if (this == Zero) return 0;
+        if (this == I) return 1;
+        if (IsUpperTriangular || IsLowerTriangular) return this[0, 0] * this[1, 1] * this[2, 2];
+
+        //"determinant cofactor 1" - using column based determinant
+        float detCof1 = this[1, 1] * this[2, 2] - this[1, 2] * this[2, 1];
+        float detCof2 = this[0, 1] * this[2, 2] - this[2, 1] * this[0, 2];
+        float detCof3 = this[0, 1] * this[1, 2] - this[1, 1] * this[0, 2];
+
+        return this[0, 0] * detCof1 - this[1, 0] * detCof2 + this[2, 0] * detCof3;
     }
 
-
-    public static float[,] GetTranspose(float[,] matrix)
-    {
-        float[,] transpose = new float[3, 3];
-
-
-        transpose[0, 0] = matrix[0, 0]; //, arr[1, 0], arr[2, 0], arr[0, 1], arr[1, 1], arr[2, 1], arr[0, 2], arr[1, 2], arr[2, 2] };
-        transpose[0, 1] = matrix[1, 0];
-        transpose[0, 2] = matrix[2, 0];
-        transpose[1, 0] = matrix[0, 1];
-        transpose[1, 1] = matrix[1, 1];
-        transpose[1, 2] = matrix[2, 1];
-        transpose[2, 0] = matrix[0, 2];
-        transpose[2, 1] = matrix[1, 2];
-        transpose[2, 2] = matrix[2, 2];
-
-        return transpose;
-    }
-
-
-    //L(LT)x = b where LT is L transpose
-    //let Y = (LT)x
-    //solve LY = b with forward sub 
-    //solve (LT)x = Y with back sub
-    //done 
-    public Vector3 SolveSystemCholesky(Vector3 b)
-    {
-        Vector3 Y = SolveSystemLowerTriangular(choleskyLowerTriangular, b);
-        return SolveSystemUpperTriangular(choleskyUpperTriangular, Y);
-    }
-
-
-    //CHOLESKY DECOMPOSITION
-    public bool CholeskyDecomp()
-    {
-        if ((FMatrix3x3)GetTranspose(arr) != (FMatrix3x3)arr) return false;
-        //attempt cholesky
-
-        if (upperTriangular[0, 0] < 0 || upperTriangular[1, 1] < 0 || upperTriangular[2, 2] < 0) return false;
-
-        //we can do cholesky factorization
-
-        float[,] squareRootDiagonalMatrix = new float[3, 3]
-        {
-            { Mathf.Sqrt(upperTriangular[0, 0]), 0, 0 },
-            { 0, Mathf.Sqrt(upperTriangular[1, 1]), 0},
-            { 0, 0, Mathf.Sqrt(upperTriangular[2, 2])}
-        };
-
-        //should probably combine and replace with just one upperTriangular, lowerTriangular set
-        choleskyLowerTriangular = (FMatrix3x3)lowerTriangular * (FMatrix3x3)squareRootDiagonalMatrix;
-        choleskyUpperTriangular = GetTranspose(choleskyLowerTriangular);
-        return true;
-    }
-
+    public override bool Equals(object obj) => obj is FMatrix3x3 && (FMatrix3x3)obj == this;
+    
 }

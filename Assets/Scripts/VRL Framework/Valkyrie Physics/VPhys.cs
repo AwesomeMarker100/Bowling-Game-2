@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +42,7 @@ public class VPhys : MonoBehaviour
         }
     }
 
-    public struct BoundedPlane
+    public struct BoundedRect
     {
         public Vector3 origin;
         public Vector3 normal;
@@ -49,81 +50,81 @@ public class VPhys : MonoBehaviour
         private Vector3 basisVector1;
         private Vector3 basisVector2;
 
-        private float bv1Length; //basic vector 1 length
+        private float bv1Length; //basis vector 1 length
         private float bv2Length; //basis vector 2 length
 
-        public BoundedPlane(Vector3 a, Vector3 b, Vector3 c) //also used to establish bounds, obviously
+        //b - a, and c - a must be orthogonal vectors 
+        public BoundedRect(Vector3 a, Vector3 b, Vector3 c) //also used to establish bounds, obviously
         {
             origin = a;
             basisVector1 = b - a;
             basisVector2 = c - a;
 
+            if (MinoMath.VApproximately(basisVector1, Vector3.zero)) throw new ArgumentException("Not given 3 unique points!");
+            if (MinoMath.VApproximately(basisVector2, Vector3.zero)) throw new ArgumentException("Not given 3 unique points!");
+            if (Vector3.Dot(basisVector1, basisVector2) != 0) throw new ArgumentException("b - a and c - a must be orthogonal!");
+
             bv1Length = basisVector1.magnitude;
             bv2Length = basisVector2.magnitude;
 
-            normal = Vector3.Cross(b - a, c - a);
-
+            normal = Vector3.Cross(b - a, c - a).normalized;
         }
+
+
+
         /***
          * Checks if p is inside bounded plane rectangle
          * 
          */
         public bool IsOnPlane(Vector3 p)
         {
+            //this first checks if p is on the infinite plane spanned by the basis vectors 
             if (!MinoMath.FApproximately(Vector3.Dot(normal, p - origin), 0, 0.0001f)) return false;
 
+            //next part is checking if p is within the given bounds 
+            //essentially mapping p in terms of basis vectors of plane
             Vector3 rebasedP = p - origin;
+
+            //check dots with basis vectors
             float compBV1Mag = Vector3.Dot(basisVector1, rebasedP) / bv1Length;
             float compBV2Mag = Vector3.Dot(basisVector2, rebasedP) / bv2Length;
-            //print("here: " + basisVector1 + " " + basisVector2 + " " + compBV1Mag + " " + compBV2Mag);
             return MinoMath.Within(compBV1Mag, 0, bv1Length) && MinoMath.Within(compBV2Mag, 0, bv2Length);
         }
 
     }
     #endregion
 
+
+
+
+
+    //General Raycast Method
     public bool Raycast(Vector3 start, Vector3 dir, float dist)
     {
+        //should change to use KDTree or OctTree nodes at some point 
         ValkyrieCollider[] colliders = FindObjectsByType<ValkyrieCollider>(FindObjectsSortMode.None);
 
         VRay ray = new VRay(start, dir.normalized);
-        bool hitSomething = true;
+        bool hitSomething = false;
 
         foreach (ValkyrieCollider collider in colliders)
         {
             switch (collider)
             {
-                case ValkyrieBoxCollider:
-                    ValkyrieBoxCollider vbc = collider as ValkyrieBoxCollider;
-
-                    bool topPlane = DidIntersectPlane(ray, vbc.topPlane);
-                    bool bottomPlane = DidIntersectPlane(ray, vbc.bottomPlane);
-                    bool leftPlane = DidIntersectPlane(ray, vbc.leftPlane);
-                    bool rightPlane = DidIntersectPlane(ray, vbc.rightPlane);
-                    bool frontPlane = DidIntersectPlane(ray, vbc.frontPlane);
-                    bool backPlane = DidIntersectPlane(ray, vbc.backPlane);
-
-
-                    bool hitBox = topPlane || bottomPlane || leftPlane || rightPlane || frontPlane || backPlane;
-                    if (hitBox)
-                    {
-                        print("hit box collider");
-                        hitSomething = true;
-                    }
+                case ValkyrieBoxCollider vbc:
+                    if (DidIntersectBox(ray, vbc)) hitSomething = true;
                     break;
 
                 
-                case ValkyrieCapsuleCollider:
-                    ValkyrieCapsuleCollider vcc = collider as ValkyrieCapsuleCollider;
+                case ValkyrieCapsuleCollider vcc:
                     break;
 
-                case ValkyrieSphereCollider:
-                    ValkyrieSphereCollider vsc = collider as ValkyrieSphereCollider;
-                    if (DidIntersectSphere(ray, vsc.globalCenter, vsc.radius))
-                    {
-                        print("hit sphere collider " + vsc.name);
-                        hitSomething = true;
-                    }
+                case ValkyrieSphereCollider vsc:
+                    if (DidIntersectSphere(ray, vsc.globalCenter, vsc.radius)) hitSomething = true;
+                    break;
+
+                case Valkyrie2DRectCollider v2Drc:
+                    if (DidIntersectBoundedRect(ray, v2Drc.plane)) hitSomething = true;
                     break;
             }
         }
@@ -141,6 +142,21 @@ public class VPhys : MonoBehaviour
         Gizmos.DrawRay(transform.position, dir);
     }
 
+    //Helper Methods
+
+    public bool DidIntersectBox(VRay ray, ValkyrieBoxCollider vbc)
+    {
+        bool topPlane = DidIntersectBoundedRect(ray, vbc.topPlane);
+        bool bottomPlane = DidIntersectBoundedRect(ray, vbc.bottomPlane);
+        bool leftPlane = DidIntersectBoundedRect(ray, vbc.leftPlane);
+        bool rightPlane = DidIntersectBoundedRect(ray, vbc.rightPlane);
+        bool frontPlane = DidIntersectBoundedRect(ray, vbc.frontPlane);
+        bool backPlane = DidIntersectBoundedRect(ray, vbc.backPlane);
+
+        return topPlane || bottomPlane || leftPlane || rightPlane || frontPlane || backPlane;
+    }
+
+    //check VRLands notes for derivation of this. it's relatively simple calc 3 
     public bool DidIntersectSphere(VRay ray, Vector3 center, float radius)
     {
         float a = Vector3.SqrMagnitude(ray.dir);
@@ -155,7 +171,7 @@ public class VPhys : MonoBehaviour
     
     }   
 
-    public bool DidIntersectPlane(VRay ray, BoundedPlane plane)
+    public bool DidIntersectBoundedRect(VRay ray, BoundedRect plane)
     {
         if (Vector3.Dot(plane.normal, ray.dir) == 0) return false;
         Vector3 pointOfIntersection = ray.start + (Vector3.Dot(plane.normal, plane.origin - ray.start) / Vector3.Dot(plane.normal, ray.dir)) * ray.dir;

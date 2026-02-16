@@ -238,7 +238,7 @@ public class ValkyrieCollider : MonoBehaviour
             //if area of triangle is less than a certain threshold, then we know at least 2 points in the triangle are essentially the same
             if(areaVec.magnitude / 2 < 0.0001f)
             {
-                throw new Exception("PolytopeTri not given 3 unique points!");
+                Debug.LogWarning("PolytopeTri not given 3 unique points!");
             }
 
             //Compute and Set
@@ -371,7 +371,7 @@ public class ValkyrieCollider : MonoBehaviour
     #region
     [Header("Editor Settings")]
     public bool drawInEditor = true;
-    public Color colliderColor = Color.red;
+    public Color colliderColor = Color.black;
     public bool logCollisions = false;
     public bool collisionDetectionMode = false;
 
@@ -638,7 +638,7 @@ public class ValkyrieCollider : MonoBehaviour
         for (int i = 1; triangles.Count > i; i++)
         {
             if (triangles[i].distToOrigin < triangles[minIdx].distToOrigin) minIdx = i;
-
+        
         }
 
 
@@ -654,6 +654,7 @@ public class ValkyrieCollider : MonoBehaviour
 
     private (Vector3, float) GetCollisionData()
     {
+        //start with terminating simplex after running GJK
         Polytope pt = new Polytope(terminatingSimplex);
         List<PolytopeTri> polytopeTriangles = pt.GetTriangles();
 
@@ -663,7 +664,7 @@ public class ValkyrieCollider : MonoBehaviour
         float sprtPtDist;
 
         int m = 0;
-
+        
         while (m < 30 && pt.GetTriangles().Count >= 4)
         {
             minTriIdx = GetMin(polytopeTriangles);
@@ -675,7 +676,7 @@ public class ValkyrieCollider : MonoBehaviour
             sprtPtDist = Mathf.Abs(Vector3.Dot(epaSprtPt - polytopeTriangles[minTriIdx].GetVertex(0), minNorm));
 
             
-            if (MinoMath.FApproximately(sprtPtDist, 0, supportThreshold))
+            if (MinoMath.FApproximately(sprtPtDist, 0.005f, supportThreshold))
             {
                 //penetrationDepth = distance from origin to minTri
                 float penetrationDepth = polytopeTriangles[minTriIdx].distToOrigin;
