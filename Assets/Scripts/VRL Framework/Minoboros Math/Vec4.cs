@@ -1,14 +1,16 @@
+using System;
 using org.mariuszgromada.math.mxparser.parsertokens;
 using System.Text;
 using UnityEngine;
 
+[Serializable]
 public struct Vec4
 {
-    // Private backing fields
-    private float _x;
-    private float _y;
-    private float _z;
-    private float _w;
+    // Private backing fields - setting serializefield on these temporarily
+    [SerializeField] private float _x;
+    [SerializeField] private float _y;
+    [SerializeField] private float _z;
+    [SerializeField] private float _w;
 
     //Float Values
     #region

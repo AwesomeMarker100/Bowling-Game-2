@@ -16,7 +16,7 @@ public class RadixTracker : MonoBehaviour
     [Header("Basic Settings")]
     [SerializeField] private bool trackMovement = true;
     [SerializeField] private bool trackRotation = true;
-    [SerializeField] private float rotationSpeed = 3;
+    [SerializeField] private float rotationSpeedMultiplier = 3;
 
     [Header("Head Cam Settings")]
     [SerializeField] public Camera headCam;
@@ -45,7 +45,7 @@ public class RadixTracker : MonoBehaviour
         {
             headset = VRLDeviceManager.GetHeadDevice();
 
-            if (headset.name is not null)
+            if (headset.isValid)
             {
 
                 if (!freeze)
@@ -55,10 +55,7 @@ public class RadixTracker : MonoBehaviour
 
                     //TRACK HEAD POSITION
                     if (trackMovement) SetHeadPosition();
-                } else
-                {
-                    
-                }
+                } 
             }
         }
         
@@ -89,7 +86,7 @@ public class RadixTracker : MonoBehaviour
 
 
         headRotation = GetRotation();
-        headCam.transform.localRotation = Quaternion.Slerp(headCam.transform.localRotation, headRotation * Quaternion.Euler(rotationOffset), Time.fixedDeltaTime * rotationSpeed);
+        headCam.transform.localRotation = Quaternion.Slerp(headCam.transform.localRotation, headRotation * Quaternion.Euler(rotationOffset), Time.fixedDeltaTime * rotationSpeedMultiplier);
 
     }
     #endregion

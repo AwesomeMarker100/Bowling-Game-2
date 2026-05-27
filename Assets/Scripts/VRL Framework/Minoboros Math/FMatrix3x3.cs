@@ -3,9 +3,14 @@ using NUnit.Framework.Constraints;
 using org.mariuszgromada.math.mxparser.parsertokens;
 using System;
 using Unity.VisualScripting;
+using UnityEngine;
+using System.Runtime.CompilerServices;
 
+
+[Serializable]
 public struct FMatrix3x3
 {
+
     private Vec3[] matArr;
 
 
@@ -57,6 +62,7 @@ public struct FMatrix3x3
         set
         {
             if (i is >= 0 and <= 2 && j is >= 0 and <= 2) matArr[i][j] = value;
+            else throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -70,6 +76,7 @@ public struct FMatrix3x3
         set
         {
             if (i is >= 0 and <= 2) matArr[i] = value;
+            else throw new ArgumentOutOfRangeException();
         }
     }
 

@@ -17,6 +17,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
     [SerializeField] bool isStatic = false;
 
     [SerializeField] ValkPhysMat physicsMaterial;
+    //[SerializeField] FMatrix3x3 inertiaTensor;
 
 
     //THRESHOLDS
@@ -57,7 +58,6 @@ public class ValkyrieRigidbody2 : MonoBehaviour
         FMatrix4x4 matrix = new FMatrix4x4(new Vec4(4, 1, 2, 3), new Vec4(1, 6, 0, 2), new Vec4(2, 0, 5, 1), new Vec4(3, 2, 1, 4));
         matrix.SolvePLU(Vec4.zero);
 
-        print(matrix.Determinant);
     }
 
     // Update is called once per frame
@@ -206,9 +206,13 @@ public class ValkyrieRigidbody2 : MonoBehaviour
 
             float effectiveInverseMass = GetEffectiveInverseMass(collision);
 
-            if (effectiveInverseMass == 0) print("Effective Inverse Mass is 0.");
+            if (effectiveInverseMass == 0)
+            {
+                Debug.LogError("Effective inverse mass is 0!");
+                return;
+            }
             
-
+            
             collision.impulseMagnitude = -(1 + cor) * collision.relVelDotNorm / effectiveInverseMass;
             float relVelDotNorm = collision.relVelDotNorm;
 

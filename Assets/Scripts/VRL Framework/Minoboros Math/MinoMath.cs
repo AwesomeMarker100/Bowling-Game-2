@@ -45,7 +45,7 @@ public class MinoMath : MonoBehaviour
 
     public static bool FApproximately(float f1, float f2)
     {
-        return Mathf.Abs(f2 - f1) <= Mathf.Epsilon;
+        return Mathf.Abs(f2 - f1) <= 10E-4;
     }
 
     public static bool Within(float val, float min, float max)

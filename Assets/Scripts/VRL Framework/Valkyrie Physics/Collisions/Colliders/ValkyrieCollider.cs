@@ -680,7 +680,7 @@ public class ValkyrieCollider : MonoBehaviour
             {
                 //penetrationDepth = distance from origin to minTri
                 float penetrationDepth = polytopeTriangles[minTriIdx].distToOrigin;
-                if(name == "Capsule") SetPointOfContact(polytopeTriangles[minTriIdx]);
+                if(name == "Cube") SetPointOfContact(polytopeTriangles[minTriIdx]);
                 return (minNorm, penetrationDepth);
             }
 
@@ -713,6 +713,7 @@ public class ValkyrieCollider : MonoBehaviour
         
         if(contactPoint != Vector3.negativeInfinity)
         {
+            print("here");
             Gizmos.DrawSphere(contactPoint, 0.05f);
         }
 

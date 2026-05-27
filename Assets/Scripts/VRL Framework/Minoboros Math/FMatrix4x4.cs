@@ -5,10 +5,11 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[Serializable]
 public struct FMatrix4x4
 {
     //row wise storage for matrix
-    private Vec4[] matArr;
+    [SerializeField] private Vec4[] matArr;
 
     //Indexing
     #region
@@ -177,10 +178,11 @@ public struct FMatrix4x4
 
     #endregion
 
+
     private bool IsUpperTriangularHelper() => this[1, 0] == 0 && this[2, 0] == 0 && this[2, 1] == 0 && this[3, 0] == 0 && this[3, 1] == 0 && this[3, 2] == 0;
 
     //Calculating Determinant
-
+    
     //im not doing the cofactor method and sort of "bruteforcing" it bc its only 4x4 and also FMatrix3x3 needs refining
     public float CalcDeterminant()
     {

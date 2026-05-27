@@ -62,7 +62,9 @@ public class VPhys : MonoBehaviour
 
             if (MinoMath.VApproximately(basisVector1, Vector3.zero)) throw new ArgumentException("Not given 3 unique points!");
             if (MinoMath.VApproximately(basisVector2, Vector3.zero)) throw new ArgumentException("Not given 3 unique points!");
-            if (Vector3.Dot(basisVector1, basisVector2) != 0) throw new ArgumentException("b - a and c - a must be orthogonal!");
+            if (Vector3.Dot(basisVector1, basisVector2) > 1e-5f) throw new ArgumentException("b - a and c - a must be orthogonal!");
+            
+            
 
             bv1Length = basisVector1.magnitude;
             bv2Length = basisVector2.magnitude;
@@ -102,7 +104,7 @@ public class VPhys : MonoBehaviour
     public bool Raycast(Vector3 start, Vector3 dir, float dist)
     {
         //should change to use KDTree or OctTree nodes at some point 
-        ValkyrieCollider[] colliders = FindObjectsByType<ValkyrieCollider>(FindObjectsSortMode.None);
+        ValkyrieCollider[] colliders = FindObjectsByType<ValkyrieCollider>();
 
         VRay ray = new VRay(start, dir.normalized);
         bool hitSomething = false;
