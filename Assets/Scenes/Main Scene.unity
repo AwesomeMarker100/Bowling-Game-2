@@ -119,47 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!21 &325130160
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - PixelSnap: 0
-    - _EnableExternalAlpha: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +307,7 @@ GameObject:
   - component: {fileID: 523724067}
   - component: {fileID: 523724068}
   m_Layer: 0
-  m_Name: Sphere Hihi
+  m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -452,7 +411,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 325130160}
+  - {fileID: 1877701973}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -820,8 +779,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 10
-  centerOfMass: {x: 0, y: 0, z: 0}
+  mass: 5
+  centerOfMass: {x: 0, y: 0.1, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
   impulseMagnitudeThreshold: 0.08
@@ -834,7 +793,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523724056}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db2ba29f07913ba4e99fe90b5227e22d, type: 3}
   m_Name: 
@@ -842,7 +801,7 @@ MonoBehaviour:
   type: 0
   drawInEditor: 1
   colliderColor: {r: 0, g: 0, b: 0, a: 0}
-  logCollisions: 0
+  logCollisions: 1
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
   globalCenter: {x: 3.561, y: 5.82, z: 10.06}
@@ -1083,6 +1042,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Radix
       objectReference: {fileID: 0}
+    - target: {fileID: 2189575434844880553, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2189575434844880554, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.17
@@ -1130,6 +1093,10 @@ PrefabInstance:
     - target: {fileID: 3307167748306105659, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
       propertyPath: translationSpeed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7772525742663878957, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 196961147, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
@@ -1350,8 +1317,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 0.5
-  centerOfMass: {x: 0, y: 0, z: 0}
+  mass: 5
+  centerOfMass: {x: 0.2, y: 0, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
   impulseMagnitudeThreshold: 0.08
@@ -1545,6 +1512,47 @@ MonoBehaviour:
   flipNormal: 0
   thickness: 21.2
   scaleFactor: 0.14
+--- !u!21 &1877701973
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - PixelSnap: 0
+    - _EnableExternalAlpha: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &1977924044 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2189575434515460544, guid: 2ce324e3a8cb0844281535e776cb21c5, type: 3}
@@ -1596,5 +1604,5 @@ SceneRoots:
   - {fileID: 968202022}
   - {fileID: 653695945}
   - {fileID: 513579289}
-  - {fileID: 808740864}
   - {fileID: 523724060}
+  - {fileID: 808740864}

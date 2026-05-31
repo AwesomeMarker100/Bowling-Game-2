@@ -112,6 +112,9 @@ public struct FMatrix3x3
 
         return new FMatrix3x3(new Vec3(c00, c01, c02), new Vec3(c10, c11, c12), new Vec3(c20, c21, c22));
     }
+
+    public static Vector3 operator *(FMatrix3x3 a, Vector3 v) => new Vector3(a[0, 0] * v.x + a[0, 1] * v.y + a[0, 2] * v.z, 
+        a[1, 0] * v.x + a[1, 1] * v.y + a[1, 2] * v.z, a[2, 0] * v.x + a[2, 1] * v.y + a[2, 2] * v.z);
     #endregion
 
     //addition and subtraction
@@ -167,7 +170,7 @@ public struct FMatrix3x3
     public float GetDeterminant()
     {
         //deal with ill conditioned case later
-        if (IsIllConditioned) return 0;
+        //if (IsIllConditioned) return 0;
         if (this == Zero) return 0;
         if (this == I) return 1;
         if (IsUpperTriangular || IsLowerTriangular) return this[0, 0] * this[1, 1] * this[2, 2];

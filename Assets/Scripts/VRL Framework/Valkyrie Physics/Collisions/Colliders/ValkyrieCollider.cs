@@ -353,6 +353,7 @@ public class ValkyrieCollider : MonoBehaviour
     {
 
 
+
         BoxCollider,
         SphereCollider,
         CapsuleCollider,
@@ -416,6 +417,7 @@ public class ValkyrieCollider : MonoBehaviour
         onCollisionDead = new ValkyrieCollisionEvent();
 
         SetBounds();
+
     }
 
     public virtual void FixedUpdate()
@@ -431,48 +433,105 @@ public class ValkyrieCollider : MonoBehaviour
     }
 
     //Check "Contact Manifold" in VRL Notebook
-    private void SetPointOfContact(PolytopeTri tri)
+    //tri is closest face after running EPA 
+    private Vector3 GetPointOfContact(PolytopeTri tri)
     {
         Vector3 nPlane = tri.normal;
 
         if(nPlane == Vector3.zero)
         {
             print("Triangle had zero normal!");
-            return;
+            return Vector3.negativeInfinity;
         }
-
-        contactPoint = Vector3.negativeInfinity;
 
         Vector3 v1 = tri.GetVertex(0);
         Vector3 v2 = tri.GetVertex(1);
         Vector3 v3 = tri.GetVertex(2);
 
-        Vector3 centroid = (v1 + v2 + v3) / 3;
-
         Vector3 e1 = v2 - v1;
-        Vector3 n1 = Vector3.Cross(e1, nPlane).normalized;
-        if (Vector3.Dot(n1, centroid) > 0) n1 *= -1;
-
         Vector3 e2 = v3 - v1;
-        Vector3 e2Tilda = v1 - v3;
-        Vector3 n2 = Vector3.Cross(e2Tilda, nPlane).normalized;
-
-        if (Vector3.Dot(n2, centroid) > 0) n2 *= -1;
-
-
         Vector3 e3 = v3 - v2;
-        Vector3 n3 = Vector3.Cross(nPlane, e3).normalized;
-        if (Vector3.Dot(n3, centroid) > 0) n3 *= -1;
 
+        // Edge normals should point INWARD (toward opposite vertex)
+        Vector3 n1 = Vector3.Cross(e1, nPlane).normalized;
+        if (Vector3.Dot(n1, v3 - v1) < 0) n1 *= -1;  // Check against opposite vertex
+
+        Vector3 n2 = Vector3.Cross(e2, nPlane).normalized;
+        if (Vector3.Dot(n2, v2 - v1) < 0) n2 *= -1;
+
+        Vector3 n3 = Vector3.Cross(e3, nPlane).normalized;
+        if (Vector3.Dot(n3, v1 - v2) < 0) n3 *= -1;
+
+        // Closest point on plane to origin
         Vector3 R = tri.distToOrigin * tri.normal;
 
-        Vector3 r1 = R - v1;
-        Vector3 r2 = R - v2;
-        Vector3 r3 = R - v3;
+        // Vectors from plane point to each vertex
+        Vector3 r1 = v1 - R;
+        Vector3 r2 = v2 - R;
+        Vector3 r3 = v3 - R;
 
-        Vector3 projectedPoint = Vector3.zero;
-        Vector3 baryCentricCoords = Vector3.zero;
+        Vector3 closestPoint = Vector3.zero;
 
+        // Determine which region the closest point is in
+        float d1 = Vector3.Dot(r1, n1);
+        float d2 = Vector3.Dot(r2, n2);
+        float d3 = Vector3.Dot(r3, n3);
+
+        if (d1 <= 0 && d2 <= 0 && d3 <= 0)
+        {
+            // Inside triangle
+            closestPoint = R;
+        }
+        else if (d1 > 0 && Vector3.Dot(r1, e1) <= 0 && Vector3.Dot(r1, -e1 - e2) >= 0)
+        {
+            // Outside edge e1 (v1-v2)
+            float t = -Vector3.Dot(R - v1, e1) / Vector3.Dot(e1, e1);
+            t = Mathf.Clamp01(t);
+            closestPoint = v1 + t * e1;
+        }
+        else if (d2 > 0 && Vector3.Dot(r2, e2) <= 0 && Vector3.Dot(r2, -e2 - e1) >= 0)
+        {
+            // Outside edge e2 (v1-v3)
+            float t = -Vector3.Dot(R - v1, e2) / Vector3.Dot(e2, e2);
+            t = Mathf.Clamp01(t);
+            closestPoint = v1 + t * e2;
+        }
+        else if (d3 > 0 && Vector3.Dot(r3, e3) <= 0 && Vector3.Dot(r3, -e3 + e1) >= 0)
+        {
+            // Outside edge e3 (v2-v3)
+            float t = -Vector3.Dot(R - v2, e3) / Vector3.Dot(e3, e3);
+            t = Mathf.Clamp01(t);
+            closestPoint = v2 + t * e3;
+        }
+        else
+        {
+            // Outside a vertex
+            closestPoint = (Vector3.Distance(R, v1) < Vector3.Distance(R, v2)) ? 
+                          (Vector3.Distance(R, v1) < Vector3.Distance(R, v3) ? v1 : v3) : 
+                          (Vector3.Distance(R, v2) < Vector3.Distance(R, v3) ? v2 : v3);
+        }
+
+        // Compute barycentric coordinates for closestPoint
+        float d0 = Vector3.Dot(e1, e1);
+        float d1_dot = Vector3.Dot(e1, e2);
+        float d2_dot = Vector3.Dot(e2, e2);
+        float h0 = Vector3.Dot(closestPoint - v1, e1);
+        float h1 = Vector3.Dot(closestPoint - v1, e2);
+
+        float detA = d0 * d2_dot - d1_dot * d1_dot;
+        
+        if (Mathf.Abs(detA) < 0.0001f)
+        {
+            print("Degenerate triangle in barycentric calculation!");
+            contactPoint = Vector3.negativeInfinity;
+            return contactPoint;
+        }
+
+        float beta = (h0 * d2_dot - h1 * d1_dot) / detA;
+        float gamma = (d0 * h1 - d1_dot * h0) / detA;
+        float alpha = 1 - beta - gamma;
+
+        // Get support points for each vertex from the direction dictionary
         Vector3 globalPtV1 = Vector3.negativeInfinity;
         Vector3 globalPtV2 = Vector3.negativeInfinity;
         Vector3 globalPtV3 = Vector3.negativeInfinity;
@@ -484,81 +543,16 @@ public class ValkyrieCollider : MonoBehaviour
         if (globalPtV1 == Vector3.negativeInfinity || globalPtV2 == Vector3.negativeInfinity || globalPtV3 == Vector3.negativeInfinity)
         {
             print("One or more global points have failed!");
-            return;
+            return Vector3.negativeInfinity;
         }
 
         globalPtV1 = this.GetFurthestPoint(globalPtV1);
         globalPtV2 = this.GetFurthestPoint(globalPtV2);
         globalPtV3 = this.GetFurthestPoint(globalPtV3);
 
-        if (Vector3.Dot(r1, n1) >= 0)
-        {
-            if(Vector3.Dot(r2, n3) >= 0)
-            {
-                //A - project onto v2
-                projectedPoint = v2;
-
-            } else if(Vector3.Dot(r1, n2) >= 0)
-            {
-                //B - project onto v1
-                projectedPoint = v1;
-            } else
-            {
-                //D
-                float d = Vector3.Dot(r1, n1);
-                projectedPoint = R - d * n1;
-            }
-        } else
-        {
-            if(Vector3.Dot(r1, n2) >= 0)
-            {
-                if(Vector3.Dot(r3, n3) >= 0)
-                {
-                    //C
-                    projectedPoint = v3;
-
-                } else
-                {
-                    //F
-                    float d = Vector3.Dot(r1, n2);
-                    projectedPoint = R - d * n2;
-                }
-            } else
-            {
-                if(Vector3.Dot(r3, n3) >= 0)
-                {
-                    //E
-                    float d = Vector3.Dot(r3, n3);
-                    projectedPoint = R - d * n3;
-
-                } else
-                {
-                    //Inside Triangle
-                    projectedPoint = R;
-
-                }
-            }
-        }
-
-        
-
-        float d0 = Vector3.Dot(e1, e1);
-        float d1 = Vector3.Dot(e1, e2);
-        float d3 = Vector3.Dot(e2, e2);
-        float h0 = Vector3.Dot(projectedPoint - v1, e1);
-        float h1 = Vector3.Dot(projectedPoint - v1, e2);
-
-        float detA = d0 * d3 - d1 * d1;
-        float detABeta = h0 * d3 - h1 * d1;
-        float detAGamma = d0 * h1 - d1 * h0;
-
-        float beta = detABeta / detA;
-        float gamma = detAGamma / detA;
-        float alpha = 1 - beta - gamma;
-
-
+        // Interpolate contact point using barycentric coordinates
         contactPoint = (alpha * globalPtV1 + beta * globalPtV2 + gamma * globalPtV3);
-        //contactPoint = globalPtV1 * baryCentricCoords.x + globalPtV2 * baryCentricCoords.y + globalPtV3 * baryCentricCoords.z;
+        return contactPoint;
     }
 
     //Check for Collisions
@@ -569,7 +563,7 @@ public class ValkyrieCollider : MonoBehaviour
         //ValkPhys2.SetNewRegion(this);
 
         // List<ValkyrieCollider> neighbors = region.GetMembers();
-        ValkyrieCollider[] neighbors = FindObjectsOfType<ValkyrieCollider>();
+        ValkyrieCollider[] neighbors = FindObjectsByType<ValkyrieCollider>();
 
 
         if (inCollision) //if we're in a collision, check with that collider first if we're still colliding - if not then die and if so, persist
@@ -590,8 +584,8 @@ public class ValkyrieCollider : MonoBehaviour
             {
                 //WE ARE STILL COLLIDING
 
-                (Vector3, float) penetrationData = GetCollisionData();
-                collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2);
+                (Vector3, float, Vector3) penetrationData = GetCollisionData();
+                collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
 
                 if(collisionInfo != null) onCollisionPersistent.Invoke(collisionInfo);
             }
@@ -607,8 +601,11 @@ public class ValkyrieCollider : MonoBehaviour
                 {
                     otherCol = neighbor;
 
-                    (Vector3, float) penetrationData = GetCollisionData();
-                    collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2);
+                    (Vector3, float, Vector3) penetrationData = GetCollisionData();
+                    collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
+
+                    if (name == "Sphere") print(collisionInfo + " Sphere");
+                    if (name == "Cube") print(collisionInfo + " Cube");
 
                     inCollision = true;
                     if (collisionInfo != null) onCollisionAwake.Invoke(collisionInfo);
@@ -652,7 +649,7 @@ public class ValkyrieCollider : MonoBehaviour
     #region
 
 
-    private (Vector3, float) GetCollisionData()
+    private (Vector3, float, Vector3) GetCollisionData()
     {
         //start with terminating simplex after running GJK
         Polytope pt = new Polytope(terminatingSimplex);
@@ -680,15 +677,15 @@ public class ValkyrieCollider : MonoBehaviour
             {
                 //penetrationDepth = distance from origin to minTri
                 float penetrationDepth = polytopeTriangles[minTriIdx].distToOrigin;
-                if(name == "Cube") SetPointOfContact(polytopeTriangles[minTriIdx]);
-                return (minNorm, penetrationDepth);
+                Vector3 poc = GetPointOfContact(polytopeTriangles[minTriIdx]);
+                return (minNorm, penetrationDepth, poc);
             }
 
             pt.AddPoint(epaSprtPt);
             m++;
         }
        
-        return (Vector3.zero, -1);
+        return (Vector3.zero, -1, Vector3.negativeInfinity);
 
     }
     #endregion
@@ -713,7 +710,6 @@ public class ValkyrieCollider : MonoBehaviour
         
         if(contactPoint != Vector3.negativeInfinity)
         {
-            print("here");
             Gizmos.DrawSphere(contactPoint, 0.05f);
         }
 

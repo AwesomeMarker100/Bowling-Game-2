@@ -17,9 +17,9 @@ public class ValkyrieCollision
     public Vector3[] contactManifold;
 
     public float relVelDotNorm;
+    public Vector3 pointOfContact; 
 
-
-    public ValkyrieCollision(ValkyrieCollider a, ValkyrieCollider b, Vector3 penetrationNormal, float penetrationDepth)
+    public ValkyrieCollision(ValkyrieCollider a, ValkyrieCollider b, Vector3 penetrationNormal, float penetrationDepth, Vector3 pointOfContact)
     {
         colliders = new ValkyrieCollider[]
         {
@@ -28,15 +28,14 @@ public class ValkyrieCollision
 
         this.penetrationNormal = penetrationNormal;
         this.penetrationDepth = penetrationDepth;
+        this.pointOfContact = pointOfContact;
     }
 
-    public ValkyrieCollider GetOtherCollider(ValkyrieCollider col)
+    public ValkyrieCollider GetOtherCollider(ValkyrieCollider col) => col == colliders[0] ? colliders[1] : colliders[0];
+
+    public override string ToString()
     {
-        if(col == colliders[0]) return colliders[1];
-        else if(col == colliders[1]) return colliders[0];
-        
-        return null;
+        return $"Penetration Depth: {penetrationDepth}, Penetration Normal: {penetrationNormal}, Point Of Contact: {pointOfContact}";
     }
-
 
 }

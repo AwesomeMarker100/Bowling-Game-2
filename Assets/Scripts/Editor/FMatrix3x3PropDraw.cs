@@ -5,7 +5,7 @@ using Codice.Client.Common.GameUI;
 [CustomPropertyDrawer(typeof(FMatrix3x3))]
 public class FMatrix3x3PropDraw : PropertyDrawer
 {
-
+/*
     private float m00;
     private float m01;
     private float m02;
@@ -29,5 +29,5 @@ public class FMatrix3x3PropDraw : PropertyDrawer
         SerializedProperty matArr = property.FindPropertyRelative("matArr");
         EditorGUI.PropertyField(new Rect(position.x, position.y + 30, 300, 30), matArr);
         
-    }
+    }*/
 }

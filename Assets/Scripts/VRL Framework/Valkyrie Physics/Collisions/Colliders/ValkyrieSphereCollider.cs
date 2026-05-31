@@ -9,12 +9,11 @@ public class ValkyrieSphereCollider : ValkyrieCollider
     private const float tau = 2 * Mathf.PI;
 
 
-    public ValkyrieSphereCollider(float radius)
+    private void Start()
     {
+        this.type = ColliderType.BoxCollider;
+        globalCenter = transform.TransformPoint(localCenter);
 
-        this.type = ColliderType.SphereCollider;
-
-        this.radius = radius;
 
     }
 
