@@ -565,56 +565,55 @@ public abstract class ValkyrieCollider : MonoBehaviour
         // List<ValkyrieCollider> neighbors = region.GetMembers();
         ValkyrieCollider[] neighbors = FindObjectsByType<ValkyrieCollider>();
 
+        bool hasAnyActiveCollision = false;
 
-        if (inCollision) //if we're in a collision, check with that collider first if we're still colliding - if not then die and if so, persist
+        // Check all neighbors for collisions and fire events for each one
+        foreach (ValkyrieCollider neighbor in neighbors)
         {
+            if (neighbor == this) continue;
 
-            if (!CheckIfCollided(otherCol))
+            bool currentlyColliding = CheckIfCollided(neighbor);
+            bool wasColliding = otherCol == neighbor && inCollision;
+
+            if (currentlyColliding)
             {
-                //THE COLLISION HAS ENDED
+                hasAnyActiveCollision = true;
+
+                // Set otherCol FIRST before getting collision data
+                otherCol = neighbor;
+
+                (Vector3, float, Vector3) penetrationData = GetCollisionData();
+                ValkyrieCollision collisionInfo = new ValkyrieCollision(this, neighbor, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
+
+                if (logCollisions) print($"{name} colliding with {neighbor.name}");
+
+                if (!wasColliding)
+                {
+                    // New collision - fire Awake
+                    if (collisionInfo != null) onCollisionAwake.Invoke(collisionInfo);
+                }
+                else
+                {
+                    // Continuing collision - fire Persistent
+                    if (collisionInfo != null) onCollisionPersistent.Invoke(collisionInfo);
+                }
+
+                this.collisionInfo = collisionInfo;
+            }
+            else if (wasColliding)
+            {
+                // Was colliding but no longer - fire Dead
+                if (logCollisions) print($"{name} stopped colliding with {neighbor.name}");
+
                 if(collisionInfo != null) onCollisionDead.Invoke(collisionInfo);
 
                 collisionInfo = null;
-                inCollision = false;
-
                 otherCol = null;
-
             }
-            else
-            {
-                //WE ARE STILL COLLIDING
+        }
 
-                if (logCollisions) print($"{name} is still colliding with {otherCol.name}");
+        inCollision = hasAnyActiveCollision;
 
-                (Vector3, float, Vector3) penetrationData = GetCollisionData();
-                collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
-
-                if(collisionInfo != null) onCollisionPersistent.Invoke(collisionInfo);
-            }
-
-        } else //2-limiter 
-        {
-            //need to make more efficient- shouldn't have to check for every neighbor
-            foreach (ValkyrieCollider neighbor in neighbors)
-            {
-                if (neighbor == this) continue;
-
-                if (CheckIfCollided(neighbor))
-                {
-                    otherCol = neighbor;
-
-                    (Vector3, float, Vector3) penetrationData = GetCollisionData();
-                    collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
-
-                    if (logCollisions) print($"{name} has collided with {otherCol.name}");
-
-                    inCollision = true;
-                    if (collisionInfo != null) onCollisionAwake.Invoke(collisionInfo);
-                }
-            }
-       }
-
-        
     }
 
     #endregion

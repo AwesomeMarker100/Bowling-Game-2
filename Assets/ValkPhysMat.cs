@@ -16,5 +16,7 @@ public class ValkPhysMat : ScriptableObject
     [SerializeField] float kineticFrictionCoefficient = 0.1f;
     [SerializeField] float coefficientOfRestitution = 1;
     [SerializeField] CombineMode frictionCombineMode = CombineMode.Average;
-    [SerializeField] CombineMode bounceCombineMode = CombineMode.Average; 
+    [SerializeField] CombineMode bounceCombineMode = CombineMode.Average;
+
+    public float GetCoefficientOfRestitution() => coefficientOfRestitution;
 }

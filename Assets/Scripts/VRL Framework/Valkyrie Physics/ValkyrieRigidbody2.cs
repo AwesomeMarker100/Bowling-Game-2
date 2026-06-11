@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using UnityEditor.Rendering;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.Analytics;
 using UnityEngine.Events;
@@ -254,13 +255,21 @@ public class ValkyrieRigidbody2 : MonoBehaviour
 
             if (otherVRB)
             {
+                // Only apply impulse if this object is not static
+                // This prevents double-application since both objects call RespondCollision independently
+                if (isStatic)
+                {
+                    SeparateObjects(col, 0.003f);
+                    continue;
+                }
+
                 //relative velocity dotted with collision normal 
                 col.relVelDotNorm = GetRelVelDotNorm(otherVRB.velocity, otherVRB.angularVelocity, 
                                                          col.penetrationNormal, col.pointOfContact, otherVRB);
 
                 float angularDenom = GetAngularImpulseComp(col.pointOfContact, col.penetrationNormal, otherVRB);
 
-                float cor = 1f; //coefficient of restitution
+                float cor = physicsMaterial != null ? physicsMaterial.GetCoefficientOfRestitution() : 0.1f;
 
                 float effectiveInverseMass = GetEffectiveInverseMass(col);
 
@@ -311,7 +320,6 @@ public class ValkyrieRigidbody2 : MonoBehaviour
             Vector3 slidingNormal = activeCollisions[0].penetrationNormal;
             velocity -= Vector3.Dot(velocity, slidingNormal) * slidingNormal;
         }
-    }
     }
     #endregion
 

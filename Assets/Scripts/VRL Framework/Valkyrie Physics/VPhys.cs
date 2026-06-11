@@ -97,7 +97,10 @@ public class VPhys : MonoBehaviour
     #endregion
 
 
-
+    public void Awake()
+    {
+        Time.fixedDeltaTime = 1 / 70f;
+    }
 
 
     //General Raycast Method
