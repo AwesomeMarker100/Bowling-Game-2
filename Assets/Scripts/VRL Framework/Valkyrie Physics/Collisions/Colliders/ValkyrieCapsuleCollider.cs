@@ -50,6 +50,11 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
 
     }
 
+    private void Start()
+    {
+        this.type = ColliderType.CapsuleCollider;
+        globalCenter = transform.TransformPoint(localCenter);
+    }
 
     public override void SetBounds()
     {

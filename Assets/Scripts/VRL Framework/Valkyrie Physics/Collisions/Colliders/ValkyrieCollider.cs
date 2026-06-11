@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.LowLevelPhysics;
 
-public class ValkyrieCollider : MonoBehaviour
+public abstract class ValkyrieCollider : MonoBehaviour
 {
 
     //represents the shape we can make in any n-dimension with least amount of vertices - e.g. 1-simplex is a line (one dimensional and can contain a point), 2-simplex is a triangle and can contain a line, etc
@@ -584,6 +584,8 @@ public class ValkyrieCollider : MonoBehaviour
             {
                 //WE ARE STILL COLLIDING
 
+                if (logCollisions) print($"{name} is still colliding with {otherCol.name}");
+
                 (Vector3, float, Vector3) penetrationData = GetCollisionData();
                 collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
 
@@ -604,8 +606,7 @@ public class ValkyrieCollider : MonoBehaviour
                     (Vector3, float, Vector3) penetrationData = GetCollisionData();
                     collisionInfo = new ValkyrieCollision(this, otherCol, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
 
-                    if (name == "Sphere") print(collisionInfo + " Sphere");
-                    if (name == "Cube") print(collisionInfo + " Cube");
+                    if (logCollisions) print($"{name} has collided with {otherCol.name}");
 
                     inCollision = true;
                     if (collisionInfo != null) onCollisionAwake.Invoke(collisionInfo);

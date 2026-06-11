@@ -10,15 +10,16 @@ public class WaveLaserInteractor : LaserInteractor
         base.Update();
 
         float t = 0;
-        float tStep = maxLength / resolution;
+
+        float tStep = 1f / resolution;  // Step per unit, based on density
         int i = 0;
 
         phaseAngle = phaseAngle % (2 * Mathf.PI);
-        SetPositionCount(resolution);
+        SetPositionCount((int)(maxLength * resolution));
         
-        while(t < maxLength)
+        while(t <= maxLength)
         {
-            if (i == GetPositionCount()) break;
+            if (i == GetPositionCount()) break; //safety check
             SetPosition(i, new Vector3(0, amplitude * Mathf.Sin(2 * Mathf.PI * frequency * t + phaseAngle), t));
             i++;
             t += tStep;

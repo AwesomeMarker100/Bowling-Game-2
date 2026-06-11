@@ -22,7 +22,7 @@ public class ValkyrieTester : MonoBehaviour
     {
         if (Keyboard.current.pKey.isPressed)
         {
-            m_Rigidbody.ApplyForce(transform.forward * 4f);
+            m_Rigidbody.ApplyForce(transform.forward * 20f);
         }
 
     }
