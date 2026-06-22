@@ -196,9 +196,24 @@ public class VPhys : MonoBehaviour
 
     }
 
-    public void SphereCast()
+    public bool Boxcast(Vector3 center, Vector3 halfLengths,  Quaternion rotation)
     {
+        throw new NotImplementedException();
+    }
 
+    public bool SphereCast(Vector3 center, float radius)
+    {
+        //make regional search asap 
+
+        foreach(ValkyrieCollider col in FindObjectsByType<ValkyrieCollider>())
+        {
+            if(Vector3.Distance(col.globalCenter, center) < radius)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

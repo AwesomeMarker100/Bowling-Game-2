@@ -225,6 +225,13 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
         return TRS.MultiplyPoint3x4(dir * t);
     }
 
+
+    //NEW STUFF
+
+    public override Vector3 GetSupportPoint(Vector3 dir)
+    {
+        return base.GetSupportPoint(dir);
+    }
     
     
 }

@@ -7,10 +7,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.LowLevelPhysics;
 
-public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
+public static class GJK
 {
 
     //represents the shape we can make in any n-dimension with least amount of vertices - e.g. 1-simplex is a line (one dimensional and can contain a point), 2-simplex is a triangle and can contain a line, etc
+
+    public static float supportThreshold = 0.01f;
 
     //Structs
     #region
@@ -30,7 +32,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
         public void RemovePoint(Vector3 point)
         {
-            if(!points.Contains(point)) { Debug.LogException(new Exception("Failed to remove point as it is not contained in simplex!")); return; }
+            if (!points.Contains(point)) { Debug.LogException(new Exception("Failed to remove point as it is not contained in simplex!")); return; }
         }
         #endregion
 
@@ -39,7 +41,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
     public struct Polytope
     {
         //Parameters
-         #region
+        #region
         private Simplex initialSimplex;
         private List<PolytopeTri> triangles;
         #endregion
@@ -80,7 +82,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
             }
             catch (Exception ex)
             {
-                print(ex.Message);
+                Debug.Log(ex.Message);
             }
         }
 
@@ -234,9 +236,9 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
             this.v3 = c;
 
             Vector3 areaVec = Vector3.Cross(v2 - v1, v3 - v1);
-            
+
             //if area of triangle is less than a certain threshold, then we know at least 2 points in the triangle are essentially the same
-            if(areaVec.magnitude / 2 < 0.0001f)
+            if (areaVec.magnitude / 2 < 0.0001f)
             {
                 Debug.LogWarning("PolytopeTri not given 3 unique points!");
             }
@@ -247,7 +249,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
             //check if norm is pointing AWAY from the origin
             if (Vector3.Dot(v1, normal) < 0) normal *= -1;
-            
+
             this.centroid = new Vector3(v1.x + v2.x + v3.x, v1.y + v2.y + v3.y, v1.z + v2.z + v3.z);
 
             //from sage old Mr. G, distance = |pw(vec) dotted with normal| / magnitude of normal
@@ -267,10 +269,10 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         #region
         public override bool Equals(object obj)
         {
-            if(!(obj is  PolytopeTri)) return false; 
+            if (!(obj is PolytopeTri)) return false;
             PolytopeTri other = (PolytopeTri)obj;
 
-            return (edge1 == other.edge1 || edge1 == other.edge2 || edge1 == other.edge3) 
+            return (edge1 == other.edge1 || edge1 == other.edge2 || edge1 == other.edge3)
                 && (edge2 == other.edge1 || edge2 == other.edge2 || edge2 == other.edge3)
                 && (edge3 == other.edge3 || edge3 == other.edge3 || edge3 == other.edge3);
         }
@@ -292,7 +294,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
         public Vector3 GetVertex(int num)
         {
-            switch(num)
+            switch (num)
             {
                 case 0:
                     return v1;
@@ -317,7 +319,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         #endregion
         public UndirectedEdge(Vector3 v1, Vector3 v2)
         {
-            if(v1 == v2)
+            if (v1 == v2)
             {
                 throw new Exception("UndirectedEdge given two non-unique vertices!");
             }
@@ -366,81 +368,18 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
     #endregion
 
-    [HideInInspector] public ColliderType type;
 
-    //Editor Settings / Dimensions / Raycasts and Collisions
-    #region
-    [Header("Editor Settings")]
-    public bool drawInEditor = true;
-    public Color colliderColor = Color.black;
-    public bool logCollisions = false;
-    public bool collisionDetectionMode = false;
-
-    [Header("Dimensions")]
-    public Vector3 localCenter;
-    [HideInInspector] public Vector3 globalCenter;
-
-    [Header("Raycasts and Collisions")]
-    public LayerMask ignoreLayers;
-    #endregion
-
-
-    //Collision Info
-    #region
-    [HideInInspector] protected ValkyrieCollider otherCol;
-    [HideInInspector] protected ValkyrieCollision collisionInfo;
-
-    protected ValkyrieCollisionEvent onCollisionAwake = new ValkyrieCollisionEvent();
-    protected ValkyrieCollisionEvent onCollisionPersistent = new ValkyrieCollisionEvent();
-    protected ValkyrieCollisionEvent onCollisionDead = new ValkyrieCollisionEvent();
-
-    public KDRegion<ValkyrieCollider> region;
-    protected bool inCollision = false;
-
-    [SerializeField] Vector3 contactPoint = Vector3.zero;
-    #endregion
-
-    //EPA Fields
-    #region
-    private Simplex terminatingSimplex;
-    private float supportThreshold = 0.009f;
-    //private List<Triangle> triangles = null;
-    private Dictionary<Vector3, Vector3> sprtPtToDirection;
-    #endregion
-
-    public void Awake()
-    {
-        if (supportThreshold <= 0) supportThreshold = 0.001f;
-
-        onCollisionAwake = new ValkyrieCollisionEvent();
-        onCollisionPersistent = new ValkyrieCollisionEvent();
-        onCollisionDead = new ValkyrieCollisionEvent();
-
-        SetBounds();
-
-    }
-
-    public virtual void FixedUpdate()
-    {
-        globalCenter = transform.TransformPoint(localCenter);
-        SetBounds();
-        CheckForCollisions();
-    }
-    
-    public virtual void SetBounds()
-    {
-
-    }
 
     //Check "Contact Manifold" in VRL Notebook
     //tri is closest face after running EPA 
-    private Vector3 GetPointOfContact(PolytopeTri tri)
+    private static Vector3 GetPointOfContact(IColliderShape col1, PolytopeTri tri, Dictionary<Vector3, Vector3> sprtPtToDirection)
     {
+        Vector3 contactPoint;
         Vector3 nPlane = tri.normal;
 
-        if(nPlane == Vector3.zero)
+        if (nPlane == Vector3.zero)
         {
-            print("Triangle had zero normal!");
+            Debug.Log("Triangle had zero normal!");
             return Vector3.negativeInfinity;
         }
 
@@ -506,8 +445,8 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         else
         {
             // Outside a vertex
-            closestPoint = (Vector3.Distance(R, v1) < Vector3.Distance(R, v2)) ? 
-                          (Vector3.Distance(R, v1) < Vector3.Distance(R, v3) ? v1 : v3) : 
+            closestPoint = (Vector3.Distance(R, v1) < Vector3.Distance(R, v2)) ?
+                          (Vector3.Distance(R, v1) < Vector3.Distance(R, v3) ? v1 : v3) :
                           (Vector3.Distance(R, v2) < Vector3.Distance(R, v3) ? v2 : v3);
         }
 
@@ -519,10 +458,10 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         float h1 = Vector3.Dot(closestPoint - v1, e2);
 
         float detA = d0 * d2_dot - d1_dot * d1_dot;
-        
+
         if (Mathf.Abs(detA) < 0.0001f)
         {
-            print("Degenerate triangle in barycentric calculation!");
+            Debug.Log("Degenerate triangle in barycentric calculation!");
             contactPoint = Vector3.negativeInfinity;
             return contactPoint;
         }
@@ -542,92 +481,30 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
         if (globalPtV1 == Vector3.negativeInfinity || globalPtV2 == Vector3.negativeInfinity || globalPtV3 == Vector3.negativeInfinity)
         {
-            print("One or more global points have failed!");
+            Debug.Log("One or more global points have failed!");
             return Vector3.negativeInfinity;
         }
 
-        globalPtV1 = this.GetFurthestPoint(globalPtV1);
-        globalPtV2 = this.GetFurthestPoint(globalPtV2);
-        globalPtV3 = this.GetFurthestPoint(globalPtV3);
+        globalPtV1 = col1.GetSupportPoint(globalPtV1);
+        globalPtV2 = col1.GetSupportPoint(globalPtV2);
+        globalPtV3 = col1.GetSupportPoint(globalPtV3);
 
         // Interpolate contact point using barycentric coordinates
         contactPoint = (alpha * globalPtV1 + beta * globalPtV2 + gamma * globalPtV3);
         return contactPoint;
     }
 
-    //Check for Collisions
-    #region
-    public virtual void CheckForCollisions()
-    {
-
-        //ValkPhys2.SetNewRegion(this);
-
-        // List<ValkyrieCollider> neighbors = region.GetMembers();
-        ValkyrieCollider[] neighbors = FindObjectsByType<ValkyrieCollider>();
-
-        bool hasAnyActiveCollision = false;
-
-        // Check all neighbors for collisions and fire events for each one
-        foreach (ValkyrieCollider neighbor in neighbors)
-        {
-            if (neighbor == this) continue;
-
-            bool currentlyColliding = CheckIfCollided(neighbor);
-            bool wasColliding = otherCol == neighbor && inCollision;
-
-            if (currentlyColliding)
-            {
-                hasAnyActiveCollision = true;
-
-                // Set otherCol FIRST before getting collision data
-                otherCol = neighbor;
-
-                (Vector3, float, Vector3) penetrationData = GetCollisionData();
-                ValkyrieCollision collisionInfo = new ValkyrieCollision(this, neighbor, penetrationData.Item1, penetrationData.Item2, penetrationData.Item3);
-
-                if (logCollisions) print($"{name} colliding with {neighbor.name}");
-
-                if (!wasColliding)
-                {
-                    // New collision - fire Awake
-                    if (collisionInfo != null) onCollisionAwake.Invoke(collisionInfo);
-                }
-                else
-                {
-                    // Continuing collision - fire Persistent
-                    if (collisionInfo != null) onCollisionPersistent.Invoke(collisionInfo);
-                }
-
-                this.collisionInfo = collisionInfo;
-            }
-            else if (wasColliding)
-            {
-                // Was colliding but no longer - fire Dead
-                if (logCollisions) print($"{name} stopped colliding with {neighbor.name}");
-
-                if(collisionInfo != null) onCollisionDead.Invoke(collisionInfo);
-
-                collisionInfo = null;
-                otherCol = null;
-            }
-        }
-
-        inCollision = hasAnyActiveCollision;
-
-    }
-
-    #endregion
 
     //EPA Helper
     #region
 
-    
+
 
     //confirmed 
 
 
     //returns index of minNorm
-    private int GetMin(List<PolytopeTri> triangles)
+    private static int GetMin(List<PolytopeTri> triangles)
     {
 
         int minIdx = 0;
@@ -635,7 +512,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         for (int i = 1; triangles.Count > i; i++)
         {
             if (triangles[i].distToOrigin < triangles[minIdx].distToOrigin) minIdx = i;
-        
+
         }
 
 
@@ -649,7 +526,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
     #region
 
 
-    private (Vector3, float, Vector3) GetCollisionData()
+    private static (Vector3, float, Vector3) GetCollisionData(IColliderShape col1, IColliderShape col2, Dictionary<Vector3, Vector3> sprtPtToDirection, Simplex terminatingSimplex)
     {
         //start with terminating simplex after running GJK
         Polytope pt = new Polytope(terminatingSimplex);
@@ -661,92 +538,57 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         float sprtPtDist;
 
         int m = 0;
-        
+
         while (m < 30 && pt.GetTriangles().Count >= 4)
         {
             minTriIdx = GetMin(polytopeTriangles);
             minNorm = polytopeTriangles[minTriIdx].normal;
-            epaSprtPt = Support(otherCol, minNorm);
+            epaSprtPt = Support(col1, col2, minNorm);
 
             //Distance from support point to closest plane
             //|pw * n| / ||n||, pw = epaSprtPt - a
             sprtPtDist = Mathf.Abs(Vector3.Dot(epaSprtPt - polytopeTriangles[minTriIdx].GetVertex(0), minNorm));
 
-            
+
             if (MinoMath.FApproximately(sprtPtDist, 0.005f, supportThreshold))
             {
                 //penetrationDepth = distance from origin to minTri
                 float penetrationDepth = polytopeTriangles[minTriIdx].distToOrigin;
-                Vector3 poc = GetPointOfContact(polytopeTriangles[minTriIdx]);
+                Vector3 poc = GetPointOfContact(col1, polytopeTriangles[minTriIdx], sprtPtToDirection);
                 return (minNorm, penetrationDepth, poc);
             }
 
             pt.AddPoint(epaSprtPt);
             m++;
         }
-       
+
         return (Vector3.zero, -1, Vector3.negativeInfinity);
 
     }
     #endregion
 
 
-    //Gizmos
-    #region
-    private void OnDrawGizmosSelected() //if object selected
-    {
-        if (drawInEditor) DrawGizmos();
-
-    }
-
-
-    public virtual void DrawGizmos()
-    {
-
-        //the matrix must be 
-        //Gizmos.color = colliderColor;
-        Gizmos.color = Color.red;
-        globalCenter = transform.TransformPoint(localCenter);
-        
-        if(contactPoint != Vector3.negativeInfinity)
-        {
-            Gizmos.DrawSphere(contactPoint, 0.05f);
-        }
-
-    }
-
-    #endregion
 
     //GJK Helper Functions
     #region
 
-    public virtual Vector3 GetClosestPointOnBounds(Vector3 point)
-    {
-
-        return Vector3.zero;
-
-    }
-    public virtual bool PointInBounds(Vector3 point)
-    {
-
-        return Vector3.Distance(GetClosestPointOnBounds(point), point) < 0.02f;
-
-    }
 
 
+    /*
     public virtual Vector3 GetFurthestPoint(Vector3 dir)
     {
 
         return Vector3.zero;
 
     }
+    */
 
 
     //A support point is given by the first collider's furthest point in a direction subtracted by the second collider's furthest point in the opposite direction
-    public Vector3 Support(ValkyrieCollider other, Vector3 dir)
+    public static Vector3 Support(IColliderShape col1, IColliderShape col2, Vector3 dir)
     {
-        Vector3 sprtPt = this.GetFurthestPoint(dir) - other.GetFurthestPoint(-dir);
-        sprtPtToDirection.TryAdd(sprtPt, dir);
+        Vector3 sprtPt = col1.GetSupportPoint(dir) - col2.GetSupportPoint(-dir);
+       // sprtPtToDirection.TryAdd(sprtPt, dir);
         return sprtPt;
 
     }
@@ -757,14 +599,12 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
     #region
 
     //GJK Algorithm - https://www.youtube.com/watch?v=MDusDn8oTSE (best explanation)
-    public virtual bool CheckIfCollided(ValkyrieCollider other)
+    public static bool CheckIfCollided(IColliderShape col1, IColliderShape col2)
     {
-        if (other == this) return false;
-        if (InLayerMask(other.gameObject) || other.InLayerMask(this.gameObject)) return false;
 
         //arbitrary direction
-        sprtPtToDirection = new Dictionary<Vector3, Vector3>();
-        Vector3 supportPoint = Support(other, Vector3.right);
+        Dictionary<Vector3, Vector3> sprtPtToDirection = new Dictionary<Vector3, Vector3>();
+        Vector3 supportPoint = Support(col1, col2, Vector3.right);
 
 
         Simplex simp = new Simplex();
@@ -785,8 +625,8 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         while (i < 20)
         {
             //get the supportPoint closest in the direction pointing toward the origin
-            supportPoint = Support(other, direction);
-            
+            supportPoint = Support(col1, col2, direction);
+
             //if our support point is the maximum we go in this direction, but we still can't reach the origin - then we haven't collided
             if (Vector3.Dot(supportPoint, direction) < 0)
             {
@@ -800,9 +640,9 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
             simp.points.Add(supportPoint);
 
 
-            if(OriginContained(ref simp, ref direction)) //check if the origin is contained within the simplex - it will only be true once we get to a tetrahedron
+            if (OriginContained(ref simp, ref direction)) //check if the origin is contained within the simplex - it will only be true once we get to a tetrahedron
             {
-                terminatingSimplex = simp;
+                //terminatingSimplex = simp;
                 return true;
             }
 
@@ -815,14 +655,14 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
     }
 
     //https://www.w3schools.blog/check-object-is-in-layermask-unity
-    public bool InLayerMask(GameObject other)
+    /*public bool InLayerMask(GameObject other)
     {
         //bitshifting type shit
         return ((ignoreLayers.value & (1 << other.layer)) > 0);
 
-    }
+    }*/
 
-    public bool OriginContained(ref Simplex simp, ref Vector3 dir)
+    public static bool OriginContained(ref Simplex simp, ref Vector3 dir)
     {
         switch (simp.points.Count)
         {
@@ -849,7 +689,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
     //REFER TO MASTER NOTEBOOK FOR ALL DRAWINGS (The Blue one)
 
-    private void Lin(ref Simplex simp, ref Vector3 dir)
+    private static void Lin(ref Simplex simp, ref Vector3 dir)
     {
         Vector3 a = simp.points[1];
         Vector3 b = simp.points[0];
@@ -862,7 +702,8 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
             dir = Vector3.Cross(Vector3.Cross(a - b, toOrigin), a - b);
 
-        } else
+        }
+        else
         {
             //we got the wrong point, reset our direction pointed at the origin
             simp.points.RemoveAt(0);
@@ -871,7 +712,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
     }
 
-    private void Tri(ref Simplex simp, ref Vector3 dir)
+    private static void Tri(ref Simplex simp, ref Vector3 dir)
     {
 
         Vector3 a = simp.points[2];
@@ -899,7 +740,8 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
                 dir = Vector3.Cross(ac, abac);
                 return;
 
-            } else //Confirm A-Region
+            }
+            else //Confirm A-Region
             {
 
                 simp.points.RemoveRange(0, 2);
@@ -922,7 +764,8 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
                 dir = Vector3.Cross(abac, ab);
                 return;
 
-            } else //Confirm A Region
+            }
+            else //Confirm A Region
             {
 
                 simp.points.RemoveRange(0, 2);
@@ -940,7 +783,8 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
             dir = abac;
 
 
-        } else //Confirm back
+        }
+        else //Confirm back
         {
 
             dir = -abac;
@@ -949,7 +793,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
 
     }
 
-    private bool Tetra(ref Simplex simp, ref Vector3 dir)
+    private static bool Tetra(ref Simplex simp, ref Vector3 dir)
     {
         Vector3 a = simp.points[3];
         Vector3 b = simp.points[2];
@@ -972,7 +816,7 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
             dir = -abc;
             Tri(ref simp, ref dir);
             return false;
-            
+
         }
 
 
@@ -998,31 +842,6 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
         }
 
         return true;
-    }
-
-    #endregion
-
-    //Subscribe to Event
-    #region
-        
-    public void SubscribeToCollisionAwake(UnityAction<ValkyrieCollision> evt)
-    {
-        onCollisionAwake.AddListener(evt);
-    }
-
-    public void SubscribeToCollisionPersistent(UnityAction<ValkyrieCollision> evt)
-    {
-        onCollisionPersistent.AddListener(evt);
-    }
-
-    public void SubscribeToCollisionDead(UnityAction<ValkyrieCollision> evt)
-    {
-        onCollisionDead.AddListener(evt);
-    }
-
-    public virtual Vector3 GetSupportPoint(Vector3 dir)
-    {
-        throw new NotImplementedException();
     }
 
     #endregion
