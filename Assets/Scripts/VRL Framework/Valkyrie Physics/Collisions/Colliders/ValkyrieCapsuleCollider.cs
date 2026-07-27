@@ -175,63 +175,83 @@ public class ValkyrieCapsuleCollider : ValkyrieCollider
     //https://www.desmos.com/3d/ecck9khnd7 - shows work
 
     //dir is given in world coords
+     
     public override Vector3 GetFurthestPoint(Vector3 dir)
     {
 
         //given a world direction, we want to find the corresponding vector in our new basis 
         //TRS * dir
 
-        dir = TRS.inverse.MultiplyVector(dir).normalized; //we are now in TRS space
-        Vector3 compVec = new Vector3(dir.x, 0, dir.z).normalized;
+        /*  dir = TRS.inverse.MultiplyVector(dir).normalized; //we are now in TRS space
+          Vector3 compVec = new Vector3(dir.x, 0, dir.z).normalized;
 
-        float a = height / 4;
-        float t = 0;
-        float angle = Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(dir, compVec));
+          float a = height / 4;
+          float t = 0;
+          float angle = Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(dir, compVec));
 
-        if(angle <= maxAngle)
+          if(angle <= maxAngle)
+          {
+              //we are in the middle cylinder portion
+              t = radius / Mathf.Sqrt(Mathf.Pow(dir.x, 2) + Mathf.Pow(dir.z, 2));
+
+          } else
+          {
+              if(dir.y >= 0)
+              {
+                  //top hemisphere
+                  float discriminant = Mathf.Pow(a, 2) * (Mathf.Pow(dir.y, 2) - 1) + Mathf.Pow(radius, 2);
+
+                  if(discriminant < 0)
+                  {
+                      return Vector3.zero;
+                  } 
+
+                  t = a * dir.y + Mathf.Sqrt(discriminant);
+              } else
+              {
+
+                  float discriminant = Mathf.Pow(a, 2) * (Mathf.Pow(dir.y, 2) - 1) + Mathf.Pow(radius, 2);
+
+                  if(discriminant < 0)
+                  {
+                      return Vector3.zero;
+                  }
+
+                  //bottom hemisphere
+                  t = -a * dir.y + Mathf.Sqrt(discriminant);
+              }
+
+          }
+
+          return TRS.MultiplyPoint3x4(dir * t);*/
+
+
+        //Gemini generated code below - temp change
+        Vector3 localDir = TRS.transpose.MultiplyVector(dir).normalized;
+
+        // 2. Define the inner line segment
+        // Assuming 'height' is total tip-to-tip height. 
+        // The centers of the top and bottom spheres are offset by this amount:
+        float yOffset = Mathf.Max(0f, (height / 2f) - radius);
+
+        // 3. Find the furthest point on just that internal segment
+        Vector3 localPt = Vector3.zero;
+        if (localDir.y > 0)
         {
-            //we are in the middle cylinder portion
-            t = radius / Mathf.Sqrt(Mathf.Pow(dir.x, 2) + Mathf.Pow(dir.z, 2));
-
-        } else
+            localPt.y = yOffset; // Top sphere center
+        }
+        else
         {
-            if(dir.y >= 0)
-            {
-                //top hemisphere
-                float discriminant = Mathf.Pow(a, 2) * (Mathf.Pow(dir.y, 2) - 1) + Mathf.Pow(radius, 2);
-
-                if(discriminant < 0)
-                {
-                    return Vector3.zero;
-                } 
-
-                t = a * dir.y + Mathf.Sqrt(discriminant);
-            } else
-            {
-
-                float discriminant = Mathf.Pow(a, 2) * (Mathf.Pow(dir.y, 2) - 1) + Mathf.Pow(radius, 2);
-
-                if(discriminant < 0)
-                {
-                    return Vector3.zero;
-                }
-
-                //bottom hemisphere
-                t = -a * dir.y + Mathf.Sqrt(discriminant);
-            }
-
+            localPt.y = -yOffset; // Bottom sphere center
         }
 
-        return TRS.MultiplyPoint3x4(dir * t);
-    }
+        // 4. Expand outward from that center by the radius in the checking direction
+        localPt += localDir * radius;
 
-
-    //NEW STUFF
-
-    public override Vector3 GetSupportPoint(Vector3 dir)
-    {
-        return base.GetSupportPoint(dir);
+        // 5. Transform back to world space
+        return TRS.MultiplyPoint3x4(localPt);
     }
     
+
     
 }

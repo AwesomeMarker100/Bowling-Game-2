@@ -11,6 +11,9 @@ public class VPhys : MonoBehaviour
 
     [SerializeField] Vector3 dir;
 
+    //Spatial Structures
+
+
     //Structs / Enums
     #region
     public struct VRay
@@ -62,7 +65,7 @@ public class VPhys : MonoBehaviour
 
             if (MinoMath.VApproximately(basisVector1, Vector3.zero)) throw new ArgumentException("Not given 3 unique points!");
             if (MinoMath.VApproximately(basisVector2, Vector3.zero)) throw new ArgumentException("Not given 3 unique points!");
-            if (Vector3.Dot(basisVector1, basisVector2) > 1e-5f) throw new ArgumentException("b - a and c - a must be orthogonal!");
+            if (Mathf.Abs(Vector3.Dot(basisVector1, basisVector2)) > 1e-2f) throw new ArgumentException($"BV1: {basisVector1}, BV2: {basisVector2}");
             
             
 

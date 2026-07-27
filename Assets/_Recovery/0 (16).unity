@@ -233,6 +233,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   size: {x: 0.1403, y: 20, z: 30}
   xMin: -0.07015
   xMax: 0.07015
@@ -260,128 +261,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 20000
+  mass: 200
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 1
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
---- !u!1 &173995963
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 173995967}
-  - component: {fileID: 173995966}
-  - component: {fileID: 173995965}
-  - component: {fileID: 173995964}
-  m_Layer: 0
-  m_Name: POC Ball
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!135 &173995964
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173995963}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &173995965
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173995963}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 0dc1bcbff714d7c44ae9cbc4f7464b8e, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &173995966
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173995963}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &173995967
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173995963}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.1800127, y: 4.1100817, z: 14.93}
-  m_LocalScale: {x: 0.66059, y: 0.66059, z: 0.66059}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &394068048
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,6 +385,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   size: {x: 0.1403, y: 20, z: 30}
   xMin: -0.07015
   xMax: 0.07015
@@ -523,13 +413,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 20000
+  mass: 200
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 1
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
@@ -937,6 +827,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   size: {x: 0.1403, y: 20, z: 30}
   xMin: -15.07015
   xMax: -14.92985
@@ -968,9 +859,9 @@ MonoBehaviour:
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 1
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
@@ -1133,7 +1024,6 @@ GameObject:
   - component: {fileID: 1059205109}
   - component: {fileID: 1059205112}
   - component: {fileID: 1059205113}
-  - component: {fileID: 1059205114}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -1207,8 +1097,8 @@ Transform:
   m_GameObject: {fileID: 1059205107}
   serializedVersion: 2
   m_LocalRotation: {x: -0.050277196, y: -0, z: -0, w: 0.99873537}
-  m_LocalPosition: {x: 1.29, y: 3.77, z: 4.25}
-  m_LocalScale: {x: 2.2, y: 2.2, z: 2.2}
+  m_LocalPosition: {x: -0.45, y: 1.62, z: 5.99}
+  m_LocalScale: {x: 2.0889, y: 2.0888999, z: 2.0888999}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1989331703}
@@ -1231,10 +1121,11 @@ MonoBehaviour:
   logCollisions: 0
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: 1.29, y: 3.77, z: 4.25}
+  globalCenter: {x: -0.45, y: 1.62, z: 5.99}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   height: 2
   radius: 0.5
   thickness: 2
@@ -1242,7 +1133,7 @@ MonoBehaviour:
   scaleFactor: 1
   rotation: {x: 0, y: 0, z: 0}
   offsetFactor: 0.01
-  testDir: {x: 0, y: 54.4, z: 0}
+  testDir: {x: 0, y: 0, z: 0}
 --- !u!114 &1059205113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1255,28 +1146,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 3
-  centerOfMass: {x: 0, y: 0, z: 0}
+  mass: 0.1
+  centerOfMass: {x: 1, y: 0, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 40, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 40, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 40}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
---- !u!114 &1059205114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059205107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d10ff975ccdc144a9a002f17ef1ce84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieTester
 --- !u!1 &1287763831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1211,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   size: {x: 0.1403, y: 20, z: 30}
   xMin: 14.92985
   xMax: 15.07015
@@ -1363,9 +1243,9 @@ MonoBehaviour:
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 1
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
@@ -1424,6 +1304,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   size: {x: 30, y: 1, z: 30}
   xMin: -15
   xMax: 15
@@ -1451,13 +1332,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 20000
+  mass: 200
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 1
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
@@ -1481,7 +1362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &1308377221
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1547,13 +1428,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1308377219}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.55076736, y: -0.66719437, z: 0.17063905, w: -0.47158185}
-  m_LocalPosition: {x: -7.46, y: 9.89, z: 9.49}
-  m_LocalScale: {x: 2.3718, y: 2.3718, z: 2.3718}
+  m_LocalRotation: {x: 0.08209525, y: -0.01492481, z: 0.17824315, w: 0.9804423}
+  m_LocalPosition: {x: -0.28, y: 3.44, z: -4.34}
+  m_LocalScale: {x: 2.3718, y: 2.3718, z: 1.9688312}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1989331703}
-  m_LocalEulerAnglesHint: {x: -16.964, y: -238.695, z: -69.493}
+  m_LocalEulerAnglesHint: {x: 9.573, y: 0, z: 20.608}
 --- !u!114 &1308377224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1569,28 +1450,29 @@ MonoBehaviour:
   type: 0
   drawInEditor: 1
   colliderColor: {r: 0.5338638, g: 0.043137267, b: 0.85490197, a: 1}
-  logCollisions: 0
+  logCollisions: 1
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: -7.46, y: 9.89, z: 9.49}
+  globalCenter: {x: -0.28, y: 3.44, z: -4.34}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
-  size: {x: 2.3718, y: 2.3718, z: 2.3718}
-  xMin: -8.6459
-  xMax: -6.2741003
-  yMin: 8.704101
-  yMax: 11.0759
-  zMin: 8.3041
-  zMax: 10.6758995
-  topLeftFront: {x: -9.170902, y: 11.003784, z: 9.716663}
-  bottomLeftFront: {x: -7.8094954, y: 10.209053, z: 11.488783}
-  topRightFront: {x: -9.04883, y: 8.878941, z: 8.669968}
-  bottomRightFront: {x: -7.6874237, y: 8.0842085, z: 10.442087}
-  topLeftBack: {x: -7.2325764, y: 11.695792, z: 8.537912}
-  topRightBack: {x: -7.1105046, y: 9.570948, z: 7.4912167}
-  bottomLeftBack: {x: -5.87117, y: 10.90106, z: 10.310032}
-  bottomRightBack: {x: -5.7490983, y: 8.7762165, z: 9.263336}
+  contactPoint: {x: 0, y: 0, z: 0}
+  size: {x: 2.3718, y: 2.3718, z: 1.9688}
+  xMin: -1.4659
+  xMax: 0.9059
+  yMin: 2.2541
+  yMax: 4.6259003
+  zMin: -5.3244
+  zMax: -3.3556
+  topLeftFront: {x: -1.8074131, y: 4.286684, z: -5.1955094}
+  bottomLeftFront: {x: -0.9726231, y: 2.0975614, z: -5.564701}
+  topRightFront: {x: 0.41262302, y: 5.10985, z: -5.056684}
+  bottomRightFront: {x: 1.2474132, y: 2.920727, z: -5.4258757}
+  topLeftBack: {x: -1.8074131, y: 3.9592733, z: -3.2541246}
+  topRightBack: {x: 0.41262302, y: 4.782439, z: -3.1152992}
+  bottomLeftBack: {x: -0.9726231, y: 1.7701503, z: -3.6233163}
+  bottomRightBack: {x: 1.2474132, y: 2.593316, z: -3.4844909}
 --- !u!114 &1308377225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1619,9 +1501,9 @@ MonoBehaviour:
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 40, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 40, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 40}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.001
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
@@ -1739,6 +1621,7 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
+  contactPoint: {x: 0, y: 0, z: 0}
   size: {x: 30, y: 1, z: 30}
   xMin: -15
   xMax: 15
@@ -1766,330 +1649,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 20000
+  mass: 200
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 1
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
---- !u!1 &1904304600
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1904304601}
-  - component: {fileID: 1904304605}
-  - component: {fileID: 1904304604}
-  - component: {fileID: 1904304603}
-  - component: {fileID: 1904304602}
-  - component: {fileID: 1904304606}
-  m_Layer: 0
-  m_Name: Sphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1904304601
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904304600}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.5506998, y: -0.4435423, z: -0.4435424, w: 0.5506998}
-  m_LocalPosition: {x: -1.29, y: 4.84, z: 9.38}
-  m_LocalScale: {x: 2.4, y: 2.4, z: 2.4}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1989331703}
-  m_LocalEulerAnglesHint: {x: 12.303, y: -90, z: -90}
---- !u!114 &1904304602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904304600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 2
-  centerOfMass: {x: 0, y: 0, z: 0}
-  isStatic: 0
-  physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 0.1, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 0.1, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 0.1}
-  impulseMagnitudeThreshold: 0.08
-  velocityThreshold: 0.08
-  accelerationThreshold: 0.08
---- !u!114 &1904304603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904304600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db2ba29f07913ba4e99fe90b5227e22d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieSphereCollider
-  type: 1
-  drawInEditor: 1
-  colliderColor: {r: 0, g: 0, b: 0, a: 1}
-  logCollisions: 0
-  collisionDetectionMode: 0
-  localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: -1.29, y: 4.84, z: 9.38}
-  ignoreLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  radius: 1.2
---- !u!23 &1904304604
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904304600}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1904304605
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904304600}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1904304606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904304600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d10ff975ccdc144a9a002f17ef1ce84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieTester
---- !u!1 &1908648144
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1908648145}
-  - component: {fileID: 1908648150}
-  - component: {fileID: 1908648149}
-  - component: {fileID: 1908648148}
-  - component: {fileID: 1908648147}
-  - component: {fileID: 1908648151}
-  m_Layer: 0
-  m_Name: Cube (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1908648145
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.89, y: 1.17, z: -2.93}
-  m_LocalScale: {x: 2.3718, y: 2.3718, z: 2.3718}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1989331703}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1908648147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 0.8
-  centerOfMass: {x: 0, y: 0, z: 0}
-  isStatic: 0
-  physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 10, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 10, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 10}
-  impulseMagnitudeThreshold: 0.001
-  velocityThreshold: 0.08
-  accelerationThreshold: 0.08
---- !u!114 &1908648148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba07fb24481043646a137e24de7e7c16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieBoxCollider
-  type: 0
-  drawInEditor: 1
-  colliderColor: {r: 0.5338638, g: 0.043137267, b: 0.85490197, a: 1}
-  logCollisions: 0
-  collisionDetectionMode: 0
-  localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: 0.89, y: 1.17, z: -2.93}
-  ignoreLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  size: {x: 2.3718, y: 2.3718, z: 2.3718}
-  xMin: -0.2959
-  xMax: 2.0759
-  yMin: -0.015900016
-  yMax: 2.3558998
-  zMin: -4.1159
-  zMax: -1.7441001
-  topLeftFront: {x: -0.2959, y: 2.3558998, z: -4.1159}
-  bottomLeftFront: {x: -0.2959, y: -0.015900016, z: -4.1159}
-  topRightFront: {x: 2.0759, y: 2.3558998, z: -4.1159}
-  bottomRightFront: {x: 2.0759, y: -0.015900016, z: -4.1159}
-  topLeftBack: {x: -0.2959, y: 2.3558998, z: -1.7441001}
-  topRightBack: {x: 2.0759, y: 2.3558998, z: -1.7441001}
-  bottomLeftBack: {x: -0.2959, y: -0.015900016, z: -1.7441001}
-  bottomRightBack: {x: 2.0759, y: -0.015900016, z: -1.7441001}
---- !u!23 &1908648149
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 3a8f3200221771348825160cabc76f91, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1908648150
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1908648151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d10ff975ccdc144a9a002f17ef1ce84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieTester
 --- !u!1 &1945928723
 GameObject:
   m_ObjectHideFlags: 0
@@ -2188,9 +1757,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1308377223}
-  - {fileID: 1908648145}
   - {fileID: 1059205111}
-  - {fileID: 1904304601}
   m_Father: {fileID: 1945928724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2019043404
@@ -2361,4 +1928,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 674575534}
   - {fileID: 1945928724}
-  - {fileID: 173995967}

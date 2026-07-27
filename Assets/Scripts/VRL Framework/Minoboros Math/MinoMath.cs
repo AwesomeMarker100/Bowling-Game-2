@@ -37,7 +37,7 @@ public class MinoMath : MonoBehaviour
     }
 
     public static bool FApproximately(float f1, float f2, float threshold)
-    {
+    { 
         if (threshold < 0) throw new ArgumentException("Threshold must be positive!");
 
         return Mathf.Abs(f2 - f1) < threshold;

@@ -125,7 +125,7 @@ public struct Vec3
     {
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
-
+       
 
     public static float Angle(Vec3 a, Vec3 b)
     {
@@ -178,5 +178,10 @@ public struct Vec3
 
 
     public float Norm1 => Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z);
+
+    public override string ToString()
+    {
+        return $"({x}, {y}, {z})";
+    }
 
 }

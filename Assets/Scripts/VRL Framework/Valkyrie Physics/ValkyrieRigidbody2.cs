@@ -40,7 +40,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
     private Vector3 acceleration = Vector3.zero;
 
     private Vector3 angularAcceleration = Vector3.zero;
-    private Vector3 angularVelocity = Vector3.zero;
+    private Vector3 angularVelocity = Vector3.zero; //rad / s 
     #endregion
 
     //COLLISION INFO
@@ -67,6 +67,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
         inertiaTensor = new FMatrix3x3(new Vec3(inertiaTensorRow0.x, inertiaTensorRow0.y, inertiaTensorRow0.z),
                                       new Vec3(inertiaTensorRow1.x, inertiaTensorRow1.y, inertiaTensorRow1.z),
                                       new Vec3(inertiaTensorRow2.x, inertiaTensorRow2.y, inertiaTensorRow2.z));
+
     }
 
     // Update is called once per frame
@@ -121,10 +122,16 @@ public class ValkyrieRigidbody2 : MonoBehaviour
 
     private void Rotate()
     {
-        Vector3 newRotation = transform.eulerAngles + angularVelocity * Time.fixedDeltaTime + 0.5f * Mathf.Pow(Time.fixedDeltaTime, 2) * angularAcceleration;
-        angularVelocity = (newRotation - transform.eulerAngles) / Time.fixedDeltaTime;
 
-        transform.eulerAngles = newRotation;
+        angularVelocity = angularVelocity + angularAcceleration * Time.fixedDeltaTime ;
+
+
+        float angleChange = angularVelocity.magnitude * Time.fixedDeltaTime * Mathf.Rad2Deg;
+
+        if(angleChange > 0.001f)
+            transform.rotation = Quaternion.AngleAxis(angleChange, angularVelocity.normalized) * transform.rotation;
+
+        angularAcceleration = Vector3.zero;
     }
 
     #endregion
@@ -175,8 +182,6 @@ public class ValkyrieRigidbody2 : MonoBehaviour
     public void OnCollisionAwake(ValkyrieCollision collision)
     {
         inCollision = true;
-        activeCollisions.Add(collision);
-
         if(!isStatic) RespondCollision(collision);
     }
 
@@ -184,29 +189,12 @@ public class ValkyrieRigidbody2 : MonoBehaviour
     {
         inCollision = true;
 
-        // Update existing collision or add if new
-        int existingIndex = activeCollisions.FindIndex(c => c.GetOtherCollider(col) == collision.GetOtherCollider(col));
-        if (existingIndex >= 0)
-        {
-            activeCollisions[existingIndex] = collision;
-        }
-        else
-        {
-            activeCollisions.Add(collision);
-        }
-
+     
         if(!isStatic) RespondCollision(collision);
     }
 
     public void OnCollisionEnd(ValkyrieCollision collision)
     {
-        activeCollisions.RemoveAll(c => c.GetOtherCollider(col) == collision.GetOtherCollider(col));
-
-        if (activeCollisions.Count == 0)
-        {
-            inCollision = false;
-            slidingOnSurface = false;
-        }
     }
 
     //returns the angular component of the impulse denominator
@@ -215,117 +203,149 @@ public class ValkyrieRigidbody2 : MonoBehaviour
     {
         if (pointOfContact == Vector3.negativeInfinity) return 0;
         
-        // Vectors from center of mass to contact point (in local space)
-        Vector3 rA = transform.InverseTransformPoint(pointOfContact) - centerOfMass;
-        Vector3 rB = otherVRB.transform.InverseTransformPoint(pointOfContact) - otherVRB.centerOfMass;
+
+        float componentA = 0;
         
-        // Normal needs to be in local space for each object
-        Vector3 normalLocalA = transform.InverseTransformDirection(normal);
-        Vector3 normalLocalB = otherVRB.transform.InverseTransformDirection(normal);
-        
-        FMatrix3x3 inverseInertiaA = inertiaTensor.GetInverse();
-        FMatrix3x3 inverseInertiaB = otherVRB.inertiaTensor.GetInverse();
-        
-        // Angular component for object A: (r_A x n)·(I_A^-1(r_A x n))
-        Vector3 rACrossN = Vector3.Cross(rA, normalLocalA);
-        Vector3 angularTermA = inverseInertiaA * rACrossN;
-        float componentA = Vector3.Dot(rACrossN, angularTermA);
-        
+
+        if(!isStatic)
+        {
+            /*Vector3 rA = transform.InverseTransformPoint(pointOfContact) - centerOfMass;
+            Vector3 normalLocalA = transform.InverseTransformDirection(normal);
+            FMatrix3x3 inverseInertiaA = inertiaTensor.GetInverse();
+
+            Vector3 rACrossN = Vector3.Cross(rA, normalLocalA);
+            Vector3 angularTermA = inverseInertiaA * rACrossN;
+            componentA = Vector3.Dot(rACrossN, angularTermA);*/
+            Vector3 rA = pointOfContact - (transform.position + transform.rotation *  centerOfMass);
+            Matrix4x4 rotateMatrix = Matrix4x4.Rotate(transform.rotation);
+            FMatrix3x3 inverseInertiaMat = rotateMatrix * inertiaTensor.GetInverse() * rotateMatrix.transpose;
+
+            Vector3 rACrossN = Vector3.Cross(rA, normal);
+            Vector3 angularTermA = inverseInertiaMat * rACrossN;
+            componentA = Vector3.Dot(rACrossN, angularTermA);
+
+        }
+
         // Angular component for object B: (r_B x n)·(I_B^-1(r_B x n))
-        Vector3 rBCrossN = Vector3.Cross(rB, normalLocalB);
-        Vector3 angularTermB = inverseInertiaB * rBCrossN;
-        float componentB = Vector3.Dot(rBCrossN, angularTermB);
-        
-        return componentA + componentB;
+ 
+        float componentB = 0;
+
+        if (!otherVRB.isStatic)
+        {
+
+            /*Vector3 rB = otherVRB.transform.InverseTransformPoint(pointOfContact) - otherVRB.centerOfMass;
+            Vector3 normalLocalB = otherVRB.transform.InverseTransformDirection(normal);
+            FMatrix3x3 inverseInertiaB = otherVRB.inertiaTensor.GetInverse();
+
+            Vector3 rBCrossN = Vector3.Cross(rB, normalLocalB);
+            Vector3 angularTermB = inverseInertiaB * rBCrossN;
+            componentB = Vector3.Dot(rBCrossN, angularTermB); */
+            Vector3 rB = pointOfContact - (otherVRB.transform.position + otherVRB.transform.rotation * otherVRB.centerOfMass);
+            Matrix4x4 rotateMatrix = Matrix4x4.Rotate(otherVRB.transform.rotation);
+
+            FMatrix3x3 inverseInertiaB = rotateMatrix * otherVRB.inertiaTensor.GetInverse() * rotateMatrix.transpose;
+            Vector3 rBCrossN = Vector3.Cross(rB, normal);
+            Vector3 angularTermB = inverseInertiaB * rBCrossN;
+            componentB = Vector3.Dot(rBCrossN, angularTermB);
+        } 
+
+        return componentA + componentB; //temporary!
     }
 
-    public void RespondCollision(ValkyrieCollision collision)
+    public void RespondCollision(ValkyrieCollision col)
     {
+
         // Calculate impulses for all active collisions and sum them
         Vector3 totalLinearImpulse = Vector3.zero;
         Vector3 totalAngularImpulse = Vector3.zero;
         bool anySlidingOnSurface = false;
 
-        foreach (ValkyrieCollision col in activeCollisions)
+        ValkyrieCollider otherCol = col.GetOtherCollider(this.col);
+        ValkyrieRigidbody2 otherVRB;
+
+        otherCol.TryGetComponent(out otherVRB);
+
+        Matrix4x4 rotMatrix = Matrix4x4.Rotate(transform.rotation);
+        float translationalKE = 0.5f * mass * Mathf.Pow(velocity.magnitude, 2);
+        float rotationalKE = 0.5f * Vector3.Dot(angularVelocity, (rotMatrix * inertiaTensor * rotMatrix.transpose) * angularVelocity);
+
+        if (otherVRB)
         {
-            ValkyrieCollider otherCol = col.GetOtherCollider(this.col);
-            ValkyrieRigidbody2 otherVRB;
 
-            otherCol.TryGetComponent(out otherVRB);
 
-            if (otherVRB)
+            //relative velocity dotted with collision normal 
+            col.relVelDotNorm = GetRelVelDotNorm(otherVRB.velocity, otherVRB.angularVelocity,
+                                                        col.penetrationNormal, col.pointOfContact, otherVRB);
+
+            if (col.relVelDotNorm < 0) return;
+
+            float angularDenom = GetAngularImpulseComp(col.pointOfContact, col.penetrationNormal, otherVRB);
+
+            float cor = physicsMaterial != null ? physicsMaterial.GetCoefficientOfRestitution() : 1f;
+
+            float effectiveInverseMass = GetEffectiveInverseMass(col);
+
+            if (effectiveInverseMass == 0) return;
+            // Original formula (naturally gives positive magnitude when approaching, negative when separating)
+            col.impulseMagnitude = -(1 + cor) *
+                col.relVelDotNorm / (effectiveInverseMass + angularDenom);
+            //if(name == "Cube") print($"Velocity: {velocity}, Numerator: {-(1 + cor) * col.relVelDotNorm}, Denominator: {effectiveInverseMass + angularDenom}");
+
+            //print($"AngularDenom: {angularDenom}, TotalDenom: {effectiveInverseMass + angularDenom}, VelDelt: {col.impulseMagnitude * col.penetrationNormal / mass}");
+
+            // col.impulseMagnitude = Mathf.Abs(-(1 + cor) * col.relVelDotNorm / (effectiveInverseMass + angularDenom));
+
+            float relVelDotNorm = col.relVelDotNorm;
+            //print(otherVRB.name + ", " + col.penetrationNormal + ", " + col.relVelDotNorm);
+
+            if (Mathf.Abs(col.impulseMagnitude) > 0f)
             {
-                // Only apply impulse if this object is not static
-                // This prevents double-application since both objects call RespondCollision independently
-                if (isStatic)
-                {
-                    SeparateObjects(col, 0.003f);
-                    continue;
-                }
+                totalLinearImpulse += col.impulseMagnitude * col.penetrationNormal;
 
-                //relative velocity dotted with collision normal 
-                col.relVelDotNorm = GetRelVelDotNorm(otherVRB.velocity, otherVRB.angularVelocity, 
-                                                         col.penetrationNormal, col.pointOfContact, otherVRB);
+                // Sum angular impulse
+                Vector3 rA = col.pointOfContact - (transform.position + centerOfMass);
+                Vector3 impulseDir = col.penetrationNormal;
+                Vector3 angularImpulse = Vector3.Cross(rA, col.impulseMagnitude * impulseDir);
+                totalAngularImpulse += angularImpulse;
 
-                float angularDenom = GetAngularImpulseComp(col.pointOfContact, col.penetrationNormal, otherVRB);
+                SeparateObjects(col, 0.0001f);
 
-                float cor = physicsMaterial != null ? physicsMaterial.GetCoefficientOfRestitution() : 0.1f;
-
-                float effectiveInverseMass = GetEffectiveInverseMass(col);
-
-                if (effectiveInverseMass == 0)
-                {
-                    Debug.LogError("Effective inverse mass is 0!");
-                    continue;
-                }
-
-                col.impulseMagnitude = -(1 + cor) * col.relVelDotNorm / (effectiveInverseMass + angularDenom);
-
-                float relVelDotNorm = col.relVelDotNorm;
-
-                if(relVelDotNorm < 0 && col.impulseMagnitude > impulseMagnitudeThreshold)
-                {
-                    SeparateObjects(col, 0.003f);
-
-                    // Sum linear impulse
-                    totalLinearImpulse += -col.impulseMagnitude * col.penetrationNormal / mass;
-
-                    // Sum angular impulse
-                    Vector3 rA = transform.InverseTransformPoint(col.pointOfContact) - centerOfMass;
-                    Vector3 impulseDir = transform.InverseTransformDirection(col.penetrationNormal);
-                    Vector3 angularImpulse = Vector3.Cross(rA, col.impulseMagnitude * impulseDir);
-                    totalAngularImpulse += angularImpulse;
-                } 
-                else if(MinoMath.FApproximately(relVelDotNorm, 0, impulseMagnitudeThreshold))
-                {
-                    SeparateObjects(col, -0.001f);
-                    anySlidingOnSurface = true;
-                } 
-                else
-                {
-                    SeparateObjects(col, 0.003f);
-                }
+            }
+            //sliding response
+            else if (MinoMath.FApproximately(relVelDotNorm, 0, impulseMagnitudeThreshold))
+            {
+                SeparateObjects(col, 0f);
+                anySlidingOnSurface = true;
+            }
+            else
+            {
+                SeparateObjects(col, .0001f);
             }
         }
 
         // Apply summed impulses once
-        velocity += totalLinearImpulse;
-        angularVelocity += inertiaTensor.GetInverse() * totalAngularImpulse;
 
-        slidingOnSurface = anySlidingOnSurface;
 
-        // Handle sliding velocity adjustment if needed
-        if (slidingOnSurface && activeCollisions.Count > 0)
-        {
-            Vector3 slidingNormal = activeCollisions[0].penetrationNormal;
-            velocity -= Vector3.Dot(velocity, slidingNormal) * slidingNormal;
-        }
+        velocity += totalLinearImpulse / mass;
+
+        angularVelocity += (rotMatrix * inertiaTensor.Inverse * rotMatrix.transpose) * totalAngularImpulse;
+
+        translationalKE = 0.5f * mass * Mathf.Pow(velocity.magnitude, 2);
+        rotationalKE = 0.5f * Vector3.Dot(angularVelocity, (rotMatrix * inertiaTensor * rotMatrix.transpose) * angularVelocity);
+        /* slidingOnSurface = anySlidingOnSurface;
+
+         // Handle sliding velocity adjustment if needed
+         if (slidingOnSurface && activeCollisions.Count > 0)
+         {
+             Vector3 slidingNormal = activeCollisions[0].penetrationNormal;
+             velocity -= Vector3.Dot(velocity, slidingNormal) * slidingNormal;
+         }*/
     }
     #endregion
 
     //COLLISION RESPONSE HELPER FUNCTIONS
     #region
-    public float GetRelVelDotNorm(Vector3 otherVel, Vector3 otherAngVel, Vector3 penetrationNormal, 
+    /*public float GetRelVelDotNorm(Vector3 otherVel, Vector3 otherAngVel, Vector3 penetrationNormal, 
                               Vector3 pointOfContact, ValkyrieRigidbody2 otherVRB)
     {
         // Linear velocity difference
@@ -343,6 +363,35 @@ public class ValkyrieRigidbody2 : MonoBehaviour
         
         Vector3 totalRelVel = linearVelDiff + angularContributionB - angularContributionA;
         
+        return Vector3.Dot(totalRelVel, penetrationNormal);
+    } */
+
+
+    //Getting Relative Velocity of "this" object velocity relative to the otherVRBD
+    public float GetRelVelDotNorm(Vector3 otherVel, Vector3 otherAngVel, Vector3 penetrationNormal,
+                          Vector3 pointOfContact, ValkyrieRigidbody2 otherVRB)
+    {
+        // Position vectors from center of mass to contact point (world space)
+        Vector3 rA = pointOfContact - (transform.position + centerOfMass);
+        Vector3 rB = pointOfContact - (otherVRB.transform.position + otherVRB.centerOfMass);
+
+        // Linear velocity difference: velocity of THIS relative to OTHER
+        Vector3 linearVelDiff = velocity - otherVel;
+
+        // Angular velocity contributions at contact point (world space)
+        Vector3 angularContributionA = Vector3.Cross(angularVelocity, rA);
+        Vector3 angularContributionB = Vector3.Cross(otherAngVel, rB);
+
+
+
+        // Total relative velocity at contact point
+        Vector3 totalRelVel = linearVelDiff + angularContributionA - angularContributionB;
+        //print($"LinearDiff: {linearVelDiff}, AngA: {angularContributionA}, AngB: {angularContributionB}, TotalRV: {totalRelVel}, PenNorm: {penetrationNormal}, Dot:{Vector3.Dot(totalRelVel, penetrationNormal)}");
+
+
+        //print($"Linear Vel Diff: {linearVelDiff}, AngA: {angularContributionA}, AngB: {angularContributionB}, Total: {totalRelVel}, Norm: {penetrationNormal}, Dot: {Vector3.Dot(totalRelVel, penetrationNormal)}");
+
+        // Project onto normal
         return Vector3.Dot(totalRelVel, penetrationNormal);
     }
 
@@ -369,7 +418,7 @@ public class ValkyrieRigidbody2 : MonoBehaviour
         return effectiveInverseMass;
     }
 
-    private void SeparateObjects(ValkyrieCollision collision, float threshold)
+    private void SeparateObjects(ValkyrieCollision collision, float threshold = 0f)
     {
 
 
@@ -445,38 +494,6 @@ public class ValkyrieRigidbody2 : MonoBehaviour
 
     #endregion
 
-    //FMatrix3x3
-    #region
-    //inertiaTensor = new FMatrix3x3(row1.x, row1.y, row1.z, row2.x, row2.y, row2.z, row3.x, row3.y, row3.z);
-
-
-    //print(inertiaTensor.GetInverse());
-
-    
-    /* centerOfMassWorldCoords = transform.TransformPoint(centearOfMass);
-     basicDampingForce = -velocity * dampingConstant;
-     basicDampingTorque = -angularVelocity * dampingConstant;
-
-     ApplyForce(testForce);
-     ApplyForce(basicDampingForce);
-     ApplyTorque(testTorque);*/
-    //ApplyTorque(basicDampingTorque);
-
-    //Rotate();
-    //FMatrix3x3 matrix = new FMatrix3x3(testMatrix[0, 0], testMatrix[0, 1], testMatrix[0, 2], testMatrix[1, 0], testMatrix[1, 1], testMatrix[1, 2], testMatrix[2, 0], testMatrix[2, 1], testMatrix[2, 2]);
-    // print("Normal Matrix: " + matrix);
-    //print("Upper Triangular Matrix: " + matrix.GetPrintableUpperTriangular());
-    //print("Inertia Tensor: " + inertiaTensor);
-    //print("Inverse: " + inertiaTensor.inverse);
-
-    /*linearMomentum = mass * velocity;
-
-    ApplyForce(testForce);
-    ApplyForce(basicDampingForce);
-    ApplyTorque(testTorque);
-    ApplyTorque(basicDampingTorque);
-    */
-    #endregion
 
 
     //ASYNC VOID TEST

@@ -123,6 +123,12 @@ public struct FMatrix3x3
     public static FMatrix3x3 operator -(FMatrix3x3 a, FMatrix3x3 b) => new(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
     #endregion
 
+    //casting
+    public static implicit operator FMatrix3x3(Matrix4x4 m) => new FMatrix3x3(new Vec3(m[0, 0], m[0, 1], m[0, 2]), new Vec3(m[1, 0], m[1, 1], m[1, 2]), new Vec3(m[2, 0], m[2, 1], m[2, 2]));
+
+   // public static implicit operator Matrix4x4(FMatrix3x3 m) => new Matrix4x4(new Vector4(m[0, 0], m[1, 0], m[2, 0], 0), new Vector4(m[0, 1], m[1, 1], m[2, 1], 0), 
+   //     new Vector4(m[0, 2], m[1, 2], m[2, 2], 0), new Vector4(0, 0, 0, 1));
+
     #endregion
 
     //constructors
@@ -185,5 +191,9 @@ public struct FMatrix3x3
 
     public readonly override bool Equals(object obj) => obj is FMatrix3x3 x && x == this;
     public readonly override int GetHashCode() => base.GetHashCode();
-    
+
+    public override string ToString()
+    {
+        return $"{matArr[0]}, {matArr[1]}, {matArr[2]}";
+    }
 }

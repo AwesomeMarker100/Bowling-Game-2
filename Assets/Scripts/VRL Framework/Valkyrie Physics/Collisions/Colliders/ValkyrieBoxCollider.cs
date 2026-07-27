@@ -5,7 +5,6 @@ using UnityEngine;
 using BoundedRect = VPhys.BoundedRect;
 using Edge = VPhys.Edge;
 
-[ExecuteInEditMode]
 public class ValkyrieBoxCollider : ValkyrieCollider
 {
 
@@ -87,6 +86,7 @@ public class ValkyrieBoxCollider : ValkyrieCollider
 
         //TOP PLANE
         topPlane = new BoundedRect(topLeftFront, topLeftBack, topRightFront);
+        //print($"{topLeftFront}, {topLeftBack}, {topRightFront}");
 
 
         //BOTTOM PLANE
@@ -173,7 +173,6 @@ public class ValkyrieBoxCollider : ValkyrieCollider
     //CHECK BELOW 
     public override Vector3 GetFurthestPoint(Vector3 dir) //the furthest point HAS to be one of the corners
     {
-        //that's not true -- my bad G
 
         Vector3[] verts =
         {

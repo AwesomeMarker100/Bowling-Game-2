@@ -12,7 +12,7 @@ public class ValkyrieSphereCollider : ValkyrieCollider
 
     private void Start()
     {
-        this.type = ColliderType.BoxCollider;
+        this.type = ColliderType.SphereCollider;
         globalCenter = transform.TransformPoint(localCenter);
 
 
@@ -30,15 +30,12 @@ public class ValkyrieSphereCollider : ValkyrieCollider
     {
         //get vector from our global center to the point being tested
         Vector3 diffVec = point - globalCenter;
-        diffVec.z = 0;
-
-        float unitCircleAngle = Vector3.SignedAngle(Vector3.right, diffVec, Vector3.forward); //cant just get normal angle cus it'll always return positive and that ain't how we roll
-
-        return GetUnitCirclePoint(unitCircleAngle, point - globalCenter); //DO NOT PASS DIFFVEC IN HERE, neeed Z 
+        return GetFurthestPoint(diffVec);
 
     }
 
     //Mr.G Reference?!?
+    /*
     private Vector3 GetUnitCirclePoint(float unitCircleAngle, Vector3 diffVec)
     {
         //polar to normal coords --- remember to convert unitCircleAngle to radians
@@ -59,13 +56,15 @@ public class ValkyrieSphereCollider : ValkyrieCollider
 
         return angleAxis * closestPointDiffVec + globalCenter;
     }
+    */
 
     //furthest point easy on sphere, just go that normalized direction * radius + our center point
     public override Vector3 GetFurthestPoint(Vector3 dir)
     {
-        return globalCenter + dir.normalized * radius;
+        return dir != Vector3.zero ? globalCenter + dir.normalized * radius : globalCenter + Vector3.forward * radius;
     }
 
+    //point is in global coordinates
     public override bool PointInBounds(Vector3 point)
     {
         return Vector3.Distance(globalCenter, point) <= radius;

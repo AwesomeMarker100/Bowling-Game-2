@@ -1133,7 +1133,6 @@ GameObject:
   - component: {fileID: 1059205109}
   - component: {fileID: 1059205112}
   - component: {fileID: 1059205113}
-  - component: {fileID: 1059205114}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -1207,8 +1206,8 @@ Transform:
   m_GameObject: {fileID: 1059205107}
   serializedVersion: 2
   m_LocalRotation: {x: -0.050277196, y: -0, z: -0, w: 0.99873537}
-  m_LocalPosition: {x: 1.29, y: 3.77, z: 4.25}
-  m_LocalScale: {x: 2.2, y: 2.2, z: 2.2}
+  m_LocalPosition: {x: -0.45, y: 3.22, z: 5.83}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1989331703}
@@ -1228,10 +1227,10 @@ MonoBehaviour:
   type: 2
   drawInEditor: 1
   colliderColor: {r: 0.87169814, g: 0.07730149, b: 0.07730149, a: 1}
-  logCollisions: 0
+  logCollisions: 1
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: 1.29, y: 3.77, z: 4.25}
+  globalCenter: {x: -0.45, y: 3.22, z: 5.83}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1255,28 +1254,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 3
+  mass: 0.1
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 40, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 40, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 40}
+  inertiaTensorRow0: {x: 1, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 1, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 1}
   impulseMagnitudeThreshold: 0.08
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
---- !u!114 &1059205114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059205107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d10ff975ccdc144a9a002f17ef1ce84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieTester
 --- !u!1 &1287763831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,7 +1468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &1308377221
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1598,7 +1585,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1308377219}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d10ff975ccdc144a9a002f17ef1ce84, type: 3}
   m_Name: 
@@ -1796,7 +1783,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1904304601
 Transform:
   m_ObjectHideFlags: 0
@@ -1805,13 +1792,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904304600}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5506998, y: -0.4435423, z: -0.4435424, w: 0.5506998}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -1.29, y: 4.84, z: 9.38}
   m_LocalScale: {x: 2.4, y: 2.4, z: 2.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1989331703}
-  m_LocalEulerAnglesHint: {x: 12.303, y: -90, z: -90}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1904304602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1824,7 +1811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 2
+  mass: 1
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
@@ -1849,7 +1836,7 @@ MonoBehaviour:
   type: 1
   drawInEditor: 1
   colliderColor: {r: 0, g: 0, b: 0, a: 1}
-  logCollisions: 0
+  logCollisions: 1
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
   globalCenter: {x: -1.29, y: 4.84, z: 9.38}
@@ -1939,7 +1926,6 @@ GameObject:
   - component: {fileID: 1908648149}
   - component: {fileID: 1908648148}
   - component: {fileID: 1908648147}
-  - component: {fileID: 1908648151}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -1956,7 +1942,7 @@ Transform:
   m_GameObject: {fileID: 1908648144}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.89, y: 1.17, z: -2.93}
+  m_LocalPosition: {x: 0.89, y: 3.54, z: -2.93}
   m_LocalScale: {x: 2.3718, y: 2.3718, z: 2.3718}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1974,13 +1960,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06211c25597259547850314fbd67c6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ValkyrieRigidbody2
-  mass: 0.8
+  mass: 0.5
   centerOfMass: {x: 0, y: 0, z: 0}
   isStatic: 0
   physicsMaterial: {fileID: 0}
-  inertiaTensorRow0: {x: 10, y: 0, z: 0}
-  inertiaTensorRow1: {x: 0, y: 10, z: 0}
-  inertiaTensorRow2: {x: 0, y: 0, z: 10}
+  inertiaTensorRow0: {x: 0.1667, y: 0, z: 0}
+  inertiaTensorRow1: {x: 0, y: 0.1667, z: 0}
+  inertiaTensorRow2: {x: 0, y: 0, z: 0.1667}
   impulseMagnitudeThreshold: 0.001
   velocityThreshold: 0.08
   accelerationThreshold: 0.08
@@ -2002,25 +1988,25 @@ MonoBehaviour:
   logCollisions: 0
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: 0.89, y: 1.17, z: -2.93}
+  globalCenter: {x: 0.89, y: 3.54, z: -2.93}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
   size: {x: 2.3718, y: 2.3718, z: 2.3718}
   xMin: -0.2959
   xMax: 2.0759
-  yMin: -0.015900016
-  yMax: 2.3558998
+  yMin: 2.3541
+  yMax: 4.7258997
   zMin: -4.1159
   zMax: -1.7441001
-  topLeftFront: {x: -0.2959, y: 2.3558998, z: -4.1159}
-  bottomLeftFront: {x: -0.2959, y: -0.015900016, z: -4.1159}
-  topRightFront: {x: 2.0759, y: 2.3558998, z: -4.1159}
-  bottomRightFront: {x: 2.0759, y: -0.015900016, z: -4.1159}
-  topLeftBack: {x: -0.2959, y: 2.3558998, z: -1.7441001}
-  topRightBack: {x: 2.0759, y: 2.3558998, z: -1.7441001}
-  bottomLeftBack: {x: -0.2959, y: -0.015900016, z: -1.7441001}
-  bottomRightBack: {x: 2.0759, y: -0.015900016, z: -1.7441001}
+  topLeftFront: {x: -0.2959, y: 4.7258997, z: -4.1159}
+  bottomLeftFront: {x: -0.2959, y: 2.3541, z: -4.1159}
+  topRightFront: {x: 2.0759, y: 4.7258997, z: -4.1159}
+  bottomRightFront: {x: 2.0759, y: 2.3541, z: -4.1159}
+  topLeftBack: {x: -0.2959, y: 4.7258997, z: -1.7441001}
+  topRightBack: {x: 2.0759, y: 4.7258997, z: -1.7441001}
+  bottomLeftBack: {x: -0.2959, y: 2.3541, z: -1.7441001}
+  bottomRightBack: {x: 2.0759, y: 2.3541, z: -1.7441001}
 --- !u!23 &1908648149
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2078,18 +2064,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1908648144}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1908648151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908648144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d10ff975ccdc144a9a002f17ef1ce84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ValkyrieTester
 --- !u!1 &1945928723
 GameObject:
   m_ObjectHideFlags: 0

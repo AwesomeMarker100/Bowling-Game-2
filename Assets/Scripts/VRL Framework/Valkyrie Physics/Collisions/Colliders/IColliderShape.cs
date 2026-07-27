@@ -3,7 +3,6 @@ using UnityEngine;
 public interface IColliderShape
 {
 
-    public Vector3 GetSupportPoint(Vector3 dir);
-    
+    public Vector3 GetFurthestPoint(Vector3 dir);
 
 }

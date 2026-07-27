@@ -120,13 +120,5 @@ public class ValkyrieMeshCollider : ValkyrieCollider
     }
 
 
-    public override bool CheckIfCollided(ValkyrieCollider vc)
-    {
-        Vector3 yourClosestPoint = vc.GetClosestPointOnBounds(this.transform.position);
-        Vector3 myClosestPoint = this.GetClosestPointOnBounds(yourClosestPoint);
-
-
-        return Vector3.Distance(myClosestPoint, yourClosestPoint) < 0.05f;
-    }
 
 }
