@@ -63,7 +63,6 @@ public class HandTracker : MonoBehaviour
     [HideInInspector] private bool isTriggerButtonPressed;
 
     private new ValkyrieCollider collider;
-    private new ValkyrieRigidbody rigidbody;
 
     private VPhys physicsHandler;
 
@@ -72,12 +71,12 @@ public class HandTracker : MonoBehaviour
     private Quaternion originalRotation;
     private Vector3 originalPosition;
 
+
     // Start is called before the first frame update
     private void Start()
     {
         handTrackingDevice = handTrackingDevice = handType == HandType.Left ? VRLDeviceManager.GetLeftHandController() : VRLDeviceManager.GetRightHandController();
         collider = GetComponent<ValkyrieCollider>();
-        rigidbody = GetComponent<ValkyrieRigidbody>();
     }
 
     // Update is called once per frame

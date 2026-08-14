@@ -1140,7 +1140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1059205109
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1207,7 +1207,7 @@ Transform:
   m_GameObject: {fileID: 1059205107}
   serializedVersion: 2
   m_LocalRotation: {x: -0.050277196, y: -0, z: -0, w: 0.99873537}
-  m_LocalPosition: {x: 1.29, y: 4.69, z: 13.32}
+  m_LocalPosition: {x: 1.29, y: 3.77, z: 4.25}
   m_LocalScale: {x: 2.2, y: 2.2, z: 2.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1231,7 +1231,7 @@ MonoBehaviour:
   logCollisions: 0
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: 1.29, y: 4.69, z: 13.32}
+  globalCenter: {x: 1.29, y: 3.77, z: 4.25}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1481,7 +1481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1308377221
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1796,7 +1796,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1904304601
 Transform:
   m_ObjectHideFlags: 0
@@ -1956,7 +1956,7 @@ Transform:
   m_GameObject: {fileID: 1908648144}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.98, y: 7.27, z: -4.76}
+  m_LocalPosition: {x: 0.89, y: 1.17, z: -2.93}
   m_LocalScale: {x: 2.3718, y: 2.3718, z: 2.3718}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2002,25 +2002,25 @@ MonoBehaviour:
   logCollisions: 0
   collisionDetectionMode: 0
   localCenter: {x: 0, y: 0, z: 0}
-  globalCenter: {x: 10.98, y: 7.27, z: -4.76}
+  globalCenter: {x: 0.89, y: 1.17, z: -2.93}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
   size: {x: 2.3718, y: 2.3718, z: 2.3718}
-  xMin: 9.7941
-  xMax: 12.165899
-  yMin: 6.0841
-  yMax: 8.4559
-  zMin: -5.9459
-  zMax: -3.5741003
-  topLeftFront: {x: 9.7941, y: 8.4559, z: -5.9459}
-  bottomLeftFront: {x: 9.7941, y: 6.0841, z: -5.9459}
-  topRightFront: {x: 12.165899, y: 8.4559, z: -5.9459}
-  bottomRightFront: {x: 12.165899, y: 6.0841, z: -5.9459}
-  topLeftBack: {x: 9.7941, y: 8.4559, z: -3.5741003}
-  topRightBack: {x: 12.165899, y: 8.4559, z: -3.5741003}
-  bottomLeftBack: {x: 9.7941, y: 6.0841, z: -3.5741003}
-  bottomRightBack: {x: 12.165899, y: 6.0841, z: -3.5741003}
+  xMin: -0.2959
+  xMax: 2.0759
+  yMin: -0.015900016
+  yMax: 2.3558998
+  zMin: -4.1159
+  zMax: -1.7441001
+  topLeftFront: {x: -0.2959, y: 2.3558998, z: -4.1159}
+  bottomLeftFront: {x: -0.2959, y: -0.015900016, z: -4.1159}
+  topRightFront: {x: 2.0759, y: 2.3558998, z: -4.1159}
+  bottomRightFront: {x: 2.0759, y: -0.015900016, z: -4.1159}
+  topLeftBack: {x: -0.2959, y: 2.3558998, z: -1.7441001}
+  topRightBack: {x: 2.0759, y: 2.3558998, z: -1.7441001}
+  bottomLeftBack: {x: -0.2959, y: -0.015900016, z: -1.7441001}
+  bottomRightBack: {x: 2.0759, y: -0.015900016, z: -1.7441001}
 --- !u!23 &1908648149
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2157,8 +2157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b362656bd369cf47aca49f7ee1f6215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VPhys
-  maxDataPerOctNode: 2
-  showTreeGizmo: 1
+  maxDataPerOctNode: 5
 --- !u!1 &1989331702
 GameObject:
   m_ObjectHideFlags: 0

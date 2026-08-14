@@ -397,7 +397,6 @@ public abstract class ValkyrieCollider : MonoBehaviour, IColliderShape
     protected ValkyrieCollisionEvent onCollisionPersistent = new ValkyrieCollisionEvent();
     protected ValkyrieCollisionEvent onCollisionDead = new ValkyrieCollisionEvent();
 
-    public KDRegion<ValkyrieCollider> region;
     protected bool inCollision = false;
 
     #endregion

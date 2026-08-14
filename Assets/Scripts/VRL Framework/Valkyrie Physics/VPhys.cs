@@ -1,18 +1,32 @@
+using Assets.Scripts.VRL_Framework.Valkyrie_Physics.Collisions.Colliders.IShapes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Simplex = GJK.Simplex;
+using Polyhedron = GJK.Polyhedron;
+using static GJK;
+
 
 //EQUIVALENT OF THE PHYSICS LIBRARY IN UNITY
+
+[ExecuteInEditMode]
 public class VPhys : MonoBehaviour
 {
 
-    [SerializeField] Vector3 dir;
+    // [SerializeField] Vector3 dir;
+
+    [SerializeField] int maxDataPerOctNode = 5;
+    [SerializeField] bool showTreeGizmo = false;
+
+    public static VPhys Instance { get; private set; }
 
     //Spatial Structures
-
+    private OctTree4 colTree;
 
     //Structs / Enums
     #region
@@ -99,15 +113,46 @@ public class VPhys : MonoBehaviour
     }
     #endregion
 
+    //Awake / OnValidate / OnDrawGizmos
+    #region
+
+    private void OnValidate()
+    {
+        Awake();
+    }
 
     public void Awake()
     {
-        Time.fixedDeltaTime = 1 / 70f;
+
+        //Singleton pattern
+        if(Instance != null && Instance != this)
+        {
+            enabled = false;
+            return;
+        }
+
+        Instance = this;
     }
 
+    public void OnDrawGizmos()
+    {
+        if (!showTreeGizmo) return;
+
+        BuildColliderTree();
+
+        Gizmos.color = Color.violetRed;
+        foreach (OctNode node in colTree.nodes)
+        {
+            Gizmos.DrawWireCube((node.bounds.bottomLeft + node.bounds.topRight) / 2, node.bounds.topRight - node.bounds.bottomLeft);
+        }
+       
+    }
+
+    #endregion
 
     //General Raycast Method
-    public bool Raycast(Vector3 start, Vector3 dir, float dist)
+    #region
+    public static bool Raycast(Vector3 start, Vector3 dir, float dist)
     {
         //should change to use KDTree or OctTree nodes at some point 
         ValkyrieCollider[] colliders = FindObjectsByType<ValkyrieCollider>();
@@ -139,33 +184,25 @@ public class VPhys : MonoBehaviour
 
         return hitSomething;
     }
+    #endregion
 
-    public void Update()
-    {
-        Raycast(transform.position, dir, 1);
-    }
-
-    public void OnDrawGizmos()
-    {
-        Gizmos.DrawRay(transform.position, dir);
-    }
 
     //Helper Methods
-
-    public bool DidIntersectBox(VRay ray, ValkyrieBoxCollider vbc)
+    #region
+    public static bool DidIntersectBox(VRay ray, ValkyrieBoxCollider vbc)
     {
-        bool topPlane = DidIntersectBoundedRect(ray, vbc.topPlane);
-        bool bottomPlane = DidIntersectBoundedRect(ray, vbc.bottomPlane);
+        bool topPlaneIntersection = DidIntersectBoundedRect(ray, vbc.topPlane);
+        bool bottomPlaneIntersection = DidIntersectBoundedRect(ray, vbc.bottomPlane);
         bool leftPlane = DidIntersectBoundedRect(ray, vbc.leftPlane);
         bool rightPlane = DidIntersectBoundedRect(ray, vbc.rightPlane);
         bool frontPlane = DidIntersectBoundedRect(ray, vbc.frontPlane);
         bool backPlane = DidIntersectBoundedRect(ray, vbc.backPlane);
 
-        return topPlane || bottomPlane || leftPlane || rightPlane || frontPlane || backPlane;
+        return topPlaneIntersection || bottomPlaneIntersection || leftPlane || rightPlane || frontPlane || backPlane;
     }
 
     //check VRLands notes for derivation of this. it's relatively simple calc 3 
-    public bool DidIntersectSphere(VRay ray, Vector3 center, float radius)
+    public static bool DidIntersectSphere(VRay ray, Vector3 center, float radius)
     {
         float a = Vector3.SqrMagnitude(ray.dir);
         float b = 2 * ray.start.x * ray.dir.x - 2 * ray.dir.x * center.x + 2 * ray.start.y * ray.dir.y - 2 * ray.dir.y * center.y + 2 * ray.start.z * ray.dir.z - 2 * ray.dir.z * center.z;
@@ -179,7 +216,7 @@ public class VPhys : MonoBehaviour
     
     }   
 
-    public bool DidIntersectBoundedRect(VRay ray, BoundedRect plane)
+    public static bool DidIntersectBoundedRect(VRay ray, BoundedRect plane)
     {
         if (Vector3.Dot(plane.normal, ray.dir) == 0) return false;
         Vector3 pointOfIntersection = ray.start + (Vector3.Dot(plane.normal, plane.origin - ray.start) / Vector3.Dot(plane.normal, ray.dir)) * ray.dir;
@@ -188,23 +225,12 @@ public class VPhys : MonoBehaviour
     }
 
 
-    public bool DidIntersectBox()
-    {
-        return false;
-    }
-
-
-    public void Raycast(Vector3 start, Vector3 end)
-    {
-
-    }
-
-    public bool Boxcast(Vector3 center, Vector3 halfLengths,  Quaternion rotation)
+    public static bool Boxcast(Vector3 center, Vector3 halfLengths,  Quaternion rotation)
     {
         throw new NotImplementedException();
     }
 
-    public bool SphereCast(Vector3 center, float radius)
+    public static bool SphereCast(Vector3 center, float radius)
     {
         //make regional search asap 
 
@@ -219,4 +245,121 @@ public class VPhys : MonoBehaviour
         return false;
     }
 
+
+    #endregion
+
+    //Collider Tree Setup
+    #region
+
+    public BoxBounds GetBoxBounds(ValkyrieCollider[] colliders)
+    {
+        Vector3 min = Vector3.positiveInfinity;
+        Vector3 max = Vector3.negativeInfinity;
+
+        foreach(ValkyrieCollider col in colliders)
+        {
+            Vector3 colPos = col.transform.position;
+            if (colPos.x < min.x) min.x = colPos.x;
+            else if (colPos.x > max.x) max.x = colPos.x;
+
+            if (colPos.y < min.y) min.y = colPos.y;
+            else if (colPos.y > max.y) max.y = colPos.y;
+
+            if (colPos.z < min.z) min.z = colPos.z;
+            else if (colPos.z > max.z) max.z = colPos.z;
+        }
+
+        return new BoxBounds(max, min);
+    }
+
+    public void BuildColliderTree()
+    {
+        ValkyrieCollider[] colliders = FindObjectsByType<ValkyrieCollider>();
+
+        BoxBounds boxBounds = GetBoxBounds(colliders);
+        colTree = new OctTree4(boxBounds, maxDataPerOctNode);
+
+        foreach(ValkyrieCollider col in colliders)
+        {
+            colTree.InsertData(col.GetHashCode(), col.transform.position);
+        }
+    }
+
+
+    #endregion
+
+
+    //Shape Cast Methods (mostly used for tunneling prevention - e.g. CCD or Continuous Collision Detection) 
+    #region
+    
+    //relVel = v_2 - v_1
+    public static bool ShapeCast(IColliderShape shape1, IColliderShape shape2, Vector3 relVel)
+    {
+        
+        if(GJK.CheckIfCollided(shape1, shape2) is var basicColDat && !basicColDat.Item1)
+        {
+
+            Simplex termSimp = basicColDat.Item2;
+            /*Vector3 trackerPt = Vector3.zero; //t = 0 -> curPt = Vector3.zero, t = 1 -> curPt = relVel
+
+            Vector3 closestPt = termSimp.GetClosestPoint(trackerPt);
+
+            Vector3 normal = trackerPt - closestPt;
+
+            float tNewDenom = Vector3.Dot(relVel, normal);
+            if (tNewDenom == 0) throw new DivideByZeroException("Bitch ass looking ass");
+
+            float tNew = Vector3.Dot(closestPt, normal) / tNewDenom;
+            if (tNew > 1) return false;
+
+            Vector3 newSprtPt = shape1.GetFurthestPoint(normal) - shape2.GetFurthestPoint(-normal); //it's just the support function but generalized for IColliderShape
+            float d = Vector3.Dot(newSprtPt - closestPt, normal) / normal.magnitude;
+            if (d <= 0.0001f) return true;
+
+            termSimp.AddPoint(new SimplexPt(newSprtPt, normal));*/
+
+            float d = Mathf.Infinity;
+            float tCur = 0;
+            float tNew;
+
+            Vector3 trackerPt;
+            Vector3 closestPt;
+            Vector3 normal;
+
+            float tNewDenom;
+
+            Vector3 newSprtPt;
+
+            do
+            {
+                trackerPt = tCur * relVel;
+                closestPt = termSimp.GetClosestPointAndTrim(trackerPt);
+                normal = trackerPt - closestPt;
+
+                tNewDenom = Vector3.Dot(relVel, normal);
+                if (tNewDenom == 0) throw new DivideByZeroException("Bitch ass looking ass");
+
+                tNew = Vector3.Dot(closestPt, normal) / tNewDenom;
+                if (tNew > 1) return false;
+
+
+                newSprtPt = shape1.GetFurthestPoint(normal) - shape2.GetFurthestPoint(-normal); //generalized support func for IColliderShape
+
+
+                d = Vector3.Dot(newSprtPt - closestPt, normal);
+                termSimp.AddPoint(new SimplexPt(newSprtPt, normal));
+                tCur = tNew;
+
+
+            } while (d > 0.0001f);
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    #endregion
 }
+//hkjhka

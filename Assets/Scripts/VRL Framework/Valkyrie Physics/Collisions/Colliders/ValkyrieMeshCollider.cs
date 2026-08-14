@@ -14,7 +14,6 @@ public class ValkyrieMeshCollider : ValkyrieCollider
     private Vector3[] globalizedNormals;
 
     private Vector3[] triangleAverages;
-    private KDTree<Vector3> colliderTree;
 
     private bool gizmosRefreshed = false;
 

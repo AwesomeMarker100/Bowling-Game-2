@@ -28,7 +28,7 @@ public class Strip : MonoBehaviour
                     OrbitController oc = child.GetComponent<OrbitController>();
 
                     oc.orbitalPeriod = Random.Range(50f, 800f);
-                    oc.center = GameObject.Find("Sun").GetComponent<ValkyrieRigidbody>();
+                    //oc.center = GameObject.Find("Sun").GetComponent<ValkyrieRigidbody>();
 
                     oc.eccentricity = Random.Range(0.01f, 0.6f);
 
@@ -70,7 +70,7 @@ public class Strip : MonoBehaviour
                     OrbitController oc = child.GetComponent<OrbitController>();
 
                     oc.orbitalPeriod = Random.Range(50f, 800f);
-                    oc.center = GameObject.Find("Sun").GetComponent<ValkyrieRigidbody>();
+                    //oc.center = GameObject.Find("Sun").GetComponent<ValkyrieRigidbody>();
 
                     oc.eccentricity = Random.Range(0.01f, 0.6f);
 

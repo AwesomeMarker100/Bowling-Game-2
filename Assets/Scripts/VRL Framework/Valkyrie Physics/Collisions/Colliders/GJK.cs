@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.LowLevelPhysics;
 
 public static class GJK
@@ -23,6 +26,8 @@ public static class GJK
         //pt = support point, dir = direction
         public Vector3 pt;
         public Vector3 dir;
+
+        public static explicit operator Vector3(SimplexPt sPt) => sPt.pt;
 
         public SimplexPt(Vector3 pt, Vector3 dir) => (this.pt, this.dir) = (pt, dir);
 
@@ -62,6 +67,8 @@ public static class GJK
             }
         }
     }
+
+    //only goes to 3-simplex 
     public struct Simplex
     {
         //Parameters
@@ -82,9 +89,45 @@ public static class GJK
         }
         #endregion
 
+        //GetClosestPoint. NOTE THIS ALSO TRIMS THE SIMPLEX - MAINLY USED FOR SHAPECAST SO BEWARE
+        public Vector3 GetClosestPointAndTrim(Vector3 pt)
+        {
+           
+            switch(points.Count)
+            {
+                case 0: return Vector3.negativeInfinity;
+                case 1: return (Vector3)points[0];
+                case 2:
+                    Vector3 a = (Vector3)points[0];
+                    Vector3 b = (Vector3)points[1];
+                    Vector3 dir = b - a;
+
+                    float t = Vector3.Dot(pt - a, dir) / dir.sqrMagnitude;
+
+                    if (t <= 0)
+                    {
+                        points.RemoveAt(1);
+                        return a;
+                    }
+                    else if (t >= 1)
+                    {
+                        points.RemoveAt(0);
+                        return b;
+                    }
+
+                    return a + dir * t;
+                case 3:
+                    return new PolytopeTri(points[0], points[1], points[2]).GetClosestPoint(pt);
+               
+                default:
+                    return Vector3.negativeInfinity;
+
+            }
+        }
+
     }
 
-    public struct Polytope
+    public struct Polyhedron
     {
         //Parameters
         #region
@@ -93,7 +136,7 @@ public static class GJK
         #endregion
 
         //confirmed
-        public Polytope(Simplex initialSimplex)
+        public Polyhedron(Simplex initialSimplex)
         {
             //add initial simplex, and create new triangles list
             this.initialSimplex = initialSimplex;
@@ -258,6 +301,8 @@ public static class GJK
 
     public struct PolytopeTri
     {
+
+       
         //Parameters
         #region
         public Vector3 normal;
@@ -308,6 +353,78 @@ public static class GJK
             #endregion
 
 
+        }
+
+        //Get Closest Point (includes inside of triangl and throughout edges, not just vertices) 
+        public Vector3 GetClosestPoint(Vector3 pt)
+        {
+            Vector3 A = v1.pt;
+            Vector3 B = v2.pt;
+            Vector3 C = v3.pt;
+
+            //Initial Plane Projection
+            Vector3 planePt = pt + Vector3.Dot(normal, v1.pt - pt) * normal;
+
+            //Barycentric Coordinate Calculation
+            #region
+            Vector3 ep = planePt - A;
+
+            float d11 = Vector3.Dot(edge1, edge1);
+            float d12 = Vector3.Dot(edge1, edge2);
+            float d22 = Vector3.Dot(edge2, edge2);
+            float dp1 = Vector3.Dot(ep, edge1);
+            float dp2 = Vector3.Dot(ep, edge2);
+
+            float D = d11 * d22 - Mathf.Pow(d12, 2);
+            if (D == 0) return Vector3.negativeInfinity;
+
+            float v = (d22 * dp1 - d12 * dp2) / D;
+            float w = (d11 * dp2 - d12 * dp1) / D;
+            float u = 1 - v - w;
+            #endregion
+
+            //Sign Checks / Edge Projection
+            #region
+            //Inside Check
+            if (u > 0 && u < 1 && v > 0 && v < 1 && w > 0 && w < 1) return planePt; //inside triangle
+
+
+            //Vertex Checks
+            if (u > 1 && v < 0 && w < 0) return A;
+            if (u < 0 && v > 1 && w < 0) return B;
+            if (u < 0 && v < 0 && w > 1) return C;
+
+
+            //Edge Checks
+            if (u < 0 && v > 0 && w < 1) //project onto BC 
+            {
+                float t = Vector3.Dot(planePt - B, C - B) / (C - B).sqrMagnitude;
+
+                if (t <= 0) return B;
+                else if (t >= 1) return C;
+                else return B + t * (C - B);
+            }
+            else if (u > 0 && v < 1 && w < 0) //project onto AB
+            {
+
+                float t = Vector3.Dot(planePt - A, B - A) / (B - A).sqrMagnitude;
+
+                if (t <= 0) return A;
+                else if (t >= 1) return B;
+                else return A + t * (B - A);
+
+            } else if(u > 0 && v < 0 && w < 1) //project onto AC 
+            {
+                float t = Vector3.Dot(planePt - A, C - A) / (C - A).sqrMagnitude;
+
+                if (t <= 0) return A;
+                else if (t >= 1) return C;
+                else return A + t * (C - A);
+            }
+
+            #endregion
+
+            return Vector3.negativeInfinity; //should never get to this point
         }
 
 
@@ -368,6 +485,9 @@ public static class GJK
             this.v1 = v1;
             this.v2 = v2;
         }
+
+        //technically this makes it directed but just fogeddaboutit
+        public static implicit operator Vector3(UndirectedEdge e) => e.v2.pt - e.v1.pt;
 
         //Equality
 
@@ -725,7 +845,7 @@ public static class GJK
     public static (Vector3, float, Vector3) GetCollisionData(IColliderShape col1, IColliderShape col2, Simplex terminatingSimplex, List<SimplexPt> sPtList)
     {
         //start with terminating simplex after running GJK
-        Polytope pt = new Polytope(terminatingSimplex);
+        Polyhedron pt = new Polyhedron(terminatingSimplex);
         List<PolytopeTri> polytopeTriangles = pt.GetTriangles();
 
         int minTriIdx;

@@ -46,27 +46,5 @@ public static class Sorter
     }
 
 
-    public static float[] HeapSort(float[] values)
-    {
-
-        Heap heap = new Heap(values);
-
-        return heap.HeapSort();
-       
-
-    }
-
-
-    public static float GetFloatVal(Object obj, string propertyName)
-    {
-
-        return (float)obj.GetType().GetProperty(propertyName).GetValue(obj);
-
-    }
-
-
-
-
-
-
+    public static float GetFloatVal(Object obj, string propertyName) => (float)obj.GetType().GetProperty(propertyName).GetValue(obj);
 }

@@ -152,12 +152,12 @@ public class GrabInteractable : MonoBehaviour
         if (useVRB)
         {
 
-            ValkyrieRigidbody thisVRB = GetComponent<ValkyrieRigidbody>();
+            ValkyrieRigidbody2 thisVRB = GetComponent<ValkyrieRigidbody2>();
 
             if(thisVRB != null)
             {
 
-                thisVRB.velocity = dropVelocity;
+                //thisVRB.velocity = dropVelocity;
                 
             }
 

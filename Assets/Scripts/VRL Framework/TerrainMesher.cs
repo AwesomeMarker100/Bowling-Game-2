@@ -11,8 +11,6 @@ public class TerrainMesher : MonoBehaviour
     private Vector3[] globalVerts;
     
 
-    private KDTree<Vector3> terrainMesh;
-
     private Terrain terrain;
     private TerrainData terrainData;
 
@@ -63,10 +61,6 @@ public class TerrainMesher : MonoBehaviour
 
     private void CreateTerrainMesh()
     {
-        terrainMesh = new KDTree<Vector3>(localVerts, localVerts);
-        terrainMesh.Build(20);
-
-        print(terrainMesh.GetEndRegions().Length);
 
     }
 
@@ -122,13 +116,6 @@ public class TerrainMesher : MonoBehaviour
 
     }
 
-
-    public KDTree<Vector3> GetTerrainMesh() {
-
-
-        return terrainMesh;
-
-    }
 
     public Vector3[] GetLocalVertices()
     {

@@ -31,14 +31,14 @@ public class MovementEngine : MonoBehaviour
     [SerializeField] private Quaternion rotQuat;
 
     private ValkyrieCollider radixCollider;
-    private ValkyrieRigidbody radixVRB;
+    private ValkyrieRigidbody2 radixVRB;
 
     // Start is called before the first frame update
     void Start()
     {
         //if the user didn't add movement controllers from the inspector
 
-        radixVRB = radixTracker.GetComponent<ValkyrieRigidbody>();
+        radixVRB = radixTracker.GetComponent<ValkyrieRigidbody2>();
         radixCollider = radixTracker.GetComponent<ValkyrieCollider>();
 
         radixTracker.TryGetComponent(out radixVRB);

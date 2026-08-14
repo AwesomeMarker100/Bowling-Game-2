@@ -24,7 +24,6 @@ public class OrbitController : MonoBehaviour
      * 
      */
 
-    [SerializeField] public ValkyrieRigidbody center;
     [SerializeField] private bool useVRB = false;
 
     [SerializeField] public float orbitalPeriod = 2;
@@ -59,16 +58,17 @@ public class OrbitController : MonoBehaviour
     private float xCoord = 0.0f;
     private float zCoord = 0.0f;
 
-    private ValkyrieRigidbody vrb;
+    private ValkyrieRigidbody2 vrb;
 
     //https://stjarnhimlen.se/comp/ppcomp.html#3 carried the team
 
+    
     // Start is called before the first frame update
     void Awake()
     {
 
         //initCenterPos = center.transform.position;
-        initThisPos = this.transform.position;
+     /*   initThisPos = this.transform.position;
         initCenterPos = center.transform.position;
 
         //periapsis is the closest length of the ellipse
@@ -77,7 +77,7 @@ public class OrbitController : MonoBehaviour
         
 
         vrb = GetComponent<ValkyrieRigidbody>();
-        meanAnomaly = Random.Range(0, tau - Mathf.Epsilon);
+        meanAnomaly = Random.Range(0, tau - Mathf.Epsilon); */
 
 
     }
@@ -140,7 +140,7 @@ public class OrbitController : MonoBehaviour
     {
         // Vector3 newPos = radius * (Quaternion.AngleAxis(trueAnomaly * Mathf.Rad2Deg, Vector3.up) * periapsisVector).normalized;
 
-        Vector3 newPos = new Vector3(xCoord, transform.position.y, zCoord);
+       /* Vector3 newPos = new Vector3(xCoord, transform.position.y, zCoord);
         if (useVRB)
         {
             if (vrb != null) vrb.SetVelocity((newPos + center.transform.position - transform.position));
@@ -149,7 +149,7 @@ public class OrbitController : MonoBehaviour
         else
         {
             transform.position = newPos + center.transform.position ;
-        }
+        }*/
     }
 
     //another angle that is used in calculating position in orbit, derived from mean and true anomaly
@@ -202,7 +202,7 @@ public class OrbitController : MonoBehaviour
         this.orbitalPeriod = theOne.orbitalPeriod;
         this.eccentricity = theOne.eccentricity;
         this.angleDelta = theOne.angleDelta;
-        this.center = theOne.center;
+        //this.center = theOne.center;
 
         this.transform.position = theOne.transform.position;
 
@@ -232,5 +232,5 @@ public class OrbitController : MonoBehaviour
 
     }
 
-
+    
 }

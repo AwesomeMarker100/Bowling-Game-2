@@ -10,13 +10,13 @@ public class RevolutionManager : MonoBehaviour
     [SerializeField] private float speed = 20f;
     [SerializeField] private float angleDelta = 0.2f;
 
-    private ValkyrieRigidbody vrb;
+    private ValkyrieRigidbody2 vrb;
 
 
     private void Start()
     {
 
-        vrb = GetComponent<ValkyrieRigidbody>();
+        vrb = GetComponent<ValkyrieRigidbody2>();
 
     }
 
