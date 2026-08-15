@@ -300,23 +300,6 @@ public class VPhys : MonoBehaviour
         {
 
             Simplex termSimp = basicColDat.Item2;
-            /*Vector3 trackerPt = Vector3.zero; //t = 0 -> curPt = Vector3.zero, t = 1 -> curPt = relVel
-
-            Vector3 closestPt = termSimp.GetClosestPoint(trackerPt);
-
-            Vector3 normal = trackerPt - closestPt;
-
-            float tNewDenom = Vector3.Dot(relVel, normal);
-            if (tNewDenom == 0) throw new DivideByZeroException("Bitch ass looking ass");
-
-            float tNew = Vector3.Dot(closestPt, normal) / tNewDenom;
-            if (tNew > 1) return false;
-
-            Vector3 newSprtPt = shape1.GetFurthestPoint(normal) - shape2.GetFurthestPoint(-normal); //it's just the support function but generalized for IColliderShape
-            float d = Vector3.Dot(newSprtPt - closestPt, normal) / normal.magnitude;
-            if (d <= 0.0001f) return true;
-
-            termSimp.AddPoint(new SimplexPt(newSprtPt, normal));*/
 
             float d = Mathf.Infinity;
             float tCur = 0;

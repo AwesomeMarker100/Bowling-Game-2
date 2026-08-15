@@ -81,11 +81,13 @@ public static class GJK
         public void AddPoint(SimplexPt pt)
         {
             if (points.Contains(pt)) { Debug.LogException(new Exception("Failed to add point as it is already contained in simplex!")); return; }
+            points.Add(pt);
         }
 
         public void RemovePoint(SimplexPt pt)
         {
             if (!points.Contains(pt)) { Debug.LogException(new Exception("Failed to remove point as it is not contained in simplex!")); return; }
+            points.Remove(pt);
         }
         #endregion
 
@@ -106,12 +108,10 @@ public static class GJK
 
                     if (t <= 0)
                     {
-                        points.RemoveAt(1);
                         return a;
                     }
                     else if (t >= 1)
                     {
-                        points.RemoveAt(0);
                         return b;
                     }
 
@@ -218,7 +218,8 @@ public static class GJK
         //confirmed
         private void CollectFaultyEdges(List<UndirectedEdge> faultyEdges, SimplexPt point)
         {
-            for (int i = 0; i < triangles.Count; i++)
+            // Iterate in reverse to safely remove items during iteration
+            for (int i = triangles.Count - 1; i >= 0; i--)
             {
                 PolytopeTri tri = triangles[i];
 
@@ -345,7 +346,7 @@ public static class GJK
 
             //from sage old Mr. G, distance = |pw(vec) dotted with normal| / magnitude of normal
             //we choose norm to be unit vector so this simplifies quite a bit
-            this.distToOrigin = Mathf.Abs(-v1.pt.x * normal.x - v1.pt.y * normal.y - v1.pt.z * normal.z);
+            distToOrigin = Vector3.Dot(v1.pt, normal);//Mathf.Abs(-v1.pt.x * normal.x - v1.pt.y * normal.y - v1.pt.z * normal.z);
 
             this.edge1 = new UndirectedEdge(v1, v2);
             this.edge2 = new UndirectedEdge(v1, v3);
@@ -376,17 +377,17 @@ public static class GJK
             float dp2 = Vector3.Dot(ep, edge2);
 
             float D = d11 * d22 - Mathf.Pow(d12, 2);
-            if (D == 0) return Vector3.negativeInfinity;
+            if (Mathf.Abs(D) < 0.0001f) return Vector3.negativeInfinity;
 
-            float v = (d22 * dp1 - d12 * dp2) / D;
-            float w = (d11 * dp2 - d12 * dp1) / D;
+            float w = (d22 * dp1 - d12 * dp2) / D;
+            float v = (d11 * dp2 - d12 * dp1) / D;
             float u = 1 - v - w;
             #endregion
 
             //Sign Checks / Edge Projection
             #region
             //Inside Check
-            if (u > 0 && u < 1 && v > 0 && v < 1 && w > 0 && w < 1) return planePt; //inside triangle
+            if (u >= 0 && v >= 0 && w >= 0) return planePt; //inside triangle
 
 
             //Vertex Checks
@@ -396,7 +397,7 @@ public static class GJK
 
 
             //Edge Checks
-            if (u < 0 && v > 0 && w < 1) //project onto BC 
+            if (u < 0 && v >= 0 && w >= 0) //project onto BC 
             {
                 float t = Vector3.Dot(planePt - B, C - B) / (C - B).sqrMagnitude;
 
@@ -404,7 +405,7 @@ public static class GJK
                 else if (t >= 1) return C;
                 else return B + t * (C - B);
             }
-            else if (u > 0 && v < 1 && w < 0) //project onto AB
+            else if (u >= 0 && v >= 0 && w < 0) //project onto AB
             {
 
                 float t = Vector3.Dot(planePt - A, B - A) / (B - A).sqrMagnitude;
@@ -413,7 +414,7 @@ public static class GJK
                 else if (t >= 1) return B;
                 else return A + t * (B - A);
 
-            } else if(u > 0 && v < 0 && w < 1) //project onto AC 
+            } else if(u >= 0 && v < 0 && w >= 0) //project onto AC 
             {
                 float t = Vector3.Dot(planePt - A, C - A) / (C - A).sqrMagnitude;
 
@@ -437,7 +438,7 @@ public static class GJK
 
             return (edge1 == other.edge1 || edge1 == other.edge2 || edge1 == other.edge3)
                 && (edge2 == other.edge1 || edge2 == other.edge2 || edge2 == other.edge3)
-                && (edge3 == other.edge3 || edge3 == other.edge3 || edge3 == other.edge3);
+                && (edge3 == other.edge1 || edge3 == other.edge2 || edge3 == other.edge3);
         }
 
         public bool ContainsEdge(UndirectedEdge e)
@@ -462,7 +463,14 @@ public static class GJK
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 31 + v1.GetHashCode();
+                hash = hash * 31 + v2.GetHashCode();
+                hash = hash * 31 + v3.GetHashCode();
+                return hash;
+            }
         }
 
         #endregion
@@ -512,7 +520,13 @@ public static class GJK
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 31 + v1.GetHashCode();
+                hash = hash * 31 + v2.GetHashCode();
+                return hash;
+            }
         }
 
         #endregion
